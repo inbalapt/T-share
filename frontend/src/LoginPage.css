@@ -1,0 +1,102 @@
+
+.App-header{
+    background-image: url("background-resize.jpg");
+    background-color: #FFF0F9;
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+    margin: 0%;
+   /* background-size: cover; */
+
+}
+.fooo{
+    background-color: rgb(240, 226, 225, 0.8);  
+    border-color: transparent;
+    position:relative;
+    height: 120%;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    padding-top: 2vh;
+    padding-bottom: 5vh;
+    padding-left: 5vh;
+    padding-right: 5vh;
+    vertical-align: center;
+    border-radius: 25px;
+    font-size: 3.8vh !important;
+    color: rgb(73, 134, 148);
+}
+
+.loggg{
+    padding-bottom: 1vh;
+    font-size:xx-large;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    color: rgb(73, 134, 148);
+
+}
+img[type="logoBig"] {
+    max-height: 23vh;
+    padding-bottom: 1.5vh;
+  }
+
+  row.justify-content-md-center{
+    /*padding: 20vh;*/
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right:inherit;
+    padding-left:inherit;
+    margin-top:auto; 
+    padding-left: 5vh;
+    padding-right: 5vh;
+    background-color: rgb(240, 226, 225, 0.8);
+}
+
+.row {
+    --bs-gutter-x:0;
+    --bs-gutter-y: 0;
+}
+
+
+
+input{
+    background-color: rgb(240, 226, 225, 0.9);
+    background-color: rgb(173, 205, 210,0.5);
+    border-color: #ccc;
+    width: 90%;
+    height: 7vh !important;
+    padding: 1% 2%;
+    margin: 1% 0;
+    display: inline-block;
+    border: 1% solid #ccc;
+    box-sizing: border-box;
+}
+
+.h {
+    color: rgb(173, 205, 210);
+    
+  }
+.h:hover {
+    color: rgba(65, 142, 155, 0.5);
+  }
+.registering{
+    padding-top: 1%;
+    padding-bottom: 3%;
+}
+
+.btn-primary {
+    background-color: rgb(173, 205, 210,0.5) !important;
+    border:transparent;
+    
+}
+.btn-primary:hover {
+    background-color:rgb(173, 205, 210) !important;
+}
+
+.btn-lg {
+    width: 27%;
+    font-size:4vh;
+    text-align: center;
+    
+}

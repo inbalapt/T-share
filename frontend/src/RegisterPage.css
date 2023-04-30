@@ -1,0 +1,141 @@
+
+.App-header{
+    /*background-image: url("background-resize.jpg"); */
+    background-color: rgb(158, 192, 202);
+    align-items: center;
+    justify-content: center;
+    padding: 0%;
+    margin: 0%;
+   /* background-size: cover; */
+
+}
+body{
+    background-image: url("background-resize.jpg");
+}
+
+.regis{
+    background-color: rgb(240, 226, 225, 0.8);
+    border-color: transparent;
+    position:relative;
+    height: 120%;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    padding-top: 2vh;
+    padding-bottom: 3vh;
+    padding-left: 5vh;
+    padding-right: 5vh;
+    vertical-align: center;
+    border-radius: 25px;
+    font-size: 3.2vh !important;
+    color: rgb(73, 134, 148);
+}
+
+row.justify-content-md-center{
+    /*padding: 20vh;*/
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right:inherit;
+    padding-left:inherit;
+    margin-top:auto; 
+    padding-left: 5vh;
+    padding-right: 5vh;
+    background-color: rgb(240, 226, 225, 0.8);
+}
+    
+
+.loggg{
+    padding-bottom: 1vh;
+    font-size:120%;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    color: rgb(73, 134, 148);
+
+}
+
+img[type="logo"] {
+   max-height: 18.7vh;
+  }
+
+
+
+.row {
+    --bs-gutter-x:0;
+    --bs-gutter-y: 0;
+}
+
+
+
+  input{
+    background-color: rgb(240, 226, 225, 0.9);
+    background-color: rgb(173, 205, 210,0.5);
+    border-color: #ccc;
+    height: 6vh !important;
+    width: 90%;
+    padding: 1% 2%;
+    margin: 1% 0;
+    display: inline-block;
+    border: 1% solid #ccc;
+    box-sizing: border-box;
+    
+}
+ a[type="button"] {
+    color: rgb(173, 205, 210);
+    padding: 1vh;
+  }
+
+  a[type="button"]:hover {
+    color: rgb(173, 205, 210,0.5);
+  }
+
+.registering{
+    padding-top: 1%;
+    padding-bottom: 3%;
+}
+
+.btn-primary {
+    background-color: rgb(173, 205, 210,0.5) !important;
+    border:transparent;
+    size: 20%;
+}
+.btn-primary:hover {
+    background-color:rgb(173, 205, 210) !important;
+}
+
+.button{
+    width: 2;
+}
+p{
+    padding: 0;
+    margin: 0;
+}
+
+.regi{
+    padding-bottom: 1vh;
+}
+.image-uploading{
+    color: rgb(152, 188, 194);
+}
+.bi.bi-image{
+    font-size: 4vh; 
+    height: 100%;
+    cursor: pointer;
+    color: rgb(152, 188, 194);
+    
+}
+.image-uploading>input {
+    display: none;
+    visibility:hidden;
+    width:0;
+    height:0;
+    color: rgb(152, 188, 194);
+  }
+
+.btn-lg {
+    width: 30%;
+    font-size:4vh;
+    text-align: center;
+}
+
+
