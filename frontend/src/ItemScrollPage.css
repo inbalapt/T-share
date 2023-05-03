@@ -1,0 +1,27 @@
+/* src/components/ItemScrollPage.css */
+
+.category-header {
+    background-size: cover;
+    background-position: center;
+    height: 20vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .category-header h1 {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .filter-bar {
+    padding: 1rem;
+  }
+  
+  .item-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+  

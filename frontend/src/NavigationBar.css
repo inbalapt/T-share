@@ -1,0 +1,110 @@
+/* src/components/NavigationBar.css */
+
+.navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+  flex-grow: 1;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  position: relative;
+}
+
+.search-bar input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-right: 2.5rem; /* Adjust as needed */
+}
+
+.search-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0.375rem 0.75rem;
+  z-index: 2;
+}
+
+.search-button:hover {
+  background: transparent;
+}
+
+.icons {
+  gap: 0.5rem;
+}
+
+.icons .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+/*... Other styles ...*/ 
+
+.icons .nav-link {
+  padding: 0;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.icons .nav-link.bi-heart-fill {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-heart {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-heart-fill {
+  display: inline-block;
+}
+.icons .nav-link {
+  padding: 0;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.icons .nav-link .bi-heart-fill {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-heart {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-heart-fill {
+  display: inline;
+}
+
+
+.icons .nav-link .bi-person-fill {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-person {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-person-fill {
+  display: inline;
+}
+
+
+.icons .nav-link .bi-chat-dots-fill {
+  display: none;
+}
+
+.icons .nav-link:hover .bi-chat-dots {
+  display: none;
+  font-size: 1.5rem;
+}
+
+.icons .nav-link:hover .bi-chat-dots-fill {
+  display: inline;
+}
