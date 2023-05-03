@@ -1,6 +1,6 @@
 import { Link, BrowserRouter, Route, Routes } from 'react-router-dom'
-import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
+import LoginPage from './auth/LoginPage';
+import RegisterPage from './auth/RegisterPage';
 import Feedy from './Feedy';
 import Item from './Item';
 import Test from './Test';
@@ -8,6 +8,7 @@ import Test from './Test';
 import HeaderTop from './HeaderTop';
 import NavigationBar from './NavigationBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ChatPage from './chating/ChatPage';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Routes>
           <Route path='/' element={<LoginPage />}/>
           <Route path='/RegisterPage' element={<RegisterPage />}/>
-          <Route path='/Feedy' element={<Feedy />}></Route>
+          <Route path='/ChatPage' element={<ChatPage />}></Route>
         </Routes>
   </BrowserRouter>
   );

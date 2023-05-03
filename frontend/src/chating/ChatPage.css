@@ -1,0 +1,120 @@
+*, ::after, ::before {
+    box-sizing:border-box;
+  }
+  
+  /*
+  .row.chating{
+    border-radius: 25px;
+  }
+  */
+  
+  
+  
+  
+  
+  .my-user{
+    height:12.8%;
+    padding: 0;
+    margin: 0;
+    /*background-color:#B6AAAA; */
+    background-color: #f1f2f6bd;
+    background-color: rgb(210, 197, 193);
+    border-bottom: 2px solid lightgray;
+    
+  }
+  
+  
+  .chatList {
+    width: 100%;
+    height:90%;
+    background-color:#f1f2f6bd;
+    background-color: rgba(210, 197, 193, 0.785);
+    
+    list-style-type: none;
+    float: left;
+    overflow: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .chatList::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+  .chatList .row:hover{
+    background-color: rgb(210, 197, 193);
+    cursor: pointer;
+    border: 0.3vh solid rgba(163, 170, 174, 0.968); 
+  }
+  .chatList .row{
+    border: 2px solid lightgray;
+  }
+  
+  .messages {
+    width:100%;
+    height:70vh;
+    float: left;
+    overflow:auto;
+    padding-bottom:14%;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    flex-grow:0 ;
+    /* for scrolling down */
+    
+    overflow-y: scroll;
+    overscroll-behavior-y: contain;
+    scroll-snap-type: y proximity;
+    
+    
+  }
+  .messages > div > div:last-child {
+    scroll-snap-align: end;
+  }
+  .messages::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
+  }
+  
+  
+  .text-send{
+    height: 10%;
+    position: absolute;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(228, 218, 215);
+    border: 2px solid rgb(228, 218, 215);;
+  }
+  
+  .col-9{
+    position: relative;
+    height: 100%;
+    
+  }
+  
+  .right-side{
+    background-color: #cfd8d9c8;
+  }
+  
+  
+  
+  .chating{
+    border: 2px solid lightgray;
+    margin:2%;
+    position:fixed;
+    width: 96%;
+    height:90%;
+    overflow-y: scroll;
+    overflow: hidden;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  
+  .friend-top{
+    position: sticky;
+    top: 0;
+    scroll-padding-top: 0;
+    background-color: #f1f2f6bd;
+    
+  }
+  
