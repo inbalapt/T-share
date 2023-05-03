@@ -2,24 +2,18 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
     {
-        userName: {
+        username: {
             type: String,
             require: true,
-            min: 2,
-            max: 50,
+            min: 6,
+            max: 15,
             unique: true,
         },
-        firstName: {
+        fullName: {
             type: String,
             require: true,
             min: 2,
-            max: 50,
-        },
-        lastName: {
-            type: String,
-            require: true,
-            min: 2,
-            max: 50,
+            max: 25,
         },
         email: {
             type: String,
@@ -30,7 +24,8 @@ const UserSchema = new mongoose.Schema(
         password: {
             type: String,
             require: true,
-            min: 5,
+            min: 8,
+            max: 15
         },
         picturePath: {
             type: String,
@@ -56,7 +51,8 @@ const UserSchema = new mongoose.Schema(
         height: Number,
         weight: Number,
         credit: Number,
-    }
+    },
+    {timestamps:true}
 );
 
 const User = mongoose.model("User", UserSchema);

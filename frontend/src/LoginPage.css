@@ -1,12 +1,15 @@
 
 .App-header{
-    background-image: url("background-resize.jpg");
-    background-color: #FFF0F9;
+    text-align: center;
+    color: #fff;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0%;
-    margin: 0%;
-   /* background-size: cover; */
+    font-size: calc(10px + 2vmin);
+    padding: 50px;
 
 }
 .fooo{
@@ -99,4 +102,9 @@ input{
     font-size:4vh;
     text-align: center;
     
+}
+
+.error-message{
+    color:red;
+    font-size:3vh;
 }
