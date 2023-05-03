@@ -92,7 +92,7 @@ function RegisterPage() {
       console.log(response.data);
       if(response.status == "201"){
         console.log("201");
-        navigate("/Feedy", { state: {username: userData.username }});
+        navigate("/ChatPage", { state: {username: userData.username }});
       }
     } catch (error) {
       console.log(error);

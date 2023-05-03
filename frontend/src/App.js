@@ -1,7 +1,6 @@
 import { Link, BrowserRouter, Route, Routes } from 'react-router-dom'
 import LoginPage from './auth/LoginPage';
 import RegisterPage from './auth/RegisterPage';
-import Feedy from './Feedy';
 import Item from './Item';
 import Test from './Test';
 //import FrontTab from './FrontTab';
