@@ -8,6 +8,8 @@ import HeaderTop from './HeaderTop';
 import NavigationBar from './NavigationBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ChatPage from './chating/ChatPage';
+import ChatList from './chating/ChatList';
+import ChatMessages from './chating/ChatMessages';
 
 function App() {
   return (

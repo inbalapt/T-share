@@ -1,0 +1,95 @@
+.chat-list-container {
+    width: 33%;
+    height: 100%;
+    background-color: #cccccc40;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-right: 1px solid #ccc;
+  }
+  
+  /* styles for the profile picture and username */
+  .profile-container {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+  }
+  
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .username {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  /* styles for the chat boxes */
+  .chats-container {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: calc(98% - 60px); /* set the height to take up the remaining space */
+    background-color:white;
+  }
+  
+  .chat-box {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    transition: background-color 0.3s ease; /* adds a smooth transition effect */
+  }
+
+  .chat-box:hover  {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .chat-box.active {
+    background-color: #cccccc40;
+
+  }
+  
+  .friend-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .friend-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .friend-username {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .last-message {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .last-message-time {
+  
+
+    font-size: 12px;
+    color: #999999;
+    margin-left: 10px;
+  
+  }
+
+ 
+  

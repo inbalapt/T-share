@@ -10,7 +10,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { register } from "./controllers/auth.js";
 import User from "./models/User.js";
-import authRoutes from "./routes/auth.js";
+import authRouter from "./routes/auth.js";
+import userRouter from "./routes/users.js";
+import messageRouter from './routes/messages.js';
+
 import { login } from "./controllers/auth.js";
 
 /* CONFIGURATIONS */
@@ -42,7 +45,34 @@ const upload = multer({ storage });
 app.post("/auth/register", upload.single("picture"), register);
 
 /* ROUTES */
-app.use("/auth", authRoutes);
+app.use("/auth", authRouter);
+app.use('/', messageRouter);
+//app.use("/users", userRouter);
+
+
+
+
+app.get('/getFriends', async (req, res) => {
+  try {
+      const { username } = req.query;
+      const user = await User.findOne({ username });
+      res.status(200).json({ friends: user.friends });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+app.get("/getFullname", async (req,res) =>{
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    res.status(200).json({ fullName: user.fullName });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
 
 
 // check if username is taken in registeration
@@ -66,6 +96,8 @@ app.get("/auth/checkEmail", async (req, res) => {
     res.json({ exists: false });
   }
 });
+
+
 
 const PORT = process.env.PORT || 6001;
 
