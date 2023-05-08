@@ -1,0 +1,51 @@
+/* src/components/ImagesView.css */
+.images-view {
+  display: flex;
+  height: 100%;
+}
+
+.main-image {
+  width: 70%;
+  position: relative;
+}
+
+.main-image img {
+  width: 100%;
+  height: auto;
+  max-height: 100vh;
+  object-fit: cover;
+}
+
+.main-image.zoomed img {
+  transform: scale(1.5);
+}
+
+.zoom-in-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+}
+
+.thumbnails {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow-y: auto;
+  padding: 5% 0;
+}
+
+.thumbnails img {
+  width: 100%;
+  height: calc((100% - 20%) / 4);
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.thumbnails img.selected {
+  border: 2px solid #007bff;
+}

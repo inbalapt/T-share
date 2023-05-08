@@ -1,8 +1,8 @@
+
+/*
 import ChatingWith from './ChatingWith';
 import './ChatPage.css';
-/*import User from './usersFolder/User';
-import users from './usersFolder/fakeUser';
-import sami from './usersFolder/profile/sami.jpg';*/
+
 //import Message from './Message';
 import TopLeftChat from './TopLeftChat';
 import userMap from './usersFolder/usersList.js';
@@ -308,3 +308,5 @@ function ChatPage() {
 }
 
 export default ChatPage;
+
+*/

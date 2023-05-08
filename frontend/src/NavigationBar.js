@@ -2,44 +2,26 @@
 
 import React from 'react';
 import './NavigationBar.css';
+import { Link } from 'react-router-dom';
+import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 
 const NavigationBar = () => {
   return (
     <header>
     <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">Logo</a>
+        <Link className="navbar-brand" href="/">Logo</Link>
         <div className="navbar-nav">
-          <a className="nav-link" href="/">Home</a>
-          <div className="nav-item dropdown">
-            <a
-              className="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              Products
-            </a>
-            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <a className="dropdown-item" href="/clothing/all">Everything</a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="/clothing/dresses">Dresses</a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="/clothing/shirts">Shirts</a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="/clothing/skirts">Skirts</a>
-              </li>
-              <li>
-                <a className="dropdown-item" href="/clothing/general">General</a>
-              </li>
-            </ul>
-          </div>
+        <Nav className="me-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+              <NavDropdown title="Products" id="basic-nav-dropdown">
+                <NavDropdown.Item href="/clothing/all">View all</NavDropdown.Item>
+                <NavDropdown.Item href="/clothing/dresses">Dresses</NavDropdown.Item>
+                <NavDropdown.Item href="/clothing/tops">Tops</NavDropdown.Item>
+                <NavDropdown.Item href="/clothing/skirts">Skirts</NavDropdown.Item>
+                <NavDropdown.Item href="/clothing/pants">Pants</NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
         </div>
         <form className="d-flex search-bar">
           <input
