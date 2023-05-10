@@ -4,6 +4,13 @@ import Message from './Message.js';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:3000";
+var socket, selectedChatCompare;
+
+
+
 function ContactMessages({currentMsgs}){
     if (currentMsgs == []) {
         return (<></>);
@@ -20,9 +27,42 @@ function ContactMessages({currentMsgs}){
 }
 
 
-function ChatMessages({username ,friendUsername, currentMsgs, getFullname}){
+function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, getFullname}){
 
     const [friendName,setFriendName] = useState("");
+    const [newMessage, setNewMessage] = useState("");
+    const [socketConnected, setSocketConnected] = useState(false);
+
+    useEffect(() => {
+      socket = io(ENDPOINT);
+      socket.emit("setup", username);
+      socket.on("connection", ()=>{
+        setSocketConnected(true);
+      })
+      socket.on('message recieved', (newMessage)=>{
+        console.log(currentMsgs);
+        if(!selectedChatCompare || selectedChatCompare != friendUsername){
+            console.log("blabla");
+        }else{
+            //setCurrentMsgs((prevMsgs) => [...prevMsgs, newMessage]);
+            
+        }
+        })
+    }, []);
+     
+   /* useEffect(()=>{
+        socket.on('message recieved', (newMessage)=>{
+            console.log(newMessage);
+            if(!selectedChatCompare || selectedChatCompare != friendUsername){
+                console.log("blabla");
+            }else{
+                
+                setCurrentMsgs([...currentMsgs], newMessage);
+            }
+        })
+
+    });*/
+
 
     useEffect(() => {
         const fetchFullname = async () => {
@@ -36,6 +76,9 @@ function ChatMessages({username ,friendUsername, currentMsgs, getFullname}){
             }
         }
         fetchFullname();
+
+
+        selectedChatCompare = friendUsername;
     }, [friendUsername]); // pass empty array to run effect only once
 
 
@@ -64,8 +107,11 @@ function ChatMessages({username ,friendUsername, currentMsgs, getFullname}){
         var myNewMessage = {sender: true, msgType:"text", content: textMessage, createdAt: time};
         var otherNewMessage = {sender: false, msgType:"text", content: textMessage, createdAt: time};
         sendText(myNewMessage, username, friendUsername)
-        .then(transferFriend(otherNewMessage, username, friendUsername))
+        .then(sendText(otherNewMessage, friendUsername, username))
         .then(document.getElementById("textMsg").value = "");
+        
+        socket.emit('new message', myNewMessage, username);
+        socket.emit('new message', otherNewMessage, friendUsername);
         
     }
 
@@ -77,25 +123,13 @@ function ChatMessages({username ,friendUsername, currentMsgs, getFullname}){
             const encodedMessage = encodeURIComponent(JSON.stringify(newMessage));
             const response = await axios.post(`http://localhost:3000/messages?message=${encodedMessage}&username=${sender}&friendUsername=${receiver}`);
             console.log(response.data);
+           
         }
         catch (error) {
             console.log(error);
         }
-      
+        
     };
-
-
-    // Update database of friend of getting a message
-    async function transferFriend(newMessage,username,friendUsername){
-        try {
-            const encodedMessage = encodeURIComponent(JSON.stringify(newMessage));
-            const response = await axios.post(`http://localhost:3000/messages?message=${encodedMessage}&username=${friendUsername}&friendUsername=${username}`);
-            console.log(response.data);
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
 
 
     return(
@@ -111,7 +145,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, getFullname}){
                 <ContactMessages currentMsgs={currentMsgs} />
             </div>
             <div class="chat-footer">
-                <input class="message-input" id="textMsg" placeholder="Enter text here..."></input>
+                <input class="message-input" id="textMsg" placeholder="Enter text here..." value={newMessage}></input>
                 <button class="send-button" onClick={handleSend}>Send</button>
             </div>
         </div>

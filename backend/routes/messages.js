@@ -38,7 +38,6 @@ router.post('/messages', async (req, res) => {
     const { message, username, friendUsername } = req.query;
     const parsedMessage = JSON.parse(decodeURIComponent(message));
     delete parsedMessage._id;
-    console.log(username);
     // Find the user in the database
     const user = await User.findOne({ username });
    
