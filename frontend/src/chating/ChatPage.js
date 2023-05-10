@@ -4,7 +4,7 @@ import ChatingWith from './ChatingWith';
 import './ChatPage.css';
 /*
 import axios from 'axios';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+
 
 //import React, { useRef } from "react";
 var friendsFlag =0;
@@ -15,7 +15,7 @@ import { useEffect, useState , useRef} from 'react';
 import axios from 'axios';
 import ChatList from './ChatList';
 import ChatMessages from './ChatMessages';
-import * as signalR from '@microsoft/signalr';
+
 
 
 
@@ -42,33 +42,14 @@ const getFullname = async (username) => {
 function ChatPage() {
     const location = useLocation();
     const username = location.state.username;
+    //const [activeChat, setActiveChat] = useState(null);
+    //const [msgs, setMsgs] = useState([]);
+    //const theFriendTop = useRef(''); 
     const [friendUsername, setFriendUsername] = useState('');
     const [friendsList, setFriendsList] = useState([]);
     const [currentMsgs, setCurrentMsgs] = useState([]); 
     const [myName, setMyName] = useState("");
-
-   
-
-   // SignalR- real-time messaging 
-  /*useEffect(() => {
-    const connection = new signalR.HubConnectionBuilder()
-      .withUrl('/chatHub') // The URL should match the backend SignalR hub URL
-      .build();
-
-    connection.start().catch((err) => console.error(err));
-
-    connection.on('broadcastMessage', (message) => {
-      // Handle the received message, e.g., update the messages state
-      setCurrentMsgs((prevMessages) => [...prevMessages, message]);
-    });
-
-    // Clean up the connection when the component unmounts
-    return () => {
-      connection.stop();
-    };
-  }, []);*/
-
-
+    
     useEffect(() => {
         const fetchFriendsList = async () => {
           const friends = await getFriendsList(username);
@@ -105,7 +86,7 @@ function ChatPage() {
 
   return(
       <div className="chat-container">
-          <ChatMessages username={username} friendUsername={friendUsername} currentMsgs={currentMsgs} getFullname={getFullname}/>
+          {friendUsername && <ChatMessages username={username} friendUsername={friendUsername} currentMsgs={currentMsgs} setCurrentMsgs={setCurrentMsgs} getFullname={getFullname}/>}
           <ChatList username={username} myFullname={myName} friendsList={friendsList} setFriendUsername={setFriendUsername} chooseFriend={chooseFriend} getFullname={getFullname}/>
       </div>
   );
