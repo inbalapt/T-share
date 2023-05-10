@@ -1,0 +1,7 @@
+
+
+  /* src/components/ItemPage.css */
+.item-page {
+  display: flex;
+  margin-top: 60px; /* Adjust this value according to the height of the NavigationBar */
+}

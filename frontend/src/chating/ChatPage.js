@@ -1,3 +1,5 @@
+
+/*
 import ChatingWith from './ChatingWith';
 import './ChatPage.css';
 /*
@@ -93,3 +95,5 @@ function ChatPage() {
 
 
 export default ChatPage;
+
+*/
