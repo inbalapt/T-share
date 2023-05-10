@@ -1,0 +1,73 @@
+/* src/components/ItemCard.css */
+
+.item-card {
+    position: relative;
+    cursor: pointer;
+    width: 20%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+  }
+  
+  .item-card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .item-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    transition: 0.3s;
+  }
+  
+  .item-card:hover .item-overlay {
+    opacity: 1;
+  }
+  
+  .favorite-button,
+  .chat-button {
+    border-radius: 50%;
+  }
+  
+  .favorite-button:hover .bi-heart {
+    fill: #dc3545;
+  }
+  
+  .price {
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 0;
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+  }
+  .item-card {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    aspect-ratio: 1/1.5;
+    overflow: hidden;
+  }
+
+  
+
+  .favorite-button .bi-heart {
+    fill: transparent;
+    stroke: currentColor;
+    stroke-width: 1;
+  }
+  
+  .favorite-button:hover .bi-heart,
+  .favorite-button .bi-heart-fill {
+    fill: #dc3545;
+  }
+  
+    
