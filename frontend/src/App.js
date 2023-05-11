@@ -20,7 +20,7 @@ function App() {
     <BrowserRouter>
         <Routes>
           <Route path='/' element={<LoginPage />}/>
-          <Route path='/' element={<HomePage />}/>
+          <Route path='/HomePage' element={<HomePage />}/>
           <Route path='/RegisterPage' element={<RegisterPage />}/>
           <Route path='/ChatPage' element={<ChatPage />}></Route>
           <Route path='/clothing/:category' element={<ItemScrollPage  />}></Route>

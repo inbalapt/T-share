@@ -1,11 +1,22 @@
 // src/components/NavigationBar.js
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import './NavigationBar.css';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+import { useNavigate,  useLocation } from "react-router-dom";
+
+
 
 const NavigationBar = () => {
+  let navigate = useNavigate();
+  const location = useLocation();
+  const username = location.state.username;
+  
+  function handleChat(){
+    navigate("../ChatPage", { state: {username: username }});
+  }
+
   return (
     <header>
     <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
@@ -42,7 +53,7 @@ const NavigationBar = () => {
           <a href="/account/balance" className="nav-link">
             <i class="bi bi-coin"></i>
           </a>
-          <a href="/ChatPage" className="nav-link">
+          <a href="/ChatPage" className="nav-link" onClick={handleChat}>
             <i className="bi bi-chat-dots"></i>
             <i className="bi bi-chat-dots-fill"></i>
           </a>

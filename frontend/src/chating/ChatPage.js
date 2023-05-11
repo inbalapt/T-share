@@ -15,7 +15,7 @@ import { useEffect, useState , useRef} from 'react';
 import axios from 'axios';
 import ChatList from './ChatList';
 import ChatMessages from './ChatMessages';
-
+import NavigationBar from '../NavigationBar';
 
 
 
@@ -84,10 +84,13 @@ function ChatPage() {
    
 
   return(
+    <div>
+      <NavigationBar username={username}/>
       <div className="chat-container">
           {friendUsername && <ChatMessages username={username} friendUsername={friendUsername} currentMsgs={currentMsgs} setCurrentMsgs={setCurrentMsgs} getFullname={getFullname}/>}
           <ChatList username={username} myFullname={myName} friendsList={friendsList} setFriendUsername={setFriendUsername} chooseFriend={chooseFriend} getFullname={getFullname}/>
       </div>
+    </div>
   );
 
 }
