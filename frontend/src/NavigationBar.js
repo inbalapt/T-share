@@ -42,7 +42,7 @@ const NavigationBar = () => {
           <a href="/account/balance" className="nav-link">
             <i class="bi bi-coin"></i>
           </a>
-          <a href="/chat" className="nav-link">
+          <a href="/ChatPage" className="nav-link">
             <i className="bi bi-chat-dots"></i>
             <i className="bi bi-chat-dots-fill"></i>
           </a>

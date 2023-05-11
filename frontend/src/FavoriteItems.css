@@ -1,0 +1,16 @@
+/* src/pages/FavoriteItems.css */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .row {
+    margin: 0 -15px;
+  }
+  
+  .row > .col {
+    padding: 0 15px;
+  }
+  

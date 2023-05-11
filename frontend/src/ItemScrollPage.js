@@ -3,7 +3,7 @@
 import React from 'react';
 import './ItemScrollPage.css';
 import NavigationBar from './NavigationBar';
-import Item from './Item';
+import ItemCard from './ItemCard';
 import logo from './logo.jpg'
 import { useParams ,useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -144,7 +144,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
       
       <div className="item-grid">
         {items.map((item) => (
-          <Item key={item.id} {...item} />
+          <ItemCard key={item.id} {...item} />
         ))}
       </div> 
 
