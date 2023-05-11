@@ -39,6 +39,8 @@ const getFullname = async (username) => {
   }
 };
 
+
+
 function ChatPage() {
     const location = useLocation();
     const username = location.state.username;
@@ -49,7 +51,7 @@ function ChatPage() {
     const [friendsList, setFriendsList] = useState([]);
     const [currentMsgs, setCurrentMsgs] = useState([]); 
     const [myName, setMyName] = useState("");
-    
+
     useEffect(() => {
         const fetchFriendsList = async () => {
           const friends = await getFriendsList(username);
@@ -58,12 +60,10 @@ function ChatPage() {
         
         const fetchFullname = async () => {
           const fullName = await getFullname(username);
-          console.log(fullName);
           setMyName(fullName);
         }
         fetchFriendsList();
         fetchFullname();
-          
     }, []); // pass empty array to run effect only once
 
     useEffect(() => {
@@ -76,7 +76,6 @@ function ChatPage() {
             const url = `http://localhost:3000/getMessages?username=${username}&friendUsername=${friendUsername}`;
             const response = await axios.get(url);
             setCurrentMsgs(response.data.messages);
-            console.log(currentMsgs);
             return response.data.messages;
           } catch (error) {
             console.error(error);
@@ -96,4 +95,3 @@ function ChatPage() {
 
 export default ChatPage;
 
-*/

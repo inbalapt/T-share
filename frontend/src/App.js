@@ -9,7 +9,7 @@ import NavigationBar from './NavigationBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ItemScrollPage from './ItemScrollPage';
 import ItemPage from "./ItemPage"
-//import ChatPage from './chating/ChatPage';
+import ChatPage from './chating/ChatPage';
 import ChatList from './chating/ChatList';
 import ChatMessages from './chating/ChatMessages';
 
@@ -17,9 +17,9 @@ function App() {
   return (
     <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Test />}/>
+          <Route path='/' element={<LoginPage />}/>
           <Route path='/RegisterPage' element={<RegisterPage />}/>
-          <Route path='/ChatPage' element={<Test />}></Route>
+          <Route path='/ChatPage' element={<ChatPage />}></Route>
           <Route path='/clothing/:category' element={<ItemScrollPage  />}></Route>
           <Route path='/item/:id' element={<ItemPage   />}></Route>
         </Routes>

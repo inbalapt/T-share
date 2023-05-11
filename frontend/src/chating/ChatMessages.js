@@ -10,12 +10,21 @@ const ENDPOINT = "http://localhost:3000";
 var socket, selectedChatCompare;
 
 
+// Get if of friend
+const getID = async (username) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/getID?username=${username}`);
+      return response.data._id;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 function ContactMessages({currentMsgs}){
     if (currentMsgs == []) {
         return (<></>);
     }
-    console.log(currentMsgs);
+   
     const messagesList = currentMsgs.map((message, key) => {
         return <Message {...message} key={key}/>
     });
@@ -32,6 +41,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     const [friendName,setFriendName] = useState("");
     const [newMessage, setNewMessage] = useState("");
     const [socketConnected, setSocketConnected] = useState(false);
+    const [friendID, setFriendID] = useState("");
 
     useEffect(() => {
       socket = io(ENDPOINT);
@@ -39,36 +49,41 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
       socket.on("connection", ()=>{
         setSocketConnected(true);
       })
-      socket.on('message recieved', (newMessage)=>{
-        console.log(currentMsgs);
-        if(!selectedChatCompare || selectedChatCompare != friendUsername){
-            console.log("blabla");
-        }else{
-            //setCurrentMsgs((prevMsgs) => [...prevMsgs, newMessage]);
-            
-        }
-        })
+
+      socket.emit("join room", friendID);
     }, []);
      
-   /* useEffect(()=>{
-        socket.on('message recieved', (newMessage)=>{
-            console.log(newMessage);
-            if(!selectedChatCompare || selectedChatCompare != friendUsername){
-                console.log("blabla");
-            }else{
-                
-                setCurrentMsgs([...currentMsgs], newMessage);
+    useEffect(()=>{
+        socket.on('message recieved', (message, user, flag)=>{
+            console.log("hi");
+            
+            // not talking to anyone
+            if(!selectedChatCompare){
+                console.log("bye");
+            }
+            // i sent a message
+            if(user == username && flag == 1){
+                console.log("greattt");
+                console.log("flag is: " + flag);
+                setCurrentMsgs([...currentMsgs, message]);
+            }
+            // my contant sent a message
+            else if(user == username && flag == 2){
+                console.log("maaaa");
+                console.log("flag is: " + flag);
+                setCurrentMsgs([...currentMsgs, message]);
+            }
+            else{
+                console.log("we have aproblem");
             }
         })
-
-    });*/
+    });
 
 
     useEffect(() => {
         const fetchFullname = async () => {
             try{
                 const fullName = await getFullname(friendUsername);
-                console.log(fullName);
                 setFriendName(fullName);
             }
             catch (error) {
@@ -79,6 +94,12 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
 
 
         selectedChatCompare = friendUsername;
+
+        const fetchFriendID = async () => {
+            const friendID = await getID(friendUsername);
+            setFriendID(friendID);
+        }
+        fetchFriendID();
     }, [friendUsername]); // pass empty array to run effect only once
 
 
@@ -110,9 +131,9 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
         .then(sendText(otherNewMessage, friendUsername, username))
         .then(document.getElementById("textMsg").value = "");
         
-        socket.emit('new message', myNewMessage, username);
-        socket.emit('new message', otherNewMessage, friendUsername);
-        
+        console.log("im here");
+        socket.emit('send message', "", myNewMessage, username, 1);
+        socket.emit('send message', friendID, otherNewMessage, friendUsername, 2);
     }
 
     
@@ -145,7 +166,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
                 <ContactMessages currentMsgs={currentMsgs} />
             </div>
             <div class="chat-footer">
-                <input class="message-input" id="textMsg" placeholder="Enter text here..." value={newMessage}></input>
+                <textarea class="message-input" id="textMsg" placeholder="Enter text here..."></textarea>
                 <button class="send-button" onClick={handleSend}>Send</button>
             </div>
         </div>

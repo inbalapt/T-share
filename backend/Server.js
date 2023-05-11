@@ -74,6 +74,17 @@ app.get("/getFullname", async (req,res) =>{
   }
 });
 
+app.get("/getID", async (req,res) =>{
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    res.status(200).json({ _id: user._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 // check if username is taken in registeration
 app.get("/auth/checkUsername", async (req, res) => {
@@ -131,14 +142,15 @@ io.on("connection", (socket) => {
     socket.emit("connected");
   });
 
-  socket.on("join chat",(room)=>{
-    socket.join(room);
-    console.log("User joined room: " + room);
+  socket.on("join room", (userId) => {
+    console.log("join " + userId)
+    socket.join(userId); // Join the user to their own room
   });
   
-  socket.on("new message", (newMessage, friendUsername) =>{
-    console.log(friendUsername);
-    socket.in(friendUsername).emit("message recieved", newMessage);
+  socket.on("send message", (friendID, newMessage, user, flag) =>{
+    console.log("friend is " +friendID);
+    socket.in(friendID).emit("message recieved", newMessage, user, flag);
+    socket.emit("message recieved", newMessage, user, flag);
   })
 
 });

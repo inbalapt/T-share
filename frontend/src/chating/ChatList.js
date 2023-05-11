@@ -76,7 +76,6 @@ function ContactList({friendsList,handleChatClick, getFullname}){
     if (friendsList == []) {
         return (<></>);
     }
-    console.log(friendsList);
     const contactsList = friendsList.map((friend, key) => {
         return <Contact {...friend} handleChatClick={handleChatClick} key={key} getFullname={getFullname} />
     });

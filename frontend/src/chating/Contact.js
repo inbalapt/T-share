@@ -6,8 +6,6 @@ import axios from 'axios';
 
 
 function Contact({username, messages, handleChatClick, getFullname}){
-    console.log(username);
-    console.log(messages);
     const length = messages.length;
     const lastMessageType = messages[length-1].msgType;
     const lastMessage = messages[length-1].content;
