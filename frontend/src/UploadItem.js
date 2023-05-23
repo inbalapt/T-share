@@ -41,41 +41,41 @@ const UploadItem = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                <h1>Upload Item</h1>
+        <form onSubmit={handleSubmit} className="upload-item-form">
+            <label className="upload-item-label">
+                <h1 className="upload-item-title">Upload Item</h1>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Product Description:
-                <input type="text" name="description" required onChange={handleChange} />
+                <input type="text" name="description" required onChange={handleChange} className="upload-item-input"/>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Price:
-                <input type="number" name="price" required min="0" onChange={handleChange} />
+                <input type="number" name="price" required min="0" onChange={handleChange} className="upload-item-input"/>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Size:
-                <select name="size" required onChange={handleChange}>
+                <select name="size" required onChange={handleChange} className="upload-item-input">
                     {sizes.map(size => <option value={size} key={size}>{size}</option>)}
                 </select>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Condition:
-                <input type="text" name="condition" required onChange={handleChange} />
+                <input type="text" name="condition" required onChange={handleChange} className="upload-item-input"/>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Color:
-                <input type="text" name="color" onChange={handleChange} />
+                <input type="text" name="color" onChange={handleChange} className="upload-item-input"/>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Brand:
-                <input type="text" name="brand" onChange={handleChange} />
+                <input type="text" name="brand" onChange={handleChange} className="upload-item-input"/>
             </label>
-            <label>
-                Product Images:  {/* <-- add this */}
-                <input type="file" name="images" required multiple onChange={handleImageChange} />
+            <label className="upload-item-label">
+                Product Images:
+                <input type="file" name="images" required multiple onChange={handleImageChange} className="upload-item-input"/>
             </label>
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Submit" className="upload-item-submit"/>
         </form>
     );
 }
