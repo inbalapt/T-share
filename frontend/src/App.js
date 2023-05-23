@@ -14,6 +14,11 @@ import ChatPage from './chating/ChatPage';
 import ChatList from './chating/ChatList';
 import ChatMessages from './chating/ChatMessages';
 import HomePage from './HomePage';
+import UserAccountPage from './UserAccountPage';
+import UploadItem from './UploadItem';
+import UserAccountMenu from './UserAccountMenu';
+
+
 
 function App() {
   return (
@@ -26,6 +31,9 @@ function App() {
           <Route path='/clothing/:category' element={<ItemScrollPage  />}></Route>
           <Route path='/item/:id' element={<ItemPage   />}></Route>
           <Route path="/favorites" element={<FavoriteItems/>} />
+          <Route path='/account' element={<UserAccountPage/>}></Route>
+          <Route path='/test' element={<UserAccountPage/>}></Route>
+          
         </Routes>
   </BrowserRouter>
   );

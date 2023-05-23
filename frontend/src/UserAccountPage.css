@@ -1,0 +1,16 @@
+.user-account-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .user-account-menu {
+    width: 35%;
+    border-right: 1px solid #ddd;  /* optional, creates a border to separate the menu and the content */
+  }
+  
+  .user-account-content {
+    width: 65%;
+    padding-left: 1em;  /* optional, creates some space between the menu and the content */
+  }
+  
