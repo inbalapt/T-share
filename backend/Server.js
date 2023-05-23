@@ -328,6 +328,9 @@ app.post('/addFavoriteItem', async(req,res) =>{
     }
     // Add item id to favItems
     user.favItems.push(id);
+    // Save the updated user
+    await user.save();
+    console.log(user.favItems);
     res.json(user.favItems);
   } catch (error) {
     console.error(error);
@@ -349,13 +352,65 @@ app.delete('/removeFavoriteItem', async (req, res) => {
 
     // Save the updated user
     await user.save();
-    
+
     res.status(200).json({ message: 'Item removed from favorites' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+app.get('/getFavItems', (req, res) => {
+  const { username } = req.query;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const favItemIds = user.favItems;
+
+      Item.find({ _id: { $in: favItemIds } })
+        .then(items => {
+          res.json(items);
+        })
+        .catch(error => {
+          console.error('Error retrieving favorite items:', error);
+          res.status(500).json({ error: 'Failed to retrieve favorite items' });
+        });
+    })
+    .catch(error => {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    });
+});
+
+app.get('/isFavItem', (req,res) => {
+  const { username, id } = req.query;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const itemExists = user.favItems.some((item) => item === id);
+      if(itemExists){
+        res.json({  isFavorite: true});
+      } else{
+        res.json({ isFavorite:false});
+      }
+     
+    })
+    .catch(error => {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    });
+});
+
 
 app.post('/addNewFriend', async(req,res) =>{
   try {

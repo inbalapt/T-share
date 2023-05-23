@@ -3,26 +3,42 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './FavoriteItemCard.css';
-
-const FavoriteItemCard = ({ id, photo, seller, price, description, onRemove }) => {
+/*
+pictures:["1684837295465-_ש_(9).jpg"],
+      sellerUsername: 'inbal22',
+      sellerFullName: 'inbal',
+      description: 'dress',
+      price: 30,
+      size: '36',
+      itemLocation: 'Haifa',
+      category: 'dresses',
+      condition:'good',
+      color: 'pink',
+      brand: 'shein'*/
+const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullName, price, size,itemLocation, category, condition, color, brand, description, onRemove }) => {
   const navigate = useNavigate();
+
+  const photo = `http://localhost:3000/item-uploads/${pictures[0]}`;
+  const seller = sellerFullName;
 
   const handleClick = (e) => {
     if (e.target.closest('.remove-button')) {
       e.stopPropagation();
       return;
     }
-    navigate(`/item/${id}`);
+    navigate(`/item/${_id}`);
   };
 
   const handleRemoveClick = (e) => {
     e.stopPropagation();
-    onRemove(id);
+    onRemove(_id);
   };
 
+
   const handleChatClick = (e) => {
+    //const automaticMessage = `Hi, I'm interested in this ${description} :)`
     e.stopPropagation();
-    navigate(`/chat/${seller}`);
+    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, photo: photo } });
   };
 
   return (

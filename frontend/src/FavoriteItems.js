@@ -1,55 +1,48 @@
-// src/pages/FavoriteItems.js
-
 import React, { useState, useEffect } from 'react';
 import NavigationBar from './NavigationBar';
 import FavoriteItemCard from './FavoriteItemCard';
 import './ItemScrollPage.css';
 import logo from './logo.jpg';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-let itemsTemp =  [{id:"1", photo:logo, seller:"John Doe", price:"100", description:"A beautiful dress"},
-{id:"2", photo:logo, seller:"John Doe", price:"30", description:"A beautiful dress"},
-{id:"3", photo:logo, seller:"John Doe", price:"50", description:"A beautiful dress"},
-{id:"4", photo:logo, seller:"John Doe", price:"70", description:"A beautiful dress"},
-{id:"5", photo:logo, seller:"John Doe", price:"10", description:"A beautiful dress"},
-{id:"6", photo:logo, seller:"John Doe", price:"30", description:"A beautiful dress"},
-{id:"7", photo:logo, seller:"John Doe", price:"50", description:"A beautiful dress"},
-{id:"8", photo:logo, seller:"John Doe", price:"70", description:"A beautiful dress"},
-{id:"9", photo:logo, seller:"John Doe", price:"10", description:"A beautiful dress"},
-{id:"10", photo:logo, seller:"John Doe", price:"100", description:"A beautiful dress"}];
-
+const getFavItems = async (username) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/getFavItems?username=${username}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return []; // Return an empty array in case of an error
+  }
+};
 
 const FavoriteItems = () => {
-  const [favoriteItems, setFavoriteItems] = useState(itemsTemp);
   const location = useLocation();
   const username = location.state.username;
-  
+  const [favoriteItems, setFavoriteItems] = useState([]);
+
   useEffect(() => {
-    // Fetch favorite items from the server
     const fetchFavoriteItems = async () => {
-      // Replace with your API URL and authentication if required
-      const response = await fetch('https://api.example.com/favorite-items');
-      const data = await response.json();
-      setFavoriteItems(data);
+      const items = await getFavItems(username);
+      setFavoriteItems(items);
     };
 
     fetchFavoriteItems();
-  }, []);
+  }, [username]);
 
-  const handleRemove = (id) => {
-    // Remove the item from the favorite items list
-    setFavoriteItems(favoriteItems.filter((item) => item.id !== id));
+  const handleRemove = async (id) => {
+    setFavoriteItems(favoriteItems.filter((item) => item._id !== id));
 
-    // Call the server to remove the item from the user's favorites
-    // Replace with your API URL and authentication if required
-    fetch(`https://api.example.com/favorite-items/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      await axios.delete(`http://localhost:3000/removeFavoriteItem?username=${username}&id=${id}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div>
-      <NavigationBar username={username}/>
+      <NavigationBar username={username} />
       <div className="category-header">
         <h1>Favorite Items</h1>
       </div>
@@ -57,7 +50,7 @@ const FavoriteItems = () => {
       <div className="container">
         <div className="item-grid">
           {favoriteItems.map((item) => (
-            <FavoriteItemCard key={item.id} {...item} onRemove={handleRemove} />
+            <FavoriteItemCard key={item._id} {...item} onRemove={handleRemove} username={username} />
           ))}
         </div>
       </div>

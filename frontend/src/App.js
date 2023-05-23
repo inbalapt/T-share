@@ -30,7 +30,7 @@ function App() {
           <Route path='/ChatPage' element={<ChatPage />}></Route>
           <Route path='/clothing/:category' element={<ItemScrollPage  />}></Route>
           <Route path='/item/:id' element={<ItemPage   />}></Route>
-          <Route path="/favorites" element={<FavoriteItems/>} />
+          <Route path='/favorites' element={<FavoriteItems/>} />
           <Route path='/account' element={<UserAccountPage/>}></Route>
           <Route path='/test' element={<UserAccountPage/>}></Route>
           

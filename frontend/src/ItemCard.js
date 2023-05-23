@@ -2,6 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ItemCard.css';
 import axios from 'axios'; // Import axios if not already imported
+import { useEffect } from 'react';
+
+const isItemFavorite = async(username, id)=>{
+  try {
+    const response = await axios.get(`http://localhost:3000/isFavItem?username=${username}&id=${id}`);
+    return response.data.isFavorite;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, price, description }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -10,6 +20,19 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
   const photo = `http://localhost:3000/item-uploads/${picture1}`;
   console.log(photo);
   console.log(_id);
+
+  useEffect(()=>{
+    isItemFavorite(username,_id)
+    .then(isFavorite => {
+      if (isFavorite) {
+        setIsFavorite(true)
+      } else {
+        setIsFavorite(false)
+      }
+    })
+  }, [_id]);
+  
+
   const handleClick = (e) => {
     if (e.target.closest('.favorite-button') || e.target.closest('.chat-button')) {
       e.stopPropagation();
@@ -25,7 +48,6 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
     if(!isFavorite){
       setIsFavorite(true);
       try {
-      console.log("hi");
       const response = await axios.post(`http://localhost:3000/addFavoriteItem?username=${username}&id=${_id}`);
       console.log(response.data);
       return response.data;
@@ -35,7 +57,6 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
     } else{
       setIsFavorite(false);
       try {
-        console.log("hi");
         const response = await axios.delete(`http://localhost:3000/removeFavoriteItem?username=${username}&id=${_id}`);
         console.log(response.data);
         return response.data;
