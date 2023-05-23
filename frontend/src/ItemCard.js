@@ -6,7 +6,6 @@ const ItemCard = ({username, id, photo, sellerUsername,sellerFullName, price, de
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
 
-  photo=`http://localhost:3000/uploads/1684762008175-_ש_(5).jpg`
   const handleClick = (e) => {
     if (e.target.closest('.favorite-button') || e.target.closest('.chat-button')) {
       e.stopPropagation();
@@ -37,8 +36,8 @@ const ItemCard = ({username, id, photo, sellerUsername,sellerFullName, price, de
           <i className="bi bi-chat-dots"></i>
         </button>
       </div>
-      <img src={`http://localhost:3000/uploads/1684762008175-_ש_(5).jpg`} className="card-img-top" alt={description} />
-      <div className="card-body">
+      <img src={photo} className="card-img-top" alt={description} />
+      <div className="card-body"> 
         <h5 className="card-title">{description}</h5>
         <p className="card-text">
           <small className="text-muted">Seller: {sellerFullName}</small>
