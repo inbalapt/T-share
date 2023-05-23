@@ -1,29 +1,35 @@
-form {
+/* UploadItem.css */
+
+.upload-item-form {
     display: flex;
     flex-direction: column;
     width: 400px;
     margin: 0 auto;
 }
 
-label {
+.upload-item-label {
     display: flex;
     flex-direction: column;
     font-weight: bold;
     margin-top: 20px;
 }
 
-input, select {
+.upload-item-input {
     margin-top: 5px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-input[type="submit"] {
+.upload-item-submit {
     margin-top: 20px;
     cursor: pointer;
     background-color: #4CAF50;
     color: white;
     border: none;
     margin-bottom: 20px;
+}
+
+.upload-item-title {
+    /* Add any specific styles for the title here */
 }
