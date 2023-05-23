@@ -29,6 +29,10 @@ const NavigationBar = () => {
   function handleAccount(){
     navigate("../account", { state: {username: username }});
   }
+
+  function handleFavorites(){
+    navigate("../favorites", { state: {username: username }});
+  }
   
   return (
     <header>
@@ -59,7 +63,7 @@ const NavigationBar = () => {
           </button>
         </form>
         <div className="d-flex icons">
-          <a href="/favorites" className="nav-link">
+          <a href="/favorites" className="nav-link" onClick={handleFavorites}>
             <i className="bi bi-heart fa-lg"></i>
             <i className="bi bi-heart-fill"></i>
           </a>

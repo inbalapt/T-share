@@ -317,6 +317,46 @@ app.use((req, res, next) => {
 });
 
 
+app.post('/addFavoriteItem', async(req,res) =>{
+  try {
+    const { username, id } = req.query;
+   
+    const user = await User.findOne({ username });
+   
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    // Add item id to favItems
+    user.favItems.push(id);
+    res.json(user.favItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.delete('/removeFavoriteItem', async (req, res) => {
+  try {
+    const { username, id } = req.query;
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Remove the item from the favItems array
+    user.favItems = user.favItems.filter(itemId => itemId !== id);
+
+    // Save the updated user
+    await user.save();
+    
+    res.status(200).json({ message: 'Item removed from favorites' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 app.post('/addNewFriend', async(req,res) =>{
   try {
     const { username, friendUsername, content, type, createdAt } = req.query;

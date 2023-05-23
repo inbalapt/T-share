@@ -5,6 +5,7 @@ import NavigationBar from './NavigationBar';
 import FavoriteItemCard from './FavoriteItemCard';
 import './ItemScrollPage.css';
 import logo from './logo.jpg';
+import { useLocation } from 'react-router-dom';
 
 let itemsTemp =  [{id:"1", photo:logo, seller:"John Doe", price:"100", description:"A beautiful dress"},
 {id:"2", photo:logo, seller:"John Doe", price:"30", description:"A beautiful dress"},
@@ -20,7 +21,9 @@ let itemsTemp =  [{id:"1", photo:logo, seller:"John Doe", price:"100", descripti
 
 const FavoriteItems = () => {
   const [favoriteItems, setFavoriteItems] = useState(itemsTemp);
-
+  const location = useLocation();
+  const username = location.state.username;
+  
   useEffect(() => {
     // Fetch favorite items from the server
     const fetchFavoriteItems = async () => {
@@ -46,7 +49,7 @@ const FavoriteItems = () => {
 
   return (
     <div>
-      <NavigationBar />
+      <NavigationBar username={username}/>
       <div className="category-header">
         <h1>Favorite Items</h1>
       </div>
