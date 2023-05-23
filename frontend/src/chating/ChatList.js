@@ -1,7 +1,7 @@
 import defaultProfile from './defaultProfile.png';
 import Contact from './Contact.js';
 import './ChatList.css';
-
+import { useState } from 'react';
 const friends = [
     {
       _id: '1',
@@ -72,65 +72,55 @@ const friends = [
 ];
 
 
-function ContactList({friendsList,handleChatClick, getFullname}){
-    if (friendsList == []) {
-        return (<></>);
+
+function ContactList({ friendsList, activeContact, handleChatClick, getFullname }) {
+    if (friendsList.length === 0) {
+      return null;
     }
+  
     const contactsList = friendsList.map((friend, key) => {
-        return <Contact {...friend} handleChatClick={handleChatClick} key={key} getFullname={getFullname} />
+      return (
+        <Contact
+          {...friend}
+          activeContact={activeContact}
+          handleChatClick={handleChatClick}
+          key={key}
+          getFullname={getFullname}
+        />
+      );
     });
-    return (
-        <div>   
-            {contactsList}
-        </div>
-    );
-}
+  
+    return <div>{contactsList}</div>;
+  }
 
 
 
-/*
-under chat-container
-{friends.map((friend) => (
-            <div
-            key={friend._id}
-            className={`chat-box ${activeChat === friend._id ? 'active' : ''}`}
-            onClick={() => {
-                setActiveChat(friend._id);
-                handleChatClick(friend.username);}}
-            >
-            <img src={defaultProfile} alt="Profile" className="friend-pic" />
-            <div className="friend-details">
-                <div className="friend-header">
-                    <span className="friend-username">{friend.username}</span>
-                    <span className="last-message-time">{friend.lastMessageTime}</span>
-                </div>
-                <span className="last-message">{friend.lastMessage}</span>
-            </div>
-            </div>
-        ))}
-        */
-function ChatList({username, myFullname, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname}){
-    
-   
+function ChatList({ username, myFullname, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname }) {
+    const [activeContact, setActiveContact] = useState(null);
+
     const handleChatClick = (friendUsername) => {
+        setActiveContact(friendUsername);
         setFriendUsername(friendUsername);
         chooseFriend(friendUsername);
     };
 
-  return (
-    <div className="chat-list-container">
-        <div className="profile-container">
-            <img src={defaultProfile} alt="Profile" className="profile-pic" />
-            <span className="username">{myFullname}</span>
+    return (
+        <div className="chat-list-container">
+            <div className="profile-container">
+                <img src={defaultProfile} alt="Profile" className="profile-pic" />
+                <span className="username">{myFullname}</span>
+            </div>
+            <div className="chats-container">
+                <ContactList
+                friendsList={friendsList}
+                activeContact={activeContact}
+                handleChatClick={handleChatClick}
+                getFullname={getFullname}
+                />
+            </div>
         </div>
-        <div className="chats-container">
-            <ContactList friendsList={friendsList} handleChatClick={handleChatClick} getFullname={getFullname}/>
-        </div>
-    </div>
     );
-    
 }
-
 
 
 

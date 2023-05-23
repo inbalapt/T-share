@@ -7,6 +7,7 @@ import ItemCard from './ItemCard';
 import logo from './logo.jpg'
 import { useParams ,useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 let itemsTemp =  [{id:"1", photo:logo, seller:"John Doe", price:"100", description:"A beautiful dress"},
 {id:"2", photo:logo, seller:"John Doe", price:"30", description:"A beautiful dress"},
@@ -74,28 +75,38 @@ function getCategoryHeadline(category) {
 
 }
 
+const getCategoryItems = async (category,username, setItems) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/items/${category}?username=${username}`);
+    console.log(response.data);
+    setItems(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     // the category of the page (like dresses, tops etc..)
     const { category } = useParams();
     // The type of how we sort our products.
     const [sortType, setSortType] = useState("relevent");
-    const [items, setItems] = useState(itemsTemp);
-
+    const [items, setItems] = useState([]);
+    const location = useLocation();
+    const username = location.state.username;
     
 
-
+    
     useEffect(() => {
         // Fetch items from your API or use the existing items array
-        const fetchedItems = [
-          // ... your items array
-        ];
-    
-        setItems(fetchedItems);
-      }, []);
-     
+        const fetchItems= getCategoryItems(category,username, setItems);
+    }, [category]);
 
-    const location = useLocation();
+    
+    
+
+    //const location = useLocation();
     //const items = location.state?.items || [];
     let content = getCategoryHeadline(category);
     let img =  `/pictures/${category}.jpg`;
@@ -108,7 +119,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     // if the sort type (relevent, price: low to high etc..) had change - change the order
     // of the items according to that.
       useEffect(() => {
-        const sortedItems = [...itemsTemp];
+        const sortedItems = [...items];
         switch (sortType) {
           case 'popularity':
             // Sort by popularity logic
@@ -144,7 +155,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
       
       <div className="item-grid">
         {items.map((item) => (
-          <ItemCard key={item.id} {...item} />
+          <ItemCard key={item.id} {...item} username={username} />
         ))}
       </div> 
 

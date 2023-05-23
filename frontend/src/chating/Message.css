@@ -61,11 +61,13 @@
     width: auto !important;
     padding: 1% 1% 1% !important;
     border-radius: 10px 10px 10px 0;
-    background: #ffffff;
+    background-color: rgb(243, 205, 255);
+    background-color: #e8eaef;
     font-size: 10%;
     word-wrap: break-word;
     display: inline-block;
     color: black;
+
     
   }
   .col-sm-12{
@@ -94,12 +96,31 @@ video{
   max-width:23vw !important;
 }
 
-/*  .message-time {
-    margin: 0 !important;
-    margin-left: !important;
-    font-size: 12px;
-    text-align: right;
-    color: #9a9a9a;
+.message-img img {
+  max-width: 30px;
+  max-height: 300px;
+}
+.message-createdAt {
+  display: block;
+ 
+  font-size: 12px;
+  color: #9a9a9a;
+  margin-top: 5px;
+}
+.pull-right {
+  text-align: right;
+}
+
+.pull-left {
+  text-align: left;
+}
+
   
-  }*/
+  .message-time-right-bottom {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 12px;
+    color: #9a9a9a;
+  }
   

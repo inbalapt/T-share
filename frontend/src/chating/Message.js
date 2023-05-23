@@ -26,9 +26,9 @@ function Message({ sender, msgType, content, createdAt }) {
                 <>
                     <div className="row message-body">
                         <div className="col-sm-12">
-                            <div className="receiver">
+                            <div className="sender">
                                 <div className="message-img">
-                                    <img src= {content}></img>
+                                    <img controls src={`http://localhost:3000/uploads/${content}`} alt="Message Image" />
                                 </div>
                                 <span className="message-createdAt pull-right">
                                     {createdAt}
@@ -44,7 +44,7 @@ function Message({ sender, msgType, content, createdAt }) {
                 <>
                 <div className="row message-body">
                       <div className="col-sm-12">
-                          <div className="receiver">
+                          <div className="sender">
                               <div className="message-img">
                             
                               <audio controls src={content}></audio>
@@ -65,9 +65,9 @@ function Message({ sender, msgType, content, createdAt }) {
                 <>
                     <div className="row message-body">
                         <div className="col-sm-12">
-                            <div className="receiver">
+                            <div className="sender">
                                 <div className="message-video">
-                                    <video controls src= {content}></video>
+                                    <video controls src= {`http://localhost:3000/uploads/${content}`}></video>
                                 </div>
                                 <span className="message-createdAt pull-right">
                                     {createdAt}
@@ -101,11 +101,12 @@ function Message({ sender, msgType, content, createdAt }) {
                 <>
                     <div className="row message-body">
                         <div className="col-sm-12">
-                            <div className="sender">
+                            <div className="receiver">
                                 <div className="message-img">
-                                    <img src= {content}></img>
+                                    <img controls src={`http://localhost:3000/uploads/${content}`} alt="Message Image" />
                                 </div>
-                                <span className="message-createdAt pull-right">
+                                
+                                <span className="message-createdAt pull-left">
                                     {createdAt}
                                 </span>
                             </div>
@@ -120,7 +121,7 @@ function Message({ sender, msgType, content, createdAt }) {
                 <>
                   <div className="row message-body">
                         <div className="col-sm-12">
-                            <div className="sender">
+                            <div className="receiver">
                                 <div className="message-img">
                                 <audio controls src={content}></audio>
                                 </div>
@@ -141,9 +142,9 @@ function Message({ sender, msgType, content, createdAt }) {
                 <>
                     <div className="row message-body">
                         <div className="col-sm-12">
-                            <div className="sender">
+                            <div className="receiver">
                                 <div className="message-video">
-                                    <video controls src= {content}></video>
+                                    <video controls src= {`http://localhost:3000/uploads/${content}`}></video>
                                 </div>
                                 <span className="message-createdAt pull-right">
                                     {createdAt}

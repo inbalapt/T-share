@@ -14,6 +14,36 @@
   ::-webkit-scrollbar-thumb:hover {
     background-color: #555;
   }
+
+  .message-input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .message-input-container i {
+    margin-right: 8px;
+  }
+
+  .message-input {
+    margin-right: 8px; /* Add margin to create space between textarea and icons */
+  }
+  
+  i {
+    margin-right: 8px; /* Add margin to create space between icons */
+  }
+  
+  i:hover {
+    cursor: pointer; /* Change cursor to a pointer shape on hover */
+  }
+  /* Add the appropriate styles for the icon library you're using */
+  
+  
+  .bi-big {
+    font-size: 24px; /* Increase the font size to enlarge the icons */
+   
+  }
+  /* Additional styles if needed */
+  
   
 .chat-messages {
     height: 100%;
@@ -58,7 +88,7 @@
   .chat-body {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse; /* Display messages from bottom to top */
     padding: 16px;
     overflow-y: scroll;
     position: absolute; /* set the position to absolute to place it at the bottom of the chat-header */
@@ -66,6 +96,7 @@
     bottom: 72px; /* set the bottom value to the height of the chat-footer plus padding */
     width: 100%; /* set the width to full */
     height: 67.4%;
+   
   }
   
   .message {
@@ -88,8 +119,8 @@
   }
   
   .my-message {
-    background-color: #00e676;
-    color: #fff;
+    background-color: #86c1fe5e;
+    color: black;
     margin-left: auto;
   }
 
@@ -117,6 +148,7 @@
     position: fixed; /* set the position to fixed to keep it at the bottom of the viewport */
     bottom: 0; /* set the bottom value to 0 */
     width: 67%; /* set the width to full */
+    
   }
   
   
@@ -146,3 +178,53 @@
     background-color: #00c853;
   }
   
+  
+.ng-hide{
+  width: 0;
+}
+
+.image-preview {
+  display: flex; /* Display the image preview and cancel button in a row */
+  align-items: center; /* Center the items vertically */
+  justify-content: space-between; /* Distribute the space between the items */
+  overflow: hidden;
+  height: 100px;
+  font-size: 50px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f1f1f1; /* Set the background color to gray */
+}
+
+.preview-image {
+  width: auto; /* Remove the width restriction */
+  max-height: 100px; /* Set the maximum height of the image */
+  object-fit: contain;
+}
+
+.cancel-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #f1f1f1;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 8px; /* Add margin to create space between the image and the cancel button */
+}
+
+.cancel-button i {
+  font-size: 16px;
+  color: #888;
+}
+
+.cancel-button:hover {
+  background-color: #ccc;
+}
+
+
+
+
+
+

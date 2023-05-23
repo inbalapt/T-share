@@ -1,11 +1,14 @@
 import mongoose from 'mongoose';
-import User from './User';
 
 const ItemSchema = new mongoose.Schema({
     id: {
       type: String,
       required: true,
       unique: true,
+    },
+    picturePath: {
+      type: String,
+      default: "",
     },
     sellerUsername: {
       type: String,
@@ -36,7 +39,7 @@ const ItemSchema = new mongoose.Schema({
     category: {
       type: String,
       required: true,
-      enum: ['dress', 'top', 'pants' , 'skirt' , 'other'], // Add your category options here
+      enum: ['dresses', 'tops', 'pants' , 'skirts' , 'other'], // Add your category options here
     },
     condition: {
       type: String,
@@ -49,10 +52,66 @@ const ItemSchema = new mongoose.Schema({
     brand: {
       type: String,
       required: false,
-    },
-  }, { timestamps: true });
+    }
+  },
+  {timestamps:true}
+);
 
   
-  const Item = mongoose.model('Item', ItemSchema);
+const Item = mongoose.model('Item', ItemSchema);
 
-  export default Item;
+(async () => {
+  try {
+    // Create a new item
+    const item = new Item({
+      id: '1',
+      //picturePath:photo,
+      sellerUsername: 'inbal22',
+      sellerFullName: 'inbal',
+      description: 'dress',
+      price: 30,
+      size: '36',
+      itemLocation: 'Haifa',
+      category: 'dresses',
+      condition:'good',
+      color: 'pink',
+      brand: 'shein'
+    });
+
+    // Save the item to the database
+    await item.save();
+    console.log('Item saved successfully.');
+  } catch (error) {
+    console.error('Error saving item:', error);
+  }
+})();
+
+
+(async () => {
+  try {
+    // Create a new item
+    const item = new Item({
+      id: '2',
+      //picturePath:photo,
+      sellerUsername: 'noale',
+      sellerFullName: 'Noa Leshem',
+      description: 'dress',
+      price: 50,
+      size: '36',
+      itemLocation: 'Haifa',
+      category: 'dresses',
+      condition:'good',
+      color: 'pink',
+      brand: 'shein'
+    });
+
+    // Save the item to the database
+    await item.save();
+    console.log('Item saved successfully.');
+  } catch (error) {
+    console.error('Error saving item:', error);
+  }
+})();
+
+
+export default Item;

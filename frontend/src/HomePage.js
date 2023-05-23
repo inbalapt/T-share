@@ -16,7 +16,7 @@ const HomePage = () => {
         <div>
           <NavigationBar username={username}/>
           <div className="category-header" style={{ backgroundImage:`url(${`/pictures/home.jpg`})`}}>
-            <h1>Wellcome</h1>
+            <h1>Welcome</h1>
             </div>
         </div>
     )
