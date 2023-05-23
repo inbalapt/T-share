@@ -180,7 +180,7 @@
   
   
 .ng-hide{
-  width: 0;
+  display: none;
 }
 
 .image-preview {

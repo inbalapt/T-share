@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './UploadItem.css';
+import axios from 'axios';
 
-const UploadItem = () => {
+const UploadItem = ({username}) => {
+
     const [item, setItem] = useState({
+        category: '',
         description: '',
         price: '',
         size: '',
@@ -13,7 +16,7 @@ const UploadItem = () => {
     });
 
     const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-
+    const categories = ['dresses', 'tops', 'pants' , 'skirts' , 'other']
     const handleChange = (event) => {
         setItem({
             ...item,
@@ -26,6 +29,7 @@ const UploadItem = () => {
         if (event.target.files.length > 4) {
             alert("You can only upload up to 4 images.");
             event.target.value = null;  // <-- Clear the selected files
+           
         } else {
             setItem({
                 ...item,
@@ -33,17 +37,60 @@ const UploadItem = () => {
             });
         }
     };
+    
 
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(item);
-        // TODO: Add logic to send the data to the server.
+       
+        const uploadToServer = async () => {
+            try {
+                const formData = new FormData();
+                formData.append('username', username);
+                if(item.category == ''){
+                    formData.append('category', "dresses");
+                } else {formData.append('category', item.category);}
+                if(item.size == ''){
+                    formData.append('size', 32);
+                } else {formData.append('size', item.size);}
+                formData.append('description', item.description);
+                formData.append('price', item.price);
+                formData.append('condition', item.condition);
+                formData.append('color', item.color);
+                formData.append('brand', item.brand);
+        
+                for (let i = 0; i < item.images.length; i++) {
+                    formData.append('images', item.images[i]);
+                }
+        
+                const response = await axios.post(`http://localhost:3000/uploadItem`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+    
+        
+               console.log(response.data);
+            } catch (error) {
+                console.log('Error uploading item:', error);
+                // Handle error case, e.g., show an error message to the user
+            }
+        
+        }
+        uploadToServer();
+        
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <label>
                 <h1>Upload Item</h1>
+            </label>
+            <label>
+                Category:
+                <select name="category" required onChange={handleChange}>
+                    {categories.map(category => <option value={category} key={category}>{category}</option>)}
+                </select>
             </label>
             <label>
                 Product Description:

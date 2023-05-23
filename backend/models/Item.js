@@ -1,14 +1,9 @@
 import mongoose from 'mongoose';
 
 const ItemSchema = new mongoose.Schema({
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    picturePath: {
-      type: String,
-      default: "",
+    pictures: {
+      type: [String], 
+      default: [],
     },
     sellerUsername: {
       type: String,
@@ -30,7 +25,7 @@ const ItemSchema = new mongoose.Schema({
     size: {
       type: String,
       required: true,
-      enum: ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'xxs', 'XS', 'S', 'M', 'L','XL','XXL', 'XXXL'], // Add your category options here
+      enum: ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'], // Add your category options here
     },
     itemLocation: {
       type: String,
@@ -64,8 +59,7 @@ const Item = mongoose.model('Item', ItemSchema);
   try {
     // Create a new item
     const item = new Item({
-      id: '1',
-      //picturePath:photo,
+      pictures:["1684837295465-_ש_(9).jpg"],
       sellerUsername: 'inbal22',
       sellerFullName: 'inbal',
       description: 'dress',
@@ -91,7 +85,7 @@ const Item = mongoose.model('Item', ItemSchema);
   try {
     // Create a new item
     const item = new Item({
-      id: '2',
+
       //picturePath:photo,
       sellerUsername: 'noale',
       sellerFullName: 'Noa Leshem',

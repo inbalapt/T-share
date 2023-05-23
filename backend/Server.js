@@ -34,12 +34,13 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 //app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+app.use("/item-uploads", express.static(path.join(__dirname, "/item-uploads")));
+
 
 
 const MongoDBStore = connectMongoDBSession(session);
 
 
-/* FILE STORAGE */
 /* FILE STORAGE */
 // Multer configuration
 const storage = multer.diskStorage({
@@ -220,6 +221,67 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error uploading video" });
+  }
+});
+
+
+const itemStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "item-uploads/"); // Specify the destination folder to save the uploaded item images/videos
+  },
+  filename: (req, file, cb) => {
+    const uniqueFilename = `${Date.now()}-${file.originalname}`; // Append original file name as a unique identifier
+    cb(null, uniqueFilename); // Set a unique filename for the uploaded image/video
+  },
+});
+
+const itemUpload = multer({ storage: itemStorage });
+
+// Endpoint for uploading item images
+app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
+  try {
+    // Access the uploaded item data
+    const { username,description, price, size, category, condition, color, brand } = req.body;
+    const images = req.files.map((file) => file.filename); // Get the filenames of the uploaded images
+
+    // Find the user by username
+    const user = await User.findOne({ username });
+
+    // Create a new item
+    const item = new Item({
+      // Item properties
+      sellerUsername: username,
+      sellerFullName: user.fullName,
+      description,
+      price,
+      size,
+      itemLocation: 'Haifa',
+      category,
+      condition,
+      color,
+      brand,
+      pictures: images, // Assign the filenames to the item's pictures property
+    });
+
+    // Save the item to the item database
+    await item.save();
+    console.log('Item saved successfully.');
+
+  
+
+    // Add the item ID to the user's myUploads array
+    user.myUploads.push(item._id);
+
+    // Save the updated user
+    await user.save();
+    console.log('Item added to the user\'s myUploads array.');
+
+    // Send a success response
+    res.json(item);
+  } catch (error) {
+    console.error('Error uploading item:', error);
+    // Send an error response
+    res.sendStatus(500); // You can use any appropriate HTTP status code
   }
 });
 

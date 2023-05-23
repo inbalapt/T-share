@@ -25,6 +25,10 @@ const NavigationBar = () => {
   function handleHome(){
     navigate("../HomePage", { state: {username: username }});
   }
+
+  function handleAccount(){
+    navigate("../account", { state: {username: username }});
+  }
   
   return (
     <header>
@@ -66,7 +70,7 @@ const NavigationBar = () => {
             <i className="bi bi-chat-dots"></i>
             <i className="bi bi-chat-dots-fill"></i>
           </a>
-          <a href="/account" className="nav-link">
+          <a href="/account" className="nav-link" onClick={handleAccount}>
             <i className="bi bi-person"></i>
             <i className="bi bi-person-fill"></i>
           </a>

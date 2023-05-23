@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ItemCard.css';
 
-const ItemCard = ({username, id, photo, sellerUsername,sellerFullName, price, description }) => {
+const ItemCard = ({username, id, pictures, sellerUsername,sellerFullName, price, description }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
+  const picture1 = pictures[0];
+  const photo = `http://localhost:3000/item-uploads/${picture1}`;
+  console.log(photo);
 
   const handleClick = (e) => {
     if (e.target.closest('.favorite-button') || e.target.closest('.chat-button')) {
@@ -23,7 +26,7 @@ const ItemCard = ({username, id, photo, sellerUsername,sellerFullName, price, de
   const handleChatClick = (e) => {
     //const automaticMessage = `Hi, I'm interested in this ${description} :)`
     e.stopPropagation();
-    navigate("../ChatPage", { state: {username: username, friendUsername: sellerUsername, /*automaticMessage: automaticMessage,*/ photo:photo}});
+    navigate("../ChatPage", { state: {username: username, friendUsername: sellerUsername, photo: `http://localhost:3000/item-uploads/${picture1}`}});
   };
 
   return (
@@ -36,7 +39,7 @@ const ItemCard = ({username, id, photo, sellerUsername,sellerFullName, price, de
           <i className="bi bi-chat-dots"></i>
         </button>
       </div>
-      <img src={photo} className="card-img-top" alt={description} />
+      <img src={`http://localhost:3000/item-uploads/${picture1}`} className="card-img-top" alt={description} />
       <div className="card-body"> 
         <h5 className="card-title">{description}</h5>
         <p className="card-text">

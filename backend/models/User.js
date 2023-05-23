@@ -161,7 +161,7 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
       password: passwordHash, // Store the hashed password in the database
       email: 'inbalapt@gmail.com',
       friends: [],
-      myUploads: []
+      myUploads: ["1684837295465-_ש_(9).jpg"]
     });
 
     // Add a friend and their messages
