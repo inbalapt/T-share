@@ -86,7 +86,7 @@ const UploadItem = ({username}) => {
             <label className="upload-item-label">
                 <h1 className="upload-item-title">Upload Item</h1>
             </label>
-            <label>
+            <label className="upload-item-label">
                 Category:
                 <select name="category" required onChange={handleChange}>
                     {categories.map(category => <option value={category} key={category}>{category}</option>)}
