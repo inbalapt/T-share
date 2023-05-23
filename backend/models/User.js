@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+
+
 const MessageSchema = new mongoose.Schema(
     {
         sender: Boolean,
@@ -10,7 +12,12 @@ const MessageSchema = new mongoose.Schema(
             type: String
         },
         createdAt: String,
+        realTime: {
+          type: Date,
+          default: Date.now
+        }
     },
+    {timestamps:true}
 );
 
 
@@ -118,6 +125,7 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
         },
       ],
     };
+    
     // Add the friend to the user's friends array
     user.friends.push(friend);
 
@@ -153,6 +161,7 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
       password: passwordHash, // Store the hashed password in the database
       email: 'inbalapt@gmail.com',
       friends: [],
+      myUploads: []
     });
 
     // Add a friend and their messages
@@ -173,11 +182,90 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
         },
       ],
     };
+    // Add a friend and their messages
+    const friend2 = {
+      username: 'noale',
+      messages: [
+        {
+          sender: false, // Message sent by the user
+          msgType: 'text',
+          content: 'Hey, how are you?',
+          createdAt: "10:25",
+        },
+        {
+          sender: true, // Message sent by the friend
+          msgType: 'text',
+          content: "I'm doing great!",
+          createdAt: "11:30",
+        },
+      ],
+    };
+    
     // Add the friend to the user's friends array
-    userInbal.friends.push(friend);
+    userInbal.friends.push(friend, friend2);
+    userInbal.myUploads.push("1");
 
     // Save the user to the database
     userInbal
+      .save()
+      .then(() => {
+        console.log('User saved successfully.');
+      })
+      .catch((error) => {
+        console.error('Error saving user:', error);
+      });
+  });
+});
+
+
+bcrypt.genSalt(saltRounds, (err, salt) => {
+  if (err) {
+    console.error('Error generating salt:', err);
+    return;
+  }
+
+  bcrypt.hash(plainPassword, salt, (err, passwordHash) => {
+    if (err) {
+      console.error('Error hashing password:', err);
+      return;
+    }
+
+    // Create a new user with the hashed password
+    const userNoa = new User({
+      username: 'noale',
+      fullName: 'Noa Leshem',
+      password: passwordHash, // Store the hashed password in the database
+      email: 'noaleshem@gmail.com',
+      friends: [],
+      myUploads: []
+    });
+
+    // Add a friend and their messages
+    const friend = {
+      username: 'inbal22',
+      messages: [
+        {
+          sender: true, // Message sent by the user
+          msgType: 'text',
+          content: 'Hey, how are you?',
+          createdAt: "10:25",
+        },
+        {
+          sender: false, // Message sent by the friend
+          msgType: 'text',
+          content: "I'm doing great!",
+          createdAt: "11:30",
+        },
+      ],
+    };
+    
+    // Add the friend to the user's friends array
+    userNoa.friends.push(friend);
+    userNoa.myUploads.push("2");
+
+
+    // Save the user to the database
+    userNoa
       .save()
       .then(() => {
         console.log('User saved successfully.');

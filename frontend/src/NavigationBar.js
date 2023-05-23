@@ -12,11 +12,20 @@ const NavigationBar = () => {
   let navigate = useNavigate();
   const location = useLocation();
   const username = location.state.username;
-  
+  console.log(username);
   function handleChat(){
     navigate("../ChatPage", { state: {username: username }});
   }
+  
 
+  function handleCategory(category){
+    navigate(`../clothing/${category}`, {state: {username: username}})
+  }
+
+  function handleHome(){
+    navigate("../HomePage", { state: {username: username }});
+  }
+  
   return (
     <header>
     <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
@@ -24,13 +33,13 @@ const NavigationBar = () => {
         <Link className="navbar-brand" href="/">Logo</Link>
         <div className="navbar-nav">
         <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link onClick={handleHome}>Home</Nav.Link>
               <NavDropdown title="Products" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/clothing/all">View all</NavDropdown.Item>
-                <NavDropdown.Item href="/clothing/dresses">Dresses</NavDropdown.Item>
-                <NavDropdown.Item href="/clothing/tops">Tops</NavDropdown.Item>
-                <NavDropdown.Item href="/clothing/skirts">Skirts</NavDropdown.Item>
-                <NavDropdown.Item href="/clothing/pants">Pants</NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>handleCategory('all')}>View all</NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>handleCategory('dresses')}>Dresses</NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>handleCategory('tops')}>Tops</NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>handleCategory('skirts')}>Skirts</NavDropdown.Item>
+                <NavDropdown.Item onClick={()=>handleCategory('pants')}>Pants</NavDropdown.Item>
               </NavDropdown>
             </Nav>
         </div>

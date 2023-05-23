@@ -41,6 +41,9 @@ export const register = async (req, res) => {
             credit: 50
         });
         const savedUser = await newUser.save();
+        
+        // Set the username in the session
+        //req.session.username = savedUser.username;
         res.status(201).json(savedUser);
     }
     catch(err) {
@@ -61,6 +64,10 @@ export const login = async (req, res) => {
             return res.status(400).json({ msg: "Invalid credentials. " });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            
+        // Set the username in the session
+        //req.session.username = user.username;
+
         delete user.password;
         res.status(200).json({ token, user });
     } catch (err) {

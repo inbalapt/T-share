@@ -42,16 +42,18 @@
     border: 1px solid #ccc;
     border-radius: 2px;
     transition: background-color 0.3s ease; /* adds a smooth transition effect */
+   
   }
 
   .chat-box:hover  {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
   }
 
   .chat-box.active {
     background-color: #cccccc40;
-
   }
+  
   
   .friend-pic {
     width: 40px;
@@ -92,4 +94,16 @@
   }
 
  
+  .image-message {
+    display: inline-block;
+    margin-right: 0px; /* Adjust the margin as needed */
+  }
   
+  .bi-camera{
+    font-size: 15px;
+  }
+
+  
+  .bi-camera-video{
+    font-size: 15px;
+  }
