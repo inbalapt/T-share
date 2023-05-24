@@ -1,8 +1,16 @@
 // src/components/DetailsOfProduct.js
 import React from 'react';
 import './DetailsOfProduct.css';
+import { useNavigate } from 'react-router-dom';
 
-const DetailsOfProduct = ({ seller, description, price, size, collectionPoint, condition, color, brand }) => {
+const DetailsOfProduct = ({ username, seller, description, price, size, collectionPoint, condition, color, brand, sellerUsername, pictures }) => {
+  const navigate = useNavigate();
+  const handleChatClick = (e) => {
+    //const automaticMessage = `Hi, I'm interested in this ${description} :)`
+    e.stopPropagation();
+    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, photo:pictures[0]}});
+  };
+
   return (
     <div className="details-of-product">
       <p className="seller">Seller: {seller}</p>
@@ -13,7 +21,7 @@ const DetailsOfProduct = ({ seller, description, price, size, collectionPoint, c
       <p className="color">Color: {color}</p>
       <p className="brand">Brand: {brand}</p>
       <p className="price">Price: {price}</p>
-      <button className="contact-seller-btn">Contact the seller</button>
+      <button className="contact-seller-btn" onClick={handleChatClick}>Contact the seller</button>
     </div>
   );
 };

@@ -18,7 +18,7 @@ pictures:["1684837295465-_ש_(9).jpg"],
 const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullName, price, size,itemLocation, category, condition, color, brand, description, onRemove }) => {
   const navigate = useNavigate();
 
-  const photo = `http://localhost:3000/item-uploads/${pictures[0]}`;
+  const photo = `https://drive.google.com/uc?export=view&id=${pictures[0]}`;
   const seller = sellerFullName;
 
   const handleClick = (e) => {

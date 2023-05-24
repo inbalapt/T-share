@@ -18,8 +18,15 @@ import { login } from "./controllers/auth.js";
 import session from 'express-session';
 import connectMongoDBSession from 'connect-mongodb-session';
 import { v4 as uuidv4 } from 'uuid';
+import {google} from 'googleapis';
+import fs from 'fs';
 
 
+const drive = google.drive('v3');
+
+const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+//const TOKEN_PATH = ['https://oauth2.googleapis.com/token'];
+const GOOGLE_API_FOLDER_ID = '16-kMzJPiwurJ1doLa7mNjFc6hUs_c0Ig';
 /* CONFIGURATIONS */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,10 +43,93 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/item-uploads", express.static(path.join(__dirname, "/item-uploads")));
 
-
-
+// Multer configuration
+/*const storage = multer.memoryStorage(); // Use memory storage for temporary file storage
+const upload = multer({ storage });*/
 const MongoDBStore = connectMongoDBSession(session);
 
+// Function to upload a file to Google Drive
+async function uploadFileToDrive(file) {
+
+  try{
+    const auth = new google.auth.GoogleAuth({
+      keyFile: './googlekey.json',
+      scopes: ['https://www.googleapis.com/auth/drive.file']
+    })
+
+    const driveService = google.drive({
+      version: 'v3',
+      auth
+    })
+  
+    const fileMetadata = {
+      name: file.originalname,
+      parents: [GOOGLE_API_FOLDER_ID]
+    };
+
+    const media = {
+      mimeType: file.mimetype,
+      body: fs.createReadStream(file.path)
+    };
+  
+    const response = await driveService.files.create({
+      auth,
+      resource: fileMetadata,
+      media: media,
+      fields: 'id',
+    });
+
+    console.log(response.data.id);
+    return response.data.id;
+  
+  } catch(err) {
+    console.log('Upload file error', err);
+  }
+}
+
+
+const credentialsFilePath = path.join(__dirname, 'googlekey.json');
+// Function to get the Google Drive API authentication client
+async function getAuthClient() {
+  const credentialsData = fs.readFileSync(credentialsFilePath, 'utf8');
+  const credentials = JSON.parse(credentialsData);
+
+  const { client_secret, client_id, redirect_uris } = credentials.installed;
+  const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+
+  let token;
+  try {
+    token = require('./token.json'); // Replace with the path to your token JSON file
+    oAuth2Client.setCredentials(token);
+  } catch (error) {
+    token = await getAccessToken(oAuth2Client);
+  }
+
+  return oAuth2Client;
+}
+
+// Function to get the access token for the Google Drive API
+async function getAccessToken(oAuth2Client) {
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES,
+  });
+
+  console.log('Authorize this app by visiting this URL:', authUrl);
+
+  const code = await askForAuthorizationCode(); // Implement a method to get the authorization code from the user
+
+  const { tokens } = await oAuth2Client.getToken(code);
+
+  oAuth2Client.setCredentials(tokens);
+
+  // Save the access token for future use
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+
+  console.log('Token stored in', TOKEN_PATH);
+
+  return tokens;
+}
 
 /* FILE STORAGE */
 // Multer configuration
@@ -61,7 +151,8 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
     console.log("req file is: " + req.file);
     console.log("req file filename is: " +req.file.filename);
     const { myUsername, friendUsername, time} = req.query;
-
+    // Upload the file to Google Drive
+    const fileId = await uploadFileToDrive(req.file);
     // Find the user and friend documents from the database
     const [user, friend] = await Promise.all([
       User.findOne({ username: myUsername }),
@@ -80,7 +171,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
         const newFriend = {username:friendUsername, messages:[{
           sender: true, // Message sent by the user
           msgType: "image",
-          content: req.file.filename,
+          content: fileId,
           createdAt: time
         }]};
         user.friends.push(newFriend);
@@ -91,7 +182,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
         const newUserFriend = {username:user.username, messages:[{
           sender: false, // Message sent by the user
           msgType: "image",
-          content: req.file.filename,
+          content: fileId,
           createdAt: time
         }]};
         friend.friends.push(newUserFriend);
@@ -107,7 +198,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
             friendItem.messages.push({
               sender: true,
               msgType: "image",
-              content: req.file.filename,
+              content: fileId,
               createdAt: time,
             });
           }
@@ -119,7 +210,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
             friendItem.messages.push({
               sender: false,
               msgType: "image",
-              content: req.file.filename,
+              content: fileId,
               createdAt: time,
             });
           }
@@ -129,7 +220,8 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
         await Promise.all([user.save(), friend.save()]);
       }
     
-      res.json(req.file.filename);
+      
+      res.json(fileId);
     } else {
       res.status(404).json({ message: "User or friend not found" });
     }
@@ -147,7 +239,8 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
     console.log("req file is: " + req.file);
     console.log("req file filename is: " + req.file.filename);
     const { myUsername, friendUsername, time } = req.query;
-
+    // Upload the file to Google Drive
+    const fileId = await uploadFileToDrive(req.file);
     // Find the user and friend documents from the database
     const [user, friend] = await Promise.all([
       User.findOne({ username: myUsername }),
@@ -166,7 +259,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
           const newFriend = {username:friendUsername, messages:[{
             sender: true,
             msgType: "video",
-            content: req.file.filename,
+            content: fileId,
             createdAt: time
           }]};
           user.friends.push(newFriend);
@@ -177,7 +270,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
           const newUserFriend = {username:user.username, messages:[{
             sender: false, // Message sent by the user
             msgType: "video",
-            content: req.file.filename,
+            content: fileId,
             createdAt: time
           }]};
           friend.friends.push(newUserFriend);
@@ -192,7 +285,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
             friendItem.messages.push({
               sender: true,
               msgType: "video",
-              content: req.file.filename,
+              content: fileId,
               createdAt: time,
             });
           }
@@ -204,7 +297,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
             friendItem.messages.push({
               sender: false,
               msgType: "video",
-              content: req.file.filename,
+              content: fileId,
               createdAt: time,
             });
           }
@@ -213,8 +306,9 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
         // Save the updated user and friend to the database
         await Promise.all([user.save(), friend.save()]);
       }
+     
 
-      res.json(req.file.filename);
+      res.json(fileId);
     } else {
       res.status(404).json({ message: "User or friend not found" });
     }
@@ -242,8 +336,13 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
   try {
     // Access the uploaded item data
     const { username,description, price, size, category, condition, color, brand } = req.body;
-    const images = req.files.map((file) => file.filename); // Get the filenames of the uploaded images
+    //const images = req.files.map((file) => file.filename); // Get the filenames of the uploaded images
+    const images = req.files; // Get the uploaded images as an array of files
 
+    // Upload each image file to Google Drive
+    const uploadedImageIds = await Promise.all(images.map(uploadFileToDrive));
+    console.log("uploaded: ");
+    console.log(uploadedImageIds)
     // Find the user by username
     const user = await User.findOne({ username });
 
@@ -260,7 +359,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       condition,
       color,
       brand,
-      pictures: images, // Assign the filenames to the item's pictures property
+      pictures: uploadedImageIds, // Assign the filenames to the item's pictures property
     });
 
     // Save the item to the item database
@@ -384,6 +483,24 @@ app.get('/getFavItems', (req, res) => {
     .catch(error => {
       console.error('Error retrieving user:', error);
       res.status(500).json({ error: 'Failed to retrieve user' });
+    });
+});
+
+
+app.get('/getItemById', (req, res) => {
+  const { id } = req.query;
+
+  Item.findOne({ _id: id })
+    .then(item => {
+      if (!item) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+      res.json(item);
+    })
+    .catch(error => {
+      console.error('Error retrieving item:', error);
+      res.status(500).json({ error: 'Failed to retrieve item' });
     });
 });
 
