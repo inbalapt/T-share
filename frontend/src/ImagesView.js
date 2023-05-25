@@ -4,6 +4,7 @@ import './ImagesView.css';
 import { FaSearch } from 'react-icons/fa';
 
 const ImagesView = ({ images }) => {
+  console.log(images);
   const [mainImage, setMainImage] = useState(images[0]);
   const [zoom, setZoom] = useState(false);
 
@@ -21,7 +22,7 @@ const ImagesView = ({ images }) => {
         {images.map((image, index) => (
           <img
             key={index}
-            src={image}
+            src={`https://drive.google.com/uc?export=view&id=${image}`}
             alt={`Thumbnail ${index}`}
             onClick={() => handleThumbnailClick(image)}
             className={image === mainImage ? 'selected' : ''}
@@ -29,7 +30,7 @@ const ImagesView = ({ images }) => {
         ))}
       </div>
       <div className={`main-image${zoom ? ' zoomed' : ''}`}>
-        <img src={mainImage} alt="Main Product" />
+        <img src={`https://drive.google.com/uc?export=view&id=${mainImage}`} alt="Main Product" />
         <button className="zoom-in-btn" onClick={toggleZoom}>
           <FaSearch />
         </button>

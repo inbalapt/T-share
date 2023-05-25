@@ -173,6 +173,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
             sendImageToServer();
             setSelectedImage(null);
             setImagePreview(null);
+            return;
         }
 
 

@@ -4,6 +4,7 @@ function Message({ sender, msgType, content, createdAt }) {
     if (content === '') {
         return (<></>);
     }
+    console.log(content);
     
     if (sender) {
         //this is a text msgType
@@ -28,7 +29,7 @@ function Message({ sender, msgType, content, createdAt }) {
                         <div className="col-sm-12">
                             <div className="sender">
                                 <div className="message-img">
-                                    <img controls src={`http://localhost:3000/uploads/${content}`} alt="Message Image" />
+                                    <img controls src={`https://drive.google.com/uc?export=view&id=${content}`} alt="Message Image" />
                                 </div>
                                 <span className="message-createdAt pull-right">
                                     {createdAt}
@@ -67,7 +68,7 @@ function Message({ sender, msgType, content, createdAt }) {
                         <div className="col-sm-12">
                             <div className="sender">
                                 <div className="message-video">
-                                    <video controls src= {`http://localhost:3000/uploads/${content}`}></video>
+                                    <video controls src= {`https://drive.google.com/uc?export=view&id=${content}`}></video>
                                 </div>
                                 <span className="message-createdAt pull-right">
                                     {createdAt}
@@ -103,7 +104,7 @@ function Message({ sender, msgType, content, createdAt }) {
                         <div className="col-sm-12">
                             <div className="receiver">
                                 <div className="message-img">
-                                    <img controls src={`http://localhost:3000/uploads/${content}`} alt="Message Image" />
+                                    <img controls src={`https://drive.google.com/uc?export=view&id=${content}`} alt="Message Image" />
                                 </div>
                                 
                                 <span className="message-createdAt pull-left">
@@ -144,7 +145,7 @@ function Message({ sender, msgType, content, createdAt }) {
                         <div className="col-sm-12">
                             <div className="receiver">
                                 <div className="message-video">
-                                    <video controls src= {`http://localhost:3000/uploads/${content}`}></video>
+                                    <video controls src= {`https://drive.google.com/uc?export=view&id=${content}`}></video>
                                 </div>
                                 <span className="message-createdAt pull-right">
                                     {createdAt}

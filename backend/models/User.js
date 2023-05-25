@@ -69,7 +69,7 @@ const UserSchema = new mongoose.Schema(
             default: [],
         },
         favItems: {
-            type: Array,
+            type: [String],
             default: [],
         },
         city: String,
