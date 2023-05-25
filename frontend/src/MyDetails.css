@@ -1,0 +1,52 @@
+/* MyDetails.css */
+
+.my-details-form, .my-details-view {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.my-details-title {
+    /* Add specific styles for the title */
+}
+
+.my-details-label, .my-details-item {
+    /* Add specific styles for labels and items */
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.my-details-form input, .my-details-view p {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.my-details-button {
+    /* Add specific styles for the button */
+    margin-top: 20px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    margin-bottom: 20px;
+}
+.my-details-button, .upload-item-form input[type="submit"] {
+    margin-top: 20px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 24px; /* More padding -> larger button */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 16px; /* Bigger text */
+    transition: background-color 0.3s; /* Transition effect for hover */
+    margin-bottom: 20px;
+}
+
+/* Change color on hover */
+.my-details-button:hover, .upload-item-form input[type="submit"]:hover {
+    background-color: #388E3C; /* A darker green */
+}

@@ -1,0 +1,28 @@
+
+/* MyOrders.css */
+
+.my-orders h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+.my-orders {
+    padding: 20px;
+    box-sizing: border-box; /* add this line */
+    width: 100%;
+}
+
+.my-orders-headers {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    padding-left: 100px;
+}
+
+.my-orders-header {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
