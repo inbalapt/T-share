@@ -17,6 +17,7 @@ import HomePage from './HomePage';
 import UserAccountPage from './UserAccountPage';
 import UploadItem from './UploadItem';
 import UserAccountMenu from './UserAccountMenu';
+import TempAccount from './TempAccount';
 
 
 
@@ -32,7 +33,7 @@ function App() {
           <Route path='/item/:id' element={<ItemPage   />}></Route>
           <Route path="/favorites" element={<FavoriteItems/>} />
           <Route path='/account' element={<UserAccountPage/>}></Route>
-          <Route path='/test' element={<UserAccountPage/>}></Route>
+          <Route path='/test' element={<TempAccount/>}></Route>
           
         </Routes>
   </BrowserRouter>

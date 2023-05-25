@@ -1,0 +1,31 @@
+.order-tab {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.order-tab-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.order-tab-section {
+    flex: 1;
+    text-align: center;
+}
+
+.order-tab-img-section {
+    display: flex;
+    justify-content: center;
+}
+
+.order-tab-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
