@@ -45,6 +45,18 @@ function ChatPage() {
     const [myName, setMyName] = useState("");
     const [changeList, setChangeList] = useState(false);
     
+    const [friendProduct, setFriendProduct] = useState(false);
+    useEffect(()=>{
+      if(automaticMessage){
+        setFriendProduct(true);
+      } else{
+        setFriendProduct(false);
+      }
+    }, [friendUsername]);
+    
+
+    
+
     useEffect(() => {
       const fetchFriendsList = async () => {
         const friends = await getFriendsList(username);
@@ -83,7 +95,10 @@ function ChatPage() {
 
     async function chooseFriend(friendUsername){
       console.log("enter");
-        setAutomaticMessage('');
+        if(friendProduct){
+          setAutomaticMessage('');
+        }
+        console.log("automessage is " + automaticMessage)
         try {
             const url = `http://localhost:3000/getMessages?username=${username}&friendUsername=${friendUsername}`;
             const response = await axios.get(url);
@@ -100,7 +115,7 @@ function ChatPage() {
       <NavigationBar username={username}/>
       <div className="chat-container">
           {friendUsername && <ChatMessages username={username} friendUsername={friendUsername} currentMsgs={currentMsgs} setCurrentMsgs={setCurrentMsgs} getFullname={getFullname} automaticMessage={automaticMessage} itemPhoto={itemPhoto} friends={friendsList} setChangeList={setChangeList}/>}
-          <ChatList username={username} myFullname={myName} friendsList={friendsList} setFriendUsername={setFriendUsername} chooseFriend={chooseFriend} getFullname={getFullname}/>
+          <ChatList username={username} myFullname={myName} friendsList={friendsList} setFriendUsername={setFriendUsername} chooseFriend={chooseFriend} getFullname={getFullname} setFriendProduct={setFriendProduct}/>
       </div>
     </div>
   );

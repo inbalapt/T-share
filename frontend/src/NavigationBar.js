@@ -1,11 +1,23 @@
 // src/components/NavigationBar.js
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './NavigationBar.css';
 import { Link } from 'react-router-dom';
 import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 import { useNavigate,  useLocation } from "react-router-dom";
+import axios from 'axios';
 
+// Get credit of user
+const getCredit = async (username,setCredit) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/getCredit?username=${username}`);
+      setCredit(response.data.credit);
+      console.log(response.data.credit);
+      return response.data.credit;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 
 const NavigationBar = () => {
@@ -13,6 +25,12 @@ const NavigationBar = () => {
   const location = useLocation();
   const username = location.state.username;
   console.log(username);
+  const [credit,setCredit] = useState(0);
+
+  useEffect(()=>{
+    getCredit(username,setCredit);
+  }, []);
+
   function handleChat(){
     navigate("../ChatPage", { state: {username: username }});
   }
@@ -68,7 +86,7 @@ const NavigationBar = () => {
             <i className="bi bi-heart-fill"></i>
           </a>
           <a href="/account/balance" className="nav-link">
-            <i class="bi bi-coin"></i>
+            <i class="bi bi-coin" title={`Credit: ${credit}`}></i>
           </a>
           <a href="/ChatPage" className="nav-link" onClick={handleChat}>
             <i className="bi bi-chat-dots"></i>

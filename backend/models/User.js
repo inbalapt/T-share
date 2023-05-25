@@ -75,7 +75,10 @@ const UserSchema = new mongoose.Schema(
         city: String,
         height: Number,
         weight: Number,
-        credit: Number,
+        credit:{
+          type: Number,
+          default: 30
+        }
     },
     {timestamps:true}
 );

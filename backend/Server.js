@@ -144,6 +144,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+
 app.post("/uploadImage", upload.single("image"), async (req, res) => {
   try {
     // Process the uploaded image or perform necessary operations
@@ -230,6 +231,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
     res.status(500).json({ message: "Error uploading image" });
   }
 });
+
 
 
 app.post("/uploadVideo", upload.single("video"), async (req, res) => {
@@ -359,7 +361,8 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       condition,
       color,
       brand,
-      pictures: uploadedImageIds, // Assign the filenames to the item's pictures property
+      pictures: uploadedImageIds, 
+      isBought: false
     });
 
     // Save the item to the item database
@@ -415,6 +418,44 @@ app.use((req, res, next) => {
   next();
 });
 
+app.post('/buyItem', async (req, res) => {
+  try {
+    const { username, sellerUsername, itemId, price } = req.query;
+
+    const item = await Item.findOne({ _id: itemId });
+    if (item.isBought) {
+      return res.status(204).json({ error: 'Item is already bought' });
+    }
+
+    // Decrease user's credit
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    if (user.credit < price) {
+      return res.status(400).json({ error: 'Not enough credit' });
+    }
+    console.log(user.credit);
+    user.credit -= price;
+    await user.save();
+    console.log(user.credit);
+    // Increase seller's credit
+    const seller = await User.findOne({ username: sellerUsername });
+    seller.credit += price;
+    await seller.save();
+
+    item.isBought = true;
+    await item.save();
+
+    console.log("Item bought successfully");
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 app.post('/addFavoriteItem', async(req,res) =>{
   try {
@@ -424,6 +465,10 @@ app.post('/addFavoriteItem', async(req,res) =>{
    
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
+    }
+    const item = Item.findOne({_id: id});
+    if(item.isBought){
+      return res.status(204).json({ error: 'Item is already bought' });
     }
     // Add item id to favItems
     user.favItems.push(id);
@@ -471,7 +516,7 @@ app.get('/getFavItems', (req, res) => {
 
       const favItemIds = user.favItems;
 
-      Item.find({ _id: { $in: favItemIds } })
+      Item.find({ _id: { $in: favItemIds }, isBought: { $ne: true } })
         .then(items => {
           res.json(items);
         })
@@ -493,7 +538,11 @@ app.get('/getItemById', (req, res) => {
   Item.findOne({ _id: id })
     .then(item => {
       if (!item) {
-        res.status(404).json({ error: 'User not found' });
+        res.status(404).json({ error: 'Item not found' });
+        return;
+      }
+      if(item.isBought){
+        res.status(204).json({ error: 'Item is bought' });
         return;
       }
       res.json(item);
@@ -598,10 +647,10 @@ app.get('/items/:category', async (req, res) => {
     let items;
     if (category === 'all') {
       // Retrieve all items from the database
-      items = await Item.find();
+      items = await Item.find({sellerUsername: { $ne: username }, isBought: { $ne: true }});
     } else {
       // Retrieve items based on the specified category
-      items = await Item.find({ category, sellerUsername: { $ne: username } });
+      items = await Item.find({ category, sellerUsername: { $ne: username }, isBought: { $ne: true } });
     }
     res.json(items);
   } catch (error) {
@@ -626,6 +675,17 @@ app.get("/getFullname", async (req,res) =>{
     const { username } = req.query;
     const user = await User.findOne({ username });
     res.status(200).json({ fullName: user.fullName });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+app.get("/getCredit", async (req,res) =>{
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    res.status(200).json({ credit:user.credit });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');

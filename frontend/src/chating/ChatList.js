@@ -95,13 +95,14 @@ function ContactList({ friendsList, activeContact, handleChatClick, getFullname 
 
 
 
-function ChatList({ username, myFullname, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname }) {
+function ChatList({ username, myFullname, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname, setFriendProduct}) {
     const [activeContact, setActiveContact] = useState(null);
 
     const handleChatClick = (friendUsername) => {
         setActiveContact(friendUsername);
         setFriendUsername(friendUsername);
         chooseFriend(friendUsername);
+        setFriendProduct(false);
     };
 
     return (

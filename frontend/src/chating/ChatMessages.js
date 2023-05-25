@@ -10,7 +10,7 @@ const ENDPOINT = "http://localhost:3000";
 var socket, selectedChatCompare;
 
 
-// Get if of friend
+// Get id of friend
 const getID = async (username) => {
     try {
       const response = await axios.get(`http://localhost:3000/getID?username=${username}`);
@@ -20,13 +20,13 @@ const getID = async (username) => {
     }
   };
 
-function ContactMessages({currentMsgs}){
+function ContactMessages({currentMsgs, username}){
     if (currentMsgs == []) {
         return (<></>);
     }
    
     const messagesList = currentMsgs.map((message, key) => {
-        return <Message {...message} key={key}/>
+        return <Message username={username} {...message} key={key}/>
     });
     return (
         <div>   
@@ -54,7 +54,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     const [newMessage, setNewMessage] = useState("");
     const [socketConnected, setSocketConnected] = useState(false);
     const [friendID, setFriendID] = useState("");
-    const [messageInput, setMessageInput] = useState("");
+    const [messageInput, setMessageInput] = useState(automaticMessage);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
@@ -63,9 +63,12 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     }*/
     
     useEffect(() => {
-      if (automaticMessage) {
+      if (automaticMessage !== '') {
         setMessageInput(automaticMessage);
         console.log(itemPhoto);
+      }
+      else{
+        setMessageInput('');
       }
     }, [automaticMessage]);
 
@@ -332,7 +335,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
         </div>
     </div>
     <div class="chat-body">
-        <ContactMessages currentMsgs={currentMsgs} />
+        <ContactMessages currentMsgs={currentMsgs} username={username} />
     </div>
     <div class="chat-footer">
         {!imagePreview && (

@@ -30,7 +30,7 @@ let item1 = {images: [photo1, photo2, photo3, photo4] , seller: "jon", descripti
 
 const ItemPage = () => {
   const location = useLocation();
-  const username = location.state.username;
+  const username = location.state?.username;
   const { id } = useParams();
   const [item, setItem] = useState(null);
 
@@ -55,6 +55,7 @@ const ItemPage = () => {
       <div className="item-page">
         {item.pictures && <ImagesView images={item.pictures} />}
         <DetailsOfProduct
+          id={id}
           username={username}
           seller={item.sellerFullName}
           description={item.description}

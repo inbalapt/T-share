@@ -47,6 +47,10 @@ const ItemSchema = new mongoose.Schema({
     brand: {
       type: String,
       required: false,
+    },
+    isBought: {
+      type: Boolean,
+      required: true
     }
   },
   {timestamps:true}
@@ -69,7 +73,8 @@ const Item = mongoose.model('Item', ItemSchema);
       category: 'dresses',
       condition:'good',
       color: 'pink',
-      brand: 'shein'
+      brand: 'shein',
+      isBought: false
     });
 
     // Save the item to the database
@@ -96,7 +101,8 @@ const Item = mongoose.model('Item', ItemSchema);
       category: 'dresses',
       condition:'good',
       color: 'pink',
-      brand: 'shein'
+      brand: 'shein',
+      isBought: false
     });
 
     // Save the item to the database

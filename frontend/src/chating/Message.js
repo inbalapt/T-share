@@ -1,10 +1,36 @@
+import { useEffect, useState } from 'react';
 import './Message.css';
+import { useNavigate } from 'react-router-dom';
 
-function Message({ sender, msgType, content, createdAt }) {
+function Message({username, sender, msgType, content, createdAt }) {
+    const substring = 'http://localhost:3001/item/';
+    const navigate = useNavigate();
+    const [isLink, setIsLink] = useState(false);
+    const [firstPart, setFirstPart] = useState('');
+    const [secondPart, setSecondPart] = useState('');
+  
+    useEffect(() => {
+      setIsLink(content.includes(substring));
+  
+      if (isLink) {
+        const parts = content.split(substring);
+        setFirstPart(parts[0].trim());
+        setSecondPart(substring + parts[1]);
+      }
+    }, [content, substring, isLink]);
+
     if (content === '') {
-        return (<></>);
+      return null;
     }
-    console.log(content);
+    console.log("sender is " + sender);
+  
+    const handleLinkClick = (e) => {
+        const splitHere='/item/';
+        const parts = secondPart.split(splitHere);
+        const part1 = (parts[0].trim());
+        const part2 = (splitHere + parts[1]);
+        navigate(`../${part2}`, { state: { username: username} });
+      };
     
     if (sender) {
         //this is a text msgType
@@ -12,10 +38,14 @@ function Message({ sender, msgType, content, createdAt }) {
             return (
                 <>
                     <div class="message">
-                    <div class="message-bubble my-message">
+                    {!isLink &&<div class="message-bubble my-message">
                         {content}
                         <span class="message-time">{createdAt}</span>
-                    </div>
+                    </div>}
+                    {isLink && <div class="message-bubble my-message">
+                        {firstPart} <a href="" onClick={handleLinkClick}>{secondPart}</a>
+                        <span class="message-time">{createdAt}</span>
+                    </div>}
                     </div>
                 </>
             );
@@ -88,10 +118,14 @@ function Message({ sender, msgType, content, createdAt }) {
             return (
                 <>
                     <div class="message">
-                    <div class="message-bubble friend-message">
+                    {!isLink &&<div class="message-bubble friend-message">
                         {content}
-                        <span class="message-time-left">{createdAt}</span>
-                    </div>
+                        <span class="message-time">{createdAt}</span>
+                    </div>}
+                    {isLink && <div class="message-bubble friend-message">
+                        {firstPart} <a href="" onClick={handleLinkClick}>{secondPart}</a>
+                        <span class="message-time">{createdAt}</span>
+                    </div>}
                     </div>
                 </>
             );

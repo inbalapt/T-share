@@ -41,7 +41,6 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
       return;
     }
     navigate(`/item/${_id}`, { state: { username: username} });
-    //navigate(`/item/${_id}`);
   };
 
   const handleFavoriteClick = async (e) => { // Add async keyword here
@@ -72,9 +71,9 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
   };
 
   const handleChatClick = (e) => {
-    //const automaticMessage = `Hi, I'm interested in this ${description} :)`
+    const automaticMessage = `Hi, I'm interested in this ${description}, http://localhost:3001/item/${_id}`
     e.stopPropagation();
-    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, photo: photo } });
+    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, automaticMessage } });
   };
 
   return (
