@@ -4,6 +4,7 @@ import UserAccountContent from './UserAccountContent';
 import './UserAccountPage.css';  // <-- import here
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import UploadItem from './UploadItem';
 
 // Get name of the user
 const getFullname = async (username,setFullName) => {
@@ -22,6 +23,7 @@ const UserAccountPage = () => {
   const username = location.state.username;
   const [selectedMenuItem, setSelectedMenuItem] = useState('overview');
   const [fullName,setFullName] = useState("");
+  const [updateProducts, setUpdateProducts] = useState(false);
 
   useEffect(()=>{
     getFullname(username, setFullName);
@@ -38,10 +40,11 @@ const UserAccountPage = () => {
           onMenuItemClick={handleMenuItemClick}
           selectedMenuItem={selectedMenuItem}
           fullName={fullName}
+          
         />
       </div>
       <div className="user-account-content">  {/* <-- apply class here */}
-        <UserAccountContent selectedMenuItem={selectedMenuItem} username={username}/>
+        <UserAccountContent selectedMenuItem={selectedMenuItem} username={username} updateProducts={updateProducts} setUpdateProducts={setUpdateProducts}/>
       </div>
     </div>
   );

@@ -27,6 +27,16 @@ const getFullname = async (username) => {
   }
 };
 
+const getProfilePhoto = async (username)=>{
+  try {
+    const response = await axios.get(`http://localhost:3000/getProfile?username=${username}`);
+    console.log(response.data.image);
+    return response.data.image;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 
 
@@ -44,7 +54,7 @@ function ChatPage() {
     const [currentMsgs, setCurrentMsgs] = useState([]); 
     const [myName, setMyName] = useState("");
     const [changeList, setChangeList] = useState(false);
-    
+    const [myProfile, setMyProfile] = useState("");
     const [friendProduct, setFriendProduct] = useState(false);
     useEffect(()=>{
       if(automaticMessage){
@@ -82,7 +92,9 @@ function ChatPage() {
         
         const fetchFullname = async () => {
           const fullName = await getFullname(username);
+          const image = await getProfilePhoto(username);
           setMyName(fullName);
+          setMyProfile(image);
         }
         fetchFriendsList();
         fetchFullname();
@@ -114,8 +126,8 @@ function ChatPage() {
     <div>
       <NavigationBar username={username}/>
       <div className="chat-container">
-          {friendUsername && <ChatMessages username={username} friendUsername={friendUsername} currentMsgs={currentMsgs} setCurrentMsgs={setCurrentMsgs} getFullname={getFullname} automaticMessage={automaticMessage} itemPhoto={itemPhoto} friends={friendsList} setChangeList={setChangeList}/>}
-          <ChatList username={username} myFullname={myName} friendsList={friendsList} setFriendUsername={setFriendUsername} chooseFriend={chooseFriend} getFullname={getFullname} setFriendProduct={setFriendProduct}/>
+          {friendUsername && <ChatMessages username={username} friendUsername={friendUsername} currentMsgs={currentMsgs} setCurrentMsgs={setCurrentMsgs} getFullname={getFullname} getProfile={getProfilePhoto} automaticMessage={automaticMessage} itemPhoto={itemPhoto} friends={friendsList} setChangeList={setChangeList}/>}
+          <ChatList username={username} myFullname={myName} myProfile={myProfile} friendsList={friendsList} setFriendUsername={setFriendUsername} chooseFriend={chooseFriend} getFullname={getFullname} setFriendProduct={setFriendProduct} getProfile={getProfilePhoto}/>
       </div>
     </div>
   );

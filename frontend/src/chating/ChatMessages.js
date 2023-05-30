@@ -48,7 +48,7 @@ const addNewFriend = async (username, friendUsername, textMessage, msgType, time
   }
   
 
-function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, getFullname, automaticMessage, itemPhoto, friends, setChangeList}){
+function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, getFullname, getProfile, automaticMessage, itemPhoto, friends, setChangeList}){
 
     const [friendName,setFriendName] = useState("");
     const [newMessage, setNewMessage] = useState("");
@@ -57,10 +57,8 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     const [messageInput, setMessageInput] = useState(automaticMessage);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
-
-    /*if(itemPhoto !== null){
-      setImagePreview(`http://localhost:3000/uploads/1684762008175-_ש_(5).jpg`);
-    }*/
+    const [friendProfile, setFriendProfile] = useState("");
+   
     
     useEffect(() => {
       if (automaticMessage !== '') {
@@ -114,6 +112,8 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
             try{
                 const fullName = await getFullname(friendUsername);
                 setFriendName(fullName);
+                const profile = await getProfile(friendUsername);
+                setFriendProfile(profile);
             }
             catch (error) {
                 console.error(error);
@@ -328,7 +328,8 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     return(
    <div class="chat-messages">
     <div class="chat-header">
-        <img src={defaultProfile} alt="Profile" class="profile-image" />
+        {friendProfile !== "" &&  <img src={`https://drive.google.com/uc?export=view&id=${friendProfile}`} alt="Profile" class="profile-image" />}
+        {friendProfile == "" && <img src={defaultProfile} alt="Profile" class="profile-image" />}
         <div class="friend-info">
         <div class="friend-name">{friendName}</div>
         <div class="friend-status">Online</div>

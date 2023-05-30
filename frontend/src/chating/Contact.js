@@ -3,7 +3,7 @@ import defaultProfile from './defaultProfile.png';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Contact({ username, messages, activeContact, handleChatClick, getFullname }) {
+function Contact({ username, messages, activeContact, handleChatClick, getFullname, getProfile }) {
   const length = messages.length;
   console.log(messages);
   const lastMessageType = messages[length - 1].msgType;
@@ -11,12 +11,15 @@ function Contact({ username, messages, activeContact, handleChatClick, getFullna
   const lastMessageTime = messages[length - 1].createdAt;
   const lastRealTime = messages[length-1].realTime;
   const [friendName, setFriendName] = useState("");
+  const [friendProfile, setFriendProfile] = useState("");
 
   useEffect(() => {
     const fetchFullname = async () => {
       try {
         const fullName = await getFullname(username);
         setFriendName(fullName);
+        const profile = await getProfile(username);
+        setFriendProfile(profile);
       } catch (error) {
         console.error(error);
       }
@@ -31,7 +34,8 @@ function Contact({ username, messages, activeContact, handleChatClick, getFullna
       className={`chat-box ${activeContact === username ? 'active' : ''}`}
       onClick={() => handleChatClick(username)}
     >
-      <img src={defaultProfile} alt="Profile" className="friend-pic" />
+      {friendProfile !== "" && <img src={`https://drive.google.com/uc?export=view&id=${friendProfile}`} alt="Profile" className="friend-pic" />}
+      {friendProfile == "" && <img src={defaultProfile} alt="Profile" className="friend-pic" />}
       <div className="friend-details">
         <div className="friend-header">
           <span className="friend-username">{friendName}</span>

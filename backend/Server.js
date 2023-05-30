@@ -376,6 +376,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
 
     // Save the updated user
     await user.save();
+    
     console.log('Item added to the user\'s myUploads array.');
 
     // Send a success response
@@ -436,26 +437,76 @@ app.post('/buyItem', async (req, res) => {
     if (user.credit < price) {
       return res.status(400).json({ error: 'Not enough credit' });
     }
-    console.log(user.credit);
-    user.credit -= price;
+
+    user.credit -= parseInt(price);
+    user.myBoughts.push(itemId);
     await user.save();
-    console.log(user.credit);
+
     // Increase seller's credit
     const seller = await User.findOne({ username: sellerUsername });
-    seller.credit += price;
+    seller.credit += parseInt(price);
     await seller.save();
 
     item.isBought = true;
+    item.time = Date.now();
     await item.save();
 
     console.log("Item bought successfully");
-    res.sendStatus(200);
+    res.status(200).json({ message: 'Item bought successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
+
+app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
+  try {
+    // Access the updated user details
+    const { username, city, height, weight, credit, email } = req.body;
+
+     // Upload image file to Google Drive
+     const fileId = await uploadFileToDrive(req.file);
+     console.log("uploaded: ");
+     console.log(fileId)
+    
+
+    // Find the user by username
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (city) {
+      user.city = city;
+    }
+    if (!isNaN(height)) {
+      user.height = height;
+    }
+    if (!isNaN(weight)) {
+      user.weight = weight;
+    }
+    if (email) {
+      user.email = email;
+    }
+    if (fileId != undefined) {
+      user.picturePath = fileId;
+    }
+
+
+    // Save the updated user
+    await user.save();
+    console.log("User details updated");
+
+    // Send a success response
+    return res.json(user);
+  } catch (error) {
+    console.error("Error updating user details", error);
+    // Send an error response
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.post('/addFavoriteItem', async(req,res) =>{
   try {
@@ -659,6 +710,23 @@ app.get('/items/:category', async (req, res) => {
   }
 });
 
+
+app.get('/getUserDetails', async (req,res)=>{
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    res.status(200).json({ city: user.city,
+    height: user.height,
+    weight: user.weight,
+    credit: user.credit,
+    email: user.email,
+    image: user.picturePath });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 app.get('/getFriends', async (req, res) => {
   try {
       const { username } = req.query;
@@ -681,6 +749,74 @@ app.get("/getFullname", async (req,res) =>{
   }
 });
 
+
+app.get("/getProfile", async (req,res) =>{
+  try {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    res.status(200).json({ image: user.picturePath });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+app.get("/getUploads", async(req,res)=>{
+  const { username } = req.query;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const uploadsIds = user.myUploads;
+  
+      Item.find({ _id: { $in: uploadsIds } })
+        .then(items => {
+          res.json(items);
+        })
+        .catch(error => {
+          console.error('Error retrieving favorite items:', error);
+          res.status(500).json({ error: 'Failed to retrieve favorite items' });
+        });
+    })
+    .catch(error => {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    });
+});
+
+
+app.get("/getOrders", async (req,res) =>{
+  const { username } = req.query;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const boughtsIds = user.myBoughts;
+
+      Item.find({ _id: { $in: boughtsIds }, isBought: { $ne: false } })
+        .then(items => {
+          res.json(items);
+        })
+        .catch(error => {
+          console.error('Error retrieving favorite items:', error);
+          res.status(500).json({ error: 'Failed to retrieve favorite items' });
+        });
+    })
+    .catch(error => {
+      console.error('Error retrieving user:', error);
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    });
+});
+
 app.get("/getCredit", async (req,res) =>{
   try {
     const { username } = req.query;
@@ -700,6 +836,36 @@ app.get("/getID", async (req,res) =>{
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');
+  }
+});
+
+app.delete('/deleteItem', async (req, res) => {
+  try {
+    const {  itemId, username } = req.query;
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    // Find the item in the Item database
+    const item = await Item.findOne({ _id: itemId });
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
+
+    // Remove the item from the Item database
+    await Item.deleteOne({ _id: itemId });
+
+    // Remove the item ID from the user's myUploads array
+    user.myUploads = user.myUploads.filter(id => id !== itemId);
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: 'Item deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

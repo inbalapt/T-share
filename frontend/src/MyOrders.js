@@ -3,6 +3,18 @@ import React, { useState, useEffect } from 'react';
 import OrderTab from './OrderTab';
 import './MyOrders.css';
 import logo from './logo.jpg';
+import axios from 'axios';
+
+const getOrders = async(username,setOrders)=>{
+    try{
+        const response = await axios.get(`http://localhost:3000/getOrders?username=${username}`);
+        setOrders(response.data);
+        console.log(response.data);
+        return response.data;
+      } catch (error) {
+        console.error(error);
+    }
+}
 
 const MyOrders = ({ username }) => {
     // for testing
@@ -10,8 +22,12 @@ const MyOrders = ({ username }) => {
     {image: logo , description: 'floral dress', price:'70' , date: '25/05/2023' , seller: 'Inbal Apt'},
     {image: logo , description: 'floral dress', price:'80' , date: '25/05/2023' , seller: 'Inbal Apt'},]
 
-
+    console.log("username " + username);
     const [orders, setOrders] = useState([]);
+
+    useEffect(()=>{
+        getOrders(username,setOrders);
+    }, []);
 
     /*
     useEffect(() => {
@@ -24,10 +40,7 @@ const MyOrders = ({ username }) => {
         fetchOrders();
     }, [username]);
     */
-    useEffect(() => {
-        // TODO: Fetch orders from the server and set them in the state
-    }, []);
-
+   
 
     return (
         <div className="my-orders">
@@ -38,7 +51,7 @@ const MyOrders = ({ username }) => {
                 <span className="my-orders-header">Date:</span>
                 <span className="my-orders-header">Seller:</span>
             </div>
-            {tempOrders.map(order => (
+            {orders.map(order => (
                 <OrderTab key={order.id} order={order} />
             ))}
         </div>

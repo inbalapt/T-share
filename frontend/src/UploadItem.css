@@ -33,3 +33,26 @@
 .upload-item-title {
     /* Add any specific styles for the title here */
 }
+
+
+.fail{
+    background-color: red;
+}
+.success-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 18px;
+    color: white;
+    z-index: 9999;
+  }
+
+  .success{
+    background-color: green;
+  }
+  

@@ -33,16 +33,14 @@
   }
   
   i:hover {
-    cursor: pointer; /* Change cursor to a pointer shape on hover */
+    cursor: pointer; 
   }
-  /* Add the appropriate styles for the icon library you're using */
   
   
   .bi-big {
-    font-size: 24px; /* Increase the font size to enlarge the icons */
-   
+    font-size: 24px; 
   }
-  /* Additional styles if needed */
+ 
   
   
 .chat-messages {
@@ -69,6 +67,8 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
   }
   
   .friend-info {

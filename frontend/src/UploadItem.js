@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './UploadItem.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const UploadItem = ({username}) => {
-
+const UploadItem = ({username, setUpdateProducts}) => {
+    const navigate= useNavigate();
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [item, setItem] = useState({
         category: '',
         description: '',
@@ -68,9 +70,19 @@ const UploadItem = ({username}) => {
                         "Content-Type": "multipart/form-data",
                     },
                 });
-    
-        
-               console.log(response.data);
+                
+                setShowSuccessMessage(true);
+                setUpdateProducts(true);
+                
+                console.log(response.data);
+                
+                setTimeout(() => {
+                    setShowSuccessMessage(false);
+                    // Navigate to the homepage
+                    navigate("../HomePage", { state: { username: username } });
+                }, 3000); // Adjust the duration as needed
+            
+                
             } catch (error) {
                 console.log('Error uploading item:', error);
                 // Handle error case, e.g., show an error message to the user
@@ -83,6 +95,7 @@ const UploadItem = ({username}) => {
 
     return (
         <form onSubmit={handleSubmit} className="upload-item-form">
+            
             <label className="upload-item-label">
                 <h1 className="upload-item-title">Upload Item</h1>
             </label>
@@ -123,7 +136,13 @@ const UploadItem = ({username}) => {
                 <input type="file" name="images" required multiple onChange={handleImageChange} className="upload-item-input"/>
             </label>
             <input type="submit" value="Submit" className="upload-item-submit"/>
+            {showSuccessMessage && (
+            <div className="success-message success">
+              The item uploaded successfully! 
+            </div>
+          )}
         </form>
+        
     );
 }
 

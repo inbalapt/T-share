@@ -51,6 +51,10 @@ const ItemSchema = new mongoose.Schema({
     isBought: {
       type: Boolean,
       required: true
+    },
+    time: {
+      type: Date,
+      default: Date.now
     }
   },
   {timestamps:true}
@@ -58,12 +62,12 @@ const ItemSchema = new mongoose.Schema({
 
   
 const Item = mongoose.model('Item', ItemSchema);
-
+/*
 (async () => {
   try {
     // Create a new item
     const item = new Item({
-      pictures:["1684837295465-_ש_(9).jpg"],
+      pictures:["1uczlF23Zc_wv0YHsu60jHpyAS8uzfOLq"],
       sellerUsername: 'inbal22',
       sellerFullName: 'inbal',
       description: 'dress',
@@ -102,7 +106,9 @@ const Item = mongoose.model('Item', ItemSchema);
       condition:'good',
       color: 'pink',
       brand: 'shein',
-      isBought: false
+      isBought: false,
+      
+      
     });
 
     // Save the item to the database
@@ -112,6 +118,6 @@ const Item = mongoose.model('Item', ItemSchema);
     console.error('Error saving item:', error);
   }
 })();
-
+*/
 
 export default Item;

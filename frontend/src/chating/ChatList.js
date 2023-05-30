@@ -2,78 +2,9 @@ import defaultProfile from './defaultProfile.png';
 import Contact from './Contact.js';
 import './ChatList.css';
 import { useState } from 'react';
-const friends = [
-    {
-      _id: '1',
-      username: 'inbal22',
-      lastMessage: 'Hey, how are you doing?',
-      lastMessageTime: '10:30 AM',
-    },
-    {
-      _id: '2',
-      username: 'john_doe',
-      lastMessage: 'Can you send me that file?',
-      lastMessageTime: 'Yesterday',
-    },
-    {
-      _id: '3',
-      username: 'friend3',
-      lastMessage: 'I need your help with something',
-      lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '4',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '5',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '6',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '7',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '8',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '9',
-        username: 'friend3',
-        lastMessage: 'I need your help with somethinggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '10',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-    {
-        _id: '11',
-        username: 'friend3',
-        lastMessage: 'I need your help with something',
-        lastMessageTime: '2 days ago',
-    },
-];
 
 
-
-function ContactList({ friendsList, activeContact, handleChatClick, getFullname }) {
+function ContactList({ friendsList, activeContact, handleChatClick, getFullname, getProfile }) {
     if (friendsList.length === 0) {
       return null;
     }
@@ -86,6 +17,7 @@ function ContactList({ friendsList, activeContact, handleChatClick, getFullname 
           handleChatClick={handleChatClick}
           key={key}
           getFullname={getFullname}
+          getProfile={getProfile}
         />
       );
     });
@@ -95,7 +27,7 @@ function ContactList({ friendsList, activeContact, handleChatClick, getFullname 
 
 
 
-function ChatList({ username, myFullname, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname, setFriendProduct}) {
+function ChatList({ username, myFullname, myProfile, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname, setFriendProduct, getProfile}) {
     const [activeContact, setActiveContact] = useState(null);
 
     const handleChatClick = (friendUsername) => {
@@ -108,7 +40,8 @@ function ChatList({ username, myFullname, friendsList, setFriendUsername, setFri
     return (
         <div className="chat-list-container">
             <div className="profile-container">
-                <img src={defaultProfile} alt="Profile" className="profile-pic" />
+                {myProfile !== "" && <img src={`https://drive.google.com/uc?export=view&id=${myProfile}`} alt="Profile" className="profile-pic" />}
+                {myProfile == "" && <img src={defaultProfile} alt="Profile" className="profile-pic" />}
                 <span className="username">{myFullname}</span>
             </div>
             <div className="chats-container">
@@ -117,6 +50,7 @@ function ChatList({ username, myFullname, friendsList, setFriendUsername, setFri
                 activeContact={activeContact}
                 handleChatClick={handleChatClick}
                 getFullname={getFullname}
+                getProfile={getProfile}
                 />
             </div>
         </div>

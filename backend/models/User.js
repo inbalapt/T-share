@@ -72,9 +72,16 @@ const UserSchema = new mongoose.Schema(
             type: [String],
             default: [],
         },
-        city: String,
-        height: Number,
-        weight: Number,
+        city :{
+          type: String,
+          default: ""
+        },
+        height:{
+          type: Number,
+        },
+        weight:{
+          type: Number,
+        },
         credit:{
           type: Number,
           default: 30
@@ -164,7 +171,7 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
       password: passwordHash, // Store the hashed password in the database
       email: 'inbalapt@gmail.com',
       friends: [],
-      myUploads: ["1684837295465-_ש_(9).jpg"]
+      myUploads: [/*"1uczlF23Zc_wv0YHsu60jHpyAS8uzfOLq"*/]
     });
 
     // Add a friend and their messages
@@ -206,7 +213,7 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
     
     // Add the friend to the user's friends array
     userInbal.friends.push(friend, friend2);
-    userInbal.myUploads.push("1");
+    //userInbal.myUploads.push("1");
 
     // Save the user to the database
     userInbal
@@ -264,7 +271,7 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
     
     // Add the friend to the user's friends array
     userNoa.friends.push(friend);
-    userNoa.myUploads.push("2");
+    //userNoa.myUploads.push("2");
 
 
     // Save the user to the database
