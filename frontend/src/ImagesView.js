@@ -1,5 +1,5 @@
 // src/components/ImagesView.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ImagesView.css';
 import { FaSearch } from 'react-icons/fa';
 
@@ -7,6 +7,11 @@ const ImagesView = ({ images }) => {
   console.log(images);
   const [mainImage, setMainImage] = useState(images[0]);
   const [zoom, setZoom] = useState(false);
+
+
+  useEffect(()=>{
+    setMainImage(images[0]);
+  },[images]);
 
   const handleThumbnailClick = (image) => {
     setMainImage(image);

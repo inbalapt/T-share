@@ -27,9 +27,9 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
   const [showFailMessage,setShowFailMessage] = useState(false);
 
   const handleChatClick = (e) => {
-    //const automaticMessage = `Hi, I'm interested in this ${description} :)`
+    const automaticMessage = `Hi, I'm interested in this ${description}, http://localhost:3001/item/${id}`
     e.stopPropagation();
-    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, photo:pictures[0]}});
+    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, automaticMessage }});
   };
 
   async function handleBuyClick(){

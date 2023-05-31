@@ -36,9 +36,9 @@ const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullNa
 
 
   const handleChatClick = (e) => {
-    //const automaticMessage = `Hi, I'm interested in this ${description} :)`
+    const automaticMessage = `Hi, I'm interested in this ${description}, http://localhost:3001/item/${_id}`
     e.stopPropagation();
-    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, photo: photo } });
+    navigate("../ChatPage", { state: { username: username, friendUsername: sellerUsername, automaticMessage } });
   };
 
   return (

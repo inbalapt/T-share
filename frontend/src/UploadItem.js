@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import './UploadItem.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Oval } from 'react-loader-spinner';
 
 const UploadItem = ({username, setUpdateProducts}) => {
     const navigate= useNavigate();
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const [uploadedImage, setUploadedImage] = useState(false);
     const [item, setItem] = useState({
         category: '',
         description: '',
@@ -44,7 +46,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log(item);
-       
+        setUploadedImage(true);
         const uploadToServer = async () => {
             try {
                 const formData = new FormData();
@@ -73,10 +75,11 @@ const UploadItem = ({username, setUpdateProducts}) => {
                 
                 setShowSuccessMessage(true);
                 setUpdateProducts(true);
-                
+                setUploadedImage(false);
                 console.log(response.data);
                 
                 setTimeout(() => {
+                    
                     setShowSuccessMessage(false);
                     // Navigate to the homepage
                     navigate("../HomePage", { state: { username: username } });
@@ -93,7 +96,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
         
     };
 
-    return (
+    return !uploadedImage ? (
         <form onSubmit={handleSubmit} className="upload-item-form">
             
             <label className="upload-item-label">
@@ -143,7 +146,11 @@ const UploadItem = ({username, setUpdateProducts}) => {
           )}
         </form>
         
-    );
+    ) : 
+    <div className="uploading-item">
+      <h1>Uploading the item</h1>
+      <Oval color="#000000" height={50} width={50} />
+    </div>;
 }
 
 export default UploadItem;

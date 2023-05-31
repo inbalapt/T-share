@@ -940,4 +940,27 @@ io.on("connection", (socket) => {
 });
 
 
+// Endpoint for autocomplete search
+app.get('/autocomplete', async (req, res) => {
+  try {
+    const searchTerm = req.query.term; // Get the search term from the request query
+    const username = req.query.username;
+    // Perform the search query using the Item model
+    const results = await Item.find({
+      $or: [
+        { category: { $regex: searchTerm, $options: 'i' } },
+        { color: { $regex: searchTerm, $options: 'i' } },
+        { description: { $regex: searchTerm, $options: 'i' } },
+        { brand: { $regex: searchTerm, $options: 'i' } },
+      ],
+      sellerUsername: { $ne: username },
+    })
+      .limit(10) // Limit the number of results to 10
+      .select('_id sellerUsername sellerFullName pictures description price size itemLocation category condition color brand isBought time')
 
+    res.json(results);
+  } catch (error) {
+    console.error('Error searching items:', error);
+    res.status(500).json({ error: 'An error occurred while searching items' });
+  }
+});

@@ -71,7 +71,7 @@
   }
 
   .card-img-top {
-    height: 75%; /* Set the height to 75% of the card's height */
+    height: 70%; /* Set the height to 75% of the card's height */
     object-fit: cover; /* Crop the image to fit the container */
   }
   

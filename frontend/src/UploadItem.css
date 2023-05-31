@@ -56,3 +56,18 @@
     background-color: green;
   }
   
+  .uploading-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-size: 24px;
+  }
+  
+  .uploading-item h1 {
+    margin-bottom: 20px;
+  }
+  
+  /* Adjust the styling as needed */
+  

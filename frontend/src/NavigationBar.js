@@ -19,6 +19,26 @@ const getCredit = async (username,setCredit) => {
     }
   };
 
+  const AutocompleteResult = ({ result, username, setSearchTerm, setAutocompleteResults }) => {
+    const navigate = useNavigate();
+    const navigateToItem = () => {
+      setSearchTerm("");
+      setAutocompleteResults([]);
+      navigate(`/item/${result._id}`, { state: { username: username } });
+    };
+    return (
+      <div className="autocomplete-result"  onClick={navigateToItem}>
+        <div className="image-container">
+          <img src={`https://drive.google.com/uc?export=view&id=${result.pictures[0]}`} alt="Item" className="item-image" />
+        </div>
+        <div className="details-container">
+          <div className="description">{result.description}</div>
+          <div className="seller">{result.sellerFullName}</div>
+        </div>
+      </div>
+    );
+  };
+
 
 const NavigationBar = () => {
   let navigate = useNavigate();
@@ -26,6 +46,8 @@ const NavigationBar = () => {
   const username = location.state.username;
   console.log(username);
   const [credit,setCredit] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [autocompleteResults, setAutocompleteResults] = useState([]);
 
   useEffect(()=>{
     getCredit(username,setCredit);
@@ -51,6 +73,59 @@ const NavigationBar = () => {
   function handleFavorites(){
     navigate("../favorites", { state: {username: username }});
   }
+
+  function handleItem(_id){
+    setSearchTerm("");
+    setAutocompleteResults([]);
+    navigate(`/item/${_id}`, { state: { username: username} });
+    
+  }
+
+  
+
+  useEffect(() => {
+    const fetchAutocompleteResults = async () => {
+      try {
+        if (searchTerm.length > 2) {
+          const response = await axios.get(`http://localhost:3000/autocomplete`, {
+            params: {
+              term: searchTerm,
+              username: username,
+            },
+          });
+          setAutocompleteResults(response.data);
+        } else {
+          setAutocompleteResults([]); // Clear the autocomplete results if the search term is less than two characters
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchAutocompleteResults(); // Call the API initially
+
+  }, [searchTerm]);
+
+  useEffect(() => {
+    const handleSearchTermChange = () => {
+      if (searchTerm.length <= 2) {
+        setAutocompleteResults([]); // Clear the autocomplete results if the search term is less than two characters
+      }
+    };
+
+    handleSearchTermChange(); // Handle the search term change initially
+
+  }, [searchTerm]);
+
+  function handleSearchSubmit(e) {
+    e.preventDefault(); 
+    // Navigate to first result page
+    handleItem(autocompleteResults[0]._id);
+    // You can access the current value of the search term using the `searchTerm` state variable
+    console.log(searchTerm);
+    setSearchTerm(""); // Clear the search term after submission if needed
+  }
+  
   
   return (
     <header>
@@ -69,13 +144,25 @@ const NavigationBar = () => {
               </NavDropdown>
             </Nav>
         </div>
-        <form className="d-flex search-bar">
+        <form className="d-flex search-bar" onSubmit={handleSearchSubmit}>
           <input
             className="form-control me-2"
             type="search"
             placeholder="Search"
             aria-label="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
+          {autocompleteResults.length > 0 && (
+            <ul className="autocomplete-results">
+              {autocompleteResults.map((result) => (
+                <li key={result._id}>
+                  <AutocompleteResult result={result} username={username} setSearchTerm={setSearchTerm} setAutocompleteResults={setAutocompleteResults}/>
+                </li>
+              ))}
+            </ul>
+          )}
+
           <button className="btn search-button" type="submit">
             <i className="bi bi-search"></i>
           </button>

@@ -41,7 +41,7 @@ const ItemPage = () => {
     };
 
     fetchItem();
-  }, []);
+  }, [id]);
 
   if (item === null) {
     return <div>Loading...</div>;
