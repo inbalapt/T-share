@@ -154,6 +154,8 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
     const { myUsername, friendUsername, time} = req.query;
     // Upload the file to Google Drive
     const fileId = await uploadFileToDrive(req.file);
+     // Delete the image file from the uploads directory
+     fs.unlinkSync(req.file.path);
     // Find the user and friend documents from the database
     const [user, friend] = await Promise.all([
       User.findOne({ username: myUsername }),
@@ -243,6 +245,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
     const { myUsername, friendUsername, time } = req.query;
     // Upload the file to Google Drive
     const fileId = await uploadFileToDrive(req.file);
+    fs.unlinkSync(req.file.path);
     // Find the user and friend documents from the database
     const [user, friend] = await Promise.all([
       User.findOne({ username: myUsername }),
@@ -343,6 +346,11 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
 
     // Upload each image file to Google Drive
     const uploadedImageIds = await Promise.all(images.map(uploadFileToDrive));
+    // Delete the uploaded image files from the server
+    images.forEach((image) => {
+      fs.unlinkSync(image.path);
+    });
+    
     console.log("uploaded: ");
     console.log(uploadedImageIds)
     // Find the user by username

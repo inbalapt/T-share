@@ -97,12 +97,12 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
         />
       )}
        {showSuccessMessage && (
-        <div className="success-message success">
+        <div className="message-item success">
           The item was bought successfully!
         </div>
       )}
       {showFailMessage &&(
-        <div className="success-message fail">
+        <div className="message-item fail">
           You don't have enough credit. 
         </div>
       )}

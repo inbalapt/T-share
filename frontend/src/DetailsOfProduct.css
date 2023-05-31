@@ -67,6 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .modal-content {
@@ -87,10 +88,9 @@
   margin-left: 10px;
 }
 
-.success-message {
+.message-item {
   display: block;
   text-align: center;
- 
   color: #ffffff;
   padding: 10px;
   border-radius: 5px;
@@ -103,4 +103,10 @@
 
 .fail{
   background-color: #ff0000;
+}
+
+.modal-content {
+  background-color:rgb(104, 104, 104); /* Replace with your desired color */
+  padding: 20px;
+  color:white
 }
