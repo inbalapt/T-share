@@ -75,14 +75,15 @@ const UploadItem = ({username, setUpdateProducts}) => {
                 
                 setShowSuccessMessage(true);
                 setUpdateProducts(true);
-                setUploadedImage(false);
+               
                 console.log(response.data);
                 
                 setTimeout(() => {
                     
                     setShowSuccessMessage(false);
+                     setUploadedImage(false);
                     // Navigate to the homepage
-                    navigate("../HomePage", { state: { username: username } });
+                    //navigate("../HomePage", { state: { username: username } });
                 }, 3000); // Adjust the duration as needed
             
                 
@@ -139,18 +140,24 @@ const UploadItem = ({username, setUpdateProducts}) => {
                 <input type="file" name="images" required multiple onChange={handleImageChange} className="upload-item-input"/>
             </label>
             <input type="submit" value="Submit" className="upload-item-submit"/>
-            {showSuccessMessage && (
-            <div className="success-message success">
-              The item uploaded successfully! 
-            </div>
-          )}
+            
         </form>
         
     ) : 
-    <div className="uploading-item">
+    <>
+    {!showSuccessMessage && (
+         <div className="uploading-item">
       <h1>Uploading the item</h1>
       <Oval color="#000000" height={50} width={50} />
-    </div>;
+    </div>
+    )}
+    {showSuccessMessage && (
+     <div className="success-message centered">
+     The item uploaded successfully!
+   </div>
+    )}
+    
+    </>
 }
 
 export default UploadItem;

@@ -38,23 +38,23 @@
 .fail{
     background-color: red;
 }
-.success-message {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    font-size: 18px;
-    color: white;
-    z-index: 9999;
-  }
 
-  .success{
-    background-color: green;
-  }
+.success-message {
+  position: fixed;
+  top: 30%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  font-size: 40px;
+  color: white;
+  z-index: 9999;
+  background-color: rgba(0, 128, 0, 0.8);
+}
+  
+
   
   .uploading-item {
     display: flex;
@@ -69,5 +69,9 @@
     margin-bottom: 20px;
   }
   
-  /* Adjust the styling as needed */
+  .centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
