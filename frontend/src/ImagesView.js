@@ -1,4 +1,3 @@
-// src/components/ImagesView.js
 import React, { useEffect, useState } from 'react';
 import './ImagesView.css';
 import { FaSearch } from 'react-icons/fa';
@@ -8,27 +7,26 @@ const ImagesView = ({ images }) => {
   console.log(images);
   const [mainImage, setMainImage] = useState(images[0]);
   const [zoom, setZoom] = useState(false);
-
+  const [fullScreen, setFullScreen] = useState(false);
   const [focusPosition, setFocusPosition] = useState({ x: 0, y: 0 });
   const mainImageRef = useRef(null);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     setMainImage(images[0]);
-  },[images]);
+  }, [images]);
 
   const handleThumbnailClick = (image) => {
     setMainImage(image);
     setFocusPosition({ x: 0, y: 0 });
+    setZoom(false);
   };
 
   const toggleZoom = () => {
     setZoom(!zoom);
   };
 
-  
-  const handleMainImageClick = () => {
-    setZoom(!zoom);
+  const toggleFullScreen = () => {
+    setFullScreen(!fullScreen);
   };
 
   return (
@@ -45,7 +43,7 @@ const ImagesView = ({ images }) => {
         ))}
       </div>
       <div
-        className={`main-image${zoom ? ' zoomed' : ''}`}
+        className={`main-image${zoom ? ' zoomed' : ''}${fullScreen ? ' full-screen' : ''}`}
         onMouseEnter={toggleZoom}
         onMouseLeave={toggleZoom}
         onMouseMove={(e) => {
@@ -54,6 +52,7 @@ const ImagesView = ({ images }) => {
           const y = ((e.clientY - rect.top) / rect.height) * 100;
           mainImageRef.current.style.backgroundPosition = `${x}% ${y}%`;
         }}
+        onClick={toggleFullScreen}
         style={{ backgroundImage: `url(https://drive.google.com/uc?export=view&id=${mainImage})` }}
         ref={mainImageRef}
       >
