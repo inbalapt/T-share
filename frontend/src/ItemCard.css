@@ -47,6 +47,7 @@
     bottom: 1rem;
     left: 1rem;
   }
+  
   .item-card {
     position: relative;
     cursor: pointer;
@@ -63,7 +64,9 @@
     fill: transparent;
     stroke: currentColor;
     stroke-width: 1;
+    
   }
+
   
   .favorite-button:hover .bi-heart,
   .favorite-button .bi-heart-fill {

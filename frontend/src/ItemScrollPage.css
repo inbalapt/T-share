@@ -14,9 +14,6 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
   
-  .filter-bar {
-    padding: 1rem;
-  }
   
   .item-grid {
     display: grid;
@@ -27,13 +24,6 @@
   }
 
 
-  .item-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
   .filter-bar {
     padding: 1rem;
     display: flex;

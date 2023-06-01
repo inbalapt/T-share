@@ -9,6 +9,7 @@ import { useParams ,useLocation} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+/*
 let itemsTemp =  [{id:"1", photo:logo, seller:"John Doe", price:"100", description:"A beautiful dress"},
 {id:"2", photo:logo, seller:"John Doe", price:"30", description:"A beautiful dress"},
 {id:"3", photo:logo, seller:"John Doe", price:"50", description:"A beautiful dress"},
@@ -53,7 +54,7 @@ let itemsTemp =  [{id:"1", photo:logo, seller:"John Doe", price:"100", descripti
 {id:"41", photo:logo, seller:"John Doe", price:"10", description:"A beautiful dress"},
 {id:"42", photo:logo, seller:"John Doe", price:"30", description:"A beautiful dress"},
 {id:"43", photo:logo, seller:"John Doe", price:"70", description:"A beautiful dress"}]
-
+*/
 
 function getCategoryHeadline(category) {
     var content;

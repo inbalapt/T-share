@@ -35,7 +35,7 @@
     color: rgb(73, 134, 148);
   }
 
-  .btn{
+  .reg-btn .btn{
     font-size:medium;
     background-color: rgb(173, 205, 210,0.5) !important;
     border:transparent;

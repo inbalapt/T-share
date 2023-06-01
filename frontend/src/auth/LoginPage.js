@@ -74,7 +74,7 @@ function LoginPage() {
                         <div className="regi">
                             <p> Not registered? <Link to='/RegisterPage' className="h">Click here</Link> to register</p>
                         </div>
-                        <div>
+                        <div className='login-btn'>
                             {errorMessage && <div className="error-message">{errorMessage}</div>}
                             <button type="submit" className="btn btn-lg btn-primary">
                                 Login
