@@ -142,7 +142,7 @@ function RegisterPage() {
             <div className='regi'>
               <p> Already registered? <Link to='/' className="h">Click here</Link> to login</p>
             </div>
-            <div>
+            <div className='reg-btn'>
               {errorMessage && <div className="error-message">{errorMessage}</div>}
               <button type="submit" className="btn btn-lg btn-primary" onClick={handleSubmit}>
                 Register
