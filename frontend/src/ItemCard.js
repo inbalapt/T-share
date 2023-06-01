@@ -67,7 +67,6 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
         }
     }
     
-    // Save the favorite item to the server !!! important
   };
 
   const handleChatClick = (e) => {

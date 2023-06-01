@@ -28,8 +28,11 @@
     margin-right: 8px; /* Add margin to create space between textarea and icons */
   }
   
-  i {
-    margin-right: 8px; /* Add margin to create space between icons */
+ 
+
+  .bi-image-fill,
+  .bi-camera-video{
+    margin-right: 8px;
   }
   
   i:hover {

@@ -34,6 +34,8 @@ const ItemPage = () => {
   const { id } = useParams();
   const [item, setItem] = useState(null);
 
+  
+
   useEffect(() => {
     const fetchItem = async () => {
       const itemDetails = await getItemDetails(id, setItem);

@@ -1,9 +1,9 @@
 /* src/components/DetailsOfProduct.css */
 .details-of-product {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   line-height: 1.5;
-  margin-left:60px;
+  margin-left: 40px;
 }
 
 .details-of-product p,
@@ -12,49 +12,68 @@
   margin-bottom: 10px;
 }
 
-.seller {
+.collection-point,
+.seller{
   font-size: 14px;
   font-weight: bold;
+  color: gray;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: bold;
+  color: gray;
+}
+
+.seller {
+  margin-top: 0; /* Remove top margin */
 }
 
 .description {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   color: #333;
 }
 
-.price {
-  font-size: 18px;
+.price-details {
+  font-size: 20px;
+  font-weight:bold;
   color: #f60;
 }
 
 .size,
-.collection-point,
 .condition,
-.color,
-.brand {
-  font-size: 14px;
+.color {
+  font-size: 15px;
+  margin-bottom: 10px;
 }
 
 .contact-seller-btn {
+  margin-top: 10px;
   display: inline-block;
   font-size: 16px;
-  padding: 10px 20px;
-  background-color: #f60;
-  color: #fff;
+  font-weight: bold;
+  padding: 10px 100px;
+  background-color: rgb(173, 205, 210, 0.5);
+  color: #000000;
   text-align: center;
   text-decoration: none;
   border-radius: 4px;
   cursor: pointer;
+  border: none;
+ 
 }
 
 .contact-seller-btn:hover {
-  background-color: #f90;
+  border: 1px solid gray;
 }
-.bi-x-circle{
+
+
+.bi-x-circle {
   font-size: 24px;
 }
-.bi-check-circle{
+
+.bi-check-circle {
   font-size: 24px;
 }
 
@@ -98,16 +117,23 @@
   margin-top: 10px;
 }
 
-.success{
-   background-color: #00ff00;
+.success {
+  background-color: #00ff00;
 }
 
-.fail{
+.fail {
   background-color: #ff0000;
 }
 
 .modal-content {
-  background-color:rgb(104, 104, 104); /* Replace with your desired color */
+  background-color: rgb(104, 104, 104); /* Replace with your desired color */
   padding: 20px;
-  color:white
+  color: white;
 }
+
+.details-btns{
+ 
+  margin-left: 10px;
+  padding:10px;
+}
+
