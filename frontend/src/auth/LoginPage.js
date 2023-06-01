@@ -59,8 +59,10 @@ function LoginPage() {
     };
     return (          
         <form onSubmit={handleSubmit}>
+             {!true && (<div className="line"></div>)}
             <body className="App-header">
                 <div className="row justify-content-md-center">
+                
                     <div className="regis">
                         <div className="loggg">
                             Login

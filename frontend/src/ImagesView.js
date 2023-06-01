@@ -2,11 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import './ImagesView.css';
 import { FaSearch } from 'react-icons/fa';
+import { useRef } from 'react';
 
 const ImagesView = ({ images }) => {
   console.log(images);
   const [mainImage, setMainImage] = useState(images[0]);
   const [zoom, setZoom] = useState(false);
+
+  const [focusPosition, setFocusPosition] = useState({ x: 0, y: 0 });
+  const mainImageRef = useRef(null);
 
 
   useEffect(()=>{
@@ -15,9 +19,15 @@ const ImagesView = ({ images }) => {
 
   const handleThumbnailClick = (image) => {
     setMainImage(image);
+    setFocusPosition({ x: 0, y: 0 });
   };
 
   const toggleZoom = () => {
+    setZoom(!zoom);
+  };
+
+  
+  const handleMainImageClick = () => {
     setZoom(!zoom);
   };
 
@@ -34,8 +44,19 @@ const ImagesView = ({ images }) => {
           />
         ))}
       </div>
-      <div className={`main-image${zoom ? ' zoomed' : ''}`}>
-        <img src={`https://drive.google.com/uc?export=view&id=${mainImage}`} alt="Main Product" />
+      <div
+        className={`main-image${zoom ? ' zoomed' : ''}`}
+        onMouseEnter={toggleZoom}
+        onMouseLeave={toggleZoom}
+        onMouseMove={(e) => {
+          const rect = mainImageRef.current.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          mainImageRef.current.style.backgroundPosition = `${x}% ${y}%`;
+        }}
+        style={{ backgroundImage: `url(https://drive.google.com/uc?export=view&id=${mainImage})` }}
+        ref={mainImageRef}
+      >
         <button className="zoom-in-btn" onClick={toggleZoom}>
           <FaSearch />
         </button>
