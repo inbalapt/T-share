@@ -28,7 +28,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
         });
     };
 
-    const handleImageChange = (event) => {  // <-- add this
+    const handleImageChange = async (event) => {  // <-- add this
         // if there is more than 4 images to the product
         if (event.target.files.length > 4) {
             alert("You can only upload up to 4 images.");
