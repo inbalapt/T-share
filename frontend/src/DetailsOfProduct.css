@@ -66,6 +66,7 @@
 
 .contact-seller-btn:hover {
   border: 1px solid gray;
+  background-color: rgb(211, 210, 210);
 }
 
 
@@ -132,8 +133,7 @@
 }
 
 .details-btns{
- 
+  background-color: rgb(173, 205, 210, 0.5);
   margin-left: 10px;
   padding:10px;
 }
-

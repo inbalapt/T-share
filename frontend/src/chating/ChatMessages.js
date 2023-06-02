@@ -90,14 +90,11 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
             }
             // i sent a message
             if(user == username && flag == 1){
-                console.log("greattt");
-                console.log("flag is: " + flag);
                 setCurrentMsgs([...currentMsgs, message]);
+                setChangeList(true);
             }
             // my contant sent a message
             else if(user == username && flag == 2){
-                console.log("maaaa");
-                console.log("flag is: " + flag);
                 setCurrentMsgs([...currentMsgs, message]);
             }
             else{
@@ -168,8 +165,7 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
                     socket.emit('send message', friendID, otherNewMessage, friendUsername, 2);
                 // Process the response as needed
                 } catch (error) {
-                console.error(error);
-                // Handle error
+                  console.error(error);
                 }
             };
         

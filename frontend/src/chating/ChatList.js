@@ -1,15 +1,29 @@
 import defaultProfile from './defaultProfile.png';
 import Contact from './Contact.js';
 import './ChatList.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 function ContactList({ friendsList, activeContact, handleChatClick, getFullname, getProfile }) {
     if (friendsList.length === 0) {
       return null;
     }
-  
+    
+    // Sort the friendsList based on the last realTime of messages
+    const sortedFriendsList = friendsList.sort((a, b) => {
+      
+      const lenA = a.messages.length;
+      const lenB = b.messages.length
+      const dateA = new Date(a.messages[lenA-1].realTime);
+      const dateB = new Date(b.messages[lenB-1].realTime);
+      return  dateB - dateA ;
+    });
+
+    console.log(friendsList);
+    console.log(sortedFriendsList);
+
     const contactsList = friendsList.map((friend, key) => {
+      
       return (
         <Contact
           {...friend}
@@ -29,13 +43,26 @@ function ContactList({ friendsList, activeContact, handleChatClick, getFullname,
 
 function ChatList({ username, myFullname, myProfile, friendsList, setFriendUsername, setFriendName, chooseFriend, getFullname, setFriendProduct, getProfile}) {
     const [activeContact, setActiveContact] = useState(null);
-
+    const [sortedFriendsList, setSortedFriendsList] = useState(friendsList);
     const handleChatClick = (friendUsername) => {
         setActiveContact(friendUsername);
         setFriendUsername(friendUsername);
         chooseFriend(friendUsername);
         setFriendProduct(false);
     };
+
+   /* useEffect(()=>{
+      setSortedFriendsList(friendsList.sort((a, b) => {
+          
+        const lenA = a.messages.length;
+        const lenB = b.messages.length
+        const dateA = new Date(a.messages[lenA-1].realTime);
+        const dateB = new Date(b.messages[lenB-1].realTime);
+        return  dateB - dateA ;
+      }));
+      //console.log(sortedFriendsList);
+    },[friendsList]);*/
+    
 
     return (
         <div className="chat-list-container">

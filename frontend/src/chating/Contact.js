@@ -5,11 +5,9 @@ import axios from 'axios';
 
 function Contact({ username, messages, activeContact, handleChatClick, getFullname, getProfile }) {
   const length = messages.length;
-  console.log(messages);
   const lastMessageType = messages[length - 1].msgType;
   const lastMessage = messages[length - 1].content;
   const lastMessageTime = messages[length - 1].createdAt;
-  const lastRealTime = messages[length-1].realTime;
   const [friendName, setFriendName] = useState("");
   const [friendProfile, setFriendProfile] = useState("");
 
@@ -26,13 +24,13 @@ function Contact({ username, messages, activeContact, handleChatClick, getFullna
     };
     fetchFullname();
 
-    console.log("lastMessageType is: " + lastMessageType);
-  }, []); // pass empty array to run effect only once
+  }, [username]); // pass empty array to run effect only once
 
   return (
     <div
       className={`chat-box ${activeContact === username ? 'active' : ''}`}
-      onClick={() => handleChatClick(username)}
+      onClick={() =>
+         handleChatClick(username)}
     >
       {friendProfile !== "" && <img src={`https://drive.google.com/uc?export=view&id=${friendProfile}`} alt="Profile" className="friend-pic" />}
       {friendProfile == "" && <img src={defaultProfile} alt="Profile" className="friend-pic" />}

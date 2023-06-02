@@ -22,7 +22,7 @@ function Message({username, sender, msgType, content, createdAt }) {
     if (content === '') {
       return null;
     }
-    console.log("sender is " + sender);
+    
   
     const handleLinkClick = (e) => {
         const splitHere='/item/';
