@@ -1,0 +1,90 @@
+/* HomePage.css*/
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+
+.parent-cat-head {
+    padding-top: 0.5em;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+.category-header {
+    padding-top: 60px; /* Adjust this value based on the height of your NavigationBar */
+    width: 100%;
+    padding-left: 2em;
+    padding-right: 15em;
+    
+    /* other styles */
+}
+
+.head-home {
+    text-align: left;
+    align-self: flex-start;
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.5rem;
+    width: 100%;
+    padding-left: 3em;
+}
+
+.home-page {
+    padding-top: 71px; /* Adjust this value based on the height of your NavigationBar */
+    display: flex;
+    flex-direction: column;
+    /* other styles */
+}
+
+.home-categories {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 18em;
+    padding: 1em;
+    padding-left: 2em;
+    padding-right: 2em;
+    gap: 1em;
+}
+
+.category-dress {
+    width: 45%;
+}
+
+.category-top {
+    width: 35%;
+}
+
+.skirt-pants {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+}
+
+.category-skirt{
+    height: 50%;
+}
+
+.category-pants{
+    height: 50%;
+    background-color: rgb(164, 165, 179);
+}
+
+.category-dress, .category-top, .category-skirt, .category-pants {
+    background-size: cover;
+    background-position: center;
+    position: relative; /* This allows positioning of children (the label) */
+    cursor: pointer;
+}
+
+.category-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent black background */
+    color: white;
+}
+
+.category-dress:hover, .category-top:hover, .category-skirt:hover, .category-pants:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+  }
+  

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import './NavigationBar.css';
 import { Link } from 'react-router-dom';
+import logo from './logo.jpeg'
 import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
 import { useNavigate,  useLocation } from "react-router-dom";
 import axios from 'axios';
@@ -131,7 +132,7 @@ const NavigationBar = () => {
     <header>
     <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand" href="/">Logo</Link>
+        <Link className="navbar-brand" href="/"><img className='logo-img' src={logo} alt="Logo" /></Link>
         <div className="navbar-nav">
         <Nav className="me-auto">
               <Nav.Link onClick={handleHome}>Home</Nav.Link>

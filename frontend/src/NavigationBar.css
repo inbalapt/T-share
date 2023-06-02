@@ -109,7 +109,9 @@
   display: inline;
 }
 
-
+.logo-img {
+  height: 2.3em;
+}
 
 .autocomplete-results {
   position: absolute;
