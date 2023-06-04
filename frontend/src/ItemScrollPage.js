@@ -75,7 +75,7 @@ function getCategoryHeadline(category) {
     return content;
 
 }
-
+/*
 const getCategoryItems = async (category,username, setItems) => {
   try {
     const response = await axios.get(`http://localhost:3000/items/${category}?username=${username}`);
@@ -85,7 +85,21 @@ const getCategoryItems = async (category,username, setItems) => {
   } catch (error) {
     console.error(error);
   }
+}*/
+
+const getCategoryItems = async (category, username, page, limit, setItems) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/items/${category}?username=${username}`, {
+      params: { page, limit }
+    });
+    console.log(response.data);
+    setItems(response.data.items);
+    return response.data.totalPages; // Return the total number of pages from the server
+  } catch (error) {
+    console.error(error);
+  }
 }
+
 
 
 const ItemScrollPage = ({ filterOptions, handleFilter }) => {
@@ -96,16 +110,35 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     const [items, setItems] = useState([]);
     const location = useLocation();
     const username = location.state.username;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(28);
+    const [totalPages, setTotalPages] = useState(0);
     
 
     
     useEffect(() => {
-        // Fetch items from your API or use the existing items array
-        const fetchItems= getCategoryItems(category,username, setItems);
-    }, [category]);
+      const fetchItems = async () => {
+        const totalPages = await getCategoryItems(category, username, currentPage, itemsPerPage, setItems);
+        // Optionally, you can store the total number of pages in a state variable if needed
+        setTotalPages(totalPages);
+      };
+      fetchItems();
+    }, [category, currentPage, itemsPerPage, username]);
+    
 
     
+    const handlePrevPage = () => {
+      if (currentPage > 1) {
+        setCurrentPage(prevPage => prevPage - 1);
+      }
+    };
     
+    const handleNextPage = () => {
+      // Assuming you have the total number of pages stored in a state variable named 'totalPages'
+      if (currentPage < totalPages) {
+        setCurrentPage(prevPage => prevPage + 1);
+      }
+    };
 
     //const location = useLocation();
     //const items = location.state?.items || [];
@@ -142,9 +175,11 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
   return (
     <div>
       <NavigationBar />
+     
       <div className="category-header" style={{ backgroundImage:`url(${img})`}}>
         <h1>{content}</h1>
       </div>
+      
       <div className="filter-bar">
         <select value={sortType} onChange={handleSortChange}>
           <option value="relevent">Relevance</option>
@@ -153,13 +188,21 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
           <option value="priceHighToLow">Price: High to Low</option>
         </select>
       </div>
-      
+      {totalPages > 1 && (<div className="pagination">
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+        <span>{currentPage}</span>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
+      </div>)}
       <div className="item-grid">
         {items.map((item) => (
           <ItemCard key={item.id} {...item} username={username} />
         ))}
       </div> 
-
+      {totalPages > 1 && (<div className="pagination">
+        <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+        <span>{currentPage}</span>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
+      </div>)}
     </div>
     
   );

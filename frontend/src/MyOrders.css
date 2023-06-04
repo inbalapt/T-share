@@ -26,3 +26,9 @@
     text-align: center;
     font-weight: bold;
 }
+
+.my-uploads{
+    padding: 20px;
+    box-sizing: border-box; /* add this line */
+    width: 130%;
+}

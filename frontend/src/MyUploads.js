@@ -36,12 +36,13 @@ const MyUploads = ({ username, setUpdateProducts, updateProducts }) => {
 
 
     return (
-        <div className="my-orders">
+        <div className="my-uploads">
             <h1>My Products</h1>
             <div className="my-orders-headers">
                 <span className="my-orders-header">Description:</span>
                 <span className="my-orders-header">Price:</span>
                 <span className="my-orders-header">Condition:</span>
+                <span className="my-orders-header">Bought:</span>
                 <span className="my-orders-header">Options:</span>
             </div>
             {uploads.map(upload => (

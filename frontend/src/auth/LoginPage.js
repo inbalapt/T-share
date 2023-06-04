@@ -40,7 +40,6 @@ function LoginPage() {
         try {
             const response = await axios.post("http://localhost:3000/auth/login", userData);
             if (response.status == 200) {
-                console.log("200");
                 navigate("./HomePage", { state: {username: userData.username }});
             }
         } catch (error) {

@@ -261,13 +261,14 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
           sender: false, // Message sent by the user
           msgType: "image",
           content: fileId,
-          createdAt: time
+          createdAt: time,
         }]};
+        friend.hasUnreadMessages = true;
         friend.friends.push(newUserFriend);
 
-        // Save the updated user data
-        await user.save();
-
+        // Save the updated friend data
+        await friend.save();
+        
       } else{
          
         // Update the user's messages
@@ -293,9 +294,10 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
             });
           }
         });
-
+        friend.hasUnreadMessages = true;
         // Save the updated user and friend to the database
         await Promise.all([user.save(), friend.save()]);
+        console.log(friend.username + friend.hasUnreadMessages);
       }
     
       
@@ -351,12 +353,12 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
             sender: false, // Message sent by the user
             msgType: "video",
             content: fileId,
-            createdAt: time
+            createdAt: time,
           }]};
           friend.friends.push(newUserFriend);
-  
+          friend.hasUnreadMessages = true;
           // Save the updated user data
-          await user.save();
+          await friend.save();
   
         } else{
         // Update the user's messages
@@ -382,7 +384,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
             });
           }
         });
-
+        friend.hasUnreadMessages = true;
         // Save the updated user and friend to the database
         await Promise.all([user.save(), friend.save()]);
       }
@@ -410,6 +412,7 @@ const itemStorage = multer.diskStorage({
 });
 
 const itemUpload = multer({ storage: itemStorage });
+
 
 // Endpoint for uploading item images
 app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
@@ -473,7 +476,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
 
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
+app.post("/auth/register", register);
 
 /* ROUTES */
 app.use("/auth", authRouter);
@@ -542,6 +545,27 @@ app.post('/buyItem', async (req, res) => {
   }
 });
 
+
+
+app.post("/changeNotUnreadMessages", async (req,res)=>{
+  const { username } = req.query;
+  try{
+    // Find the user by username
+    const user = await User.findOne({ username });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.hasUnreadMessages = false;
+    await user.save();
+    // Send a success response
+    return res.status(200);
+  } catch (error) {
+    console.error("Error updating user details", error);
+    // Send an error response
+    return res.status(500).json({ error: "Internal server error" });
+  }
+})
 
 app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
   try {
@@ -638,6 +662,23 @@ app.delete('/removeFavoriteItem', async (req, res) => {
   }
 });
 
+app.get('/hasUnreadMessages', (req, res)=> {
+  const { username } = req.query;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+      console.log(user.hasUnreadMessages);
+      return res.status(200).json({ has: user.hasUnreadMessages });
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'User has no this field.' });
+    });
+});
+
 app.get('/getFavItems', (req, res) => {
   const { username } = req.query;
 
@@ -675,10 +716,10 @@ app.get('/getItemById', (req, res) => {
         res.status(404).json({ error: 'Item not found' });
         return;
       }
-      if(item.isBought){
+     /* if(item.isBought){
         res.status(204).json({ error: 'Item is bought' });
         return;
-      }
+      }*/
       res.json(item);
     })
     .catch(error => {
@@ -748,6 +789,7 @@ app.post('/addNewFriend', async(req,res) =>{
       console.log("friend not found");
       return res.status(404).json({ error: 'User not found' });
     }
+    friendUser.hasUnreadMessages = true;
 
      // Check if the friendUsername is already in the user's friends array
      const userExists = friendUser.friends.some((friend) => friend.username === username);
@@ -760,11 +802,14 @@ app.post('/addNewFriend', async(req,res) =>{
       sender: false, // Message sent by the user
       msgType: type,
       content: content,
-      createdAt: createdAt}]};
+      createdAt: createdAt,
+    }]};
     friendUser.friends.push(newUserFriend);
      // Save the updated user data
+    friendUser.hasUnreadMessages = true;
+    
     await friendUser.save();
-
+    
     res.json({ success: true, message: 'Friend added successfully' });
     
   } catch (error) {
@@ -773,6 +818,8 @@ app.post('/addNewFriend', async(req,res) =>{
   }
 });
 
+
+/*
 // Retrieve items by category
 app.get('/items/:category', async (req, res) => {
   const category = req.params.category;
@@ -791,7 +838,39 @@ app.get('/items/:category', async (req, res) => {
     console.error('Error retrieving items:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});*/
+
+app.get('/items/:category', async (req, res) => {
+  const { category } = req.params;
+  const {username} = req.body;
+  const { page, limit } = req.query;
+
+  try {
+    let items;
+    if (category === 'all') {
+      // Retrieve all items from the database
+      items = await Item.find({ sellerUsername: { $ne: username }, isBought: { $ne: true } });
+    } else {
+      // Retrieve items based on the specified category
+      items = await Item.find({ category, sellerUsername: { $ne: username }, isBought: { $ne: true } });
+    }
+
+    // Pagination logic
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const slicedItems = items.slice(startIndex, endIndex);
+
+    // Assuming you have the total count of items available
+    const totalCount = items.length;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.json({ items: slicedItems, totalPages });
+  } catch (error) {
+    console.error('Error retrieving items:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
 
 
 app.get('/getUserDetails', async (req,res)=>{
@@ -935,7 +1014,6 @@ app.delete('/deleteItem', async (req, res) => {
     if (!item) {
       return res.status(404).json({ error: 'Item not found' });
     }
-
     // Remove the item from the Item database
     await Item.deleteOne({ _id: itemId });
 

@@ -8,13 +8,11 @@ function Message({username, sender, msgType, content, createdAt }) {
     const [isLink, setIsLink] = useState(false);
     const [firstPart, setFirstPart] = useState('');
     const [secondPart, setSecondPart] = useState('');
-  
+    
     useEffect(() => {
-        if(content== 'text'){
+        if(msgType == 'text'){
             setIsLink(content.includes(substring));
         
-     
-  
         if (isLink) {
             const parts = content.split(substring);
             setFirstPart(parts[0].trim());

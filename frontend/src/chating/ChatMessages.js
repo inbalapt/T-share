@@ -208,8 +208,8 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
               // Continue with the desired logic
             }
           }
-        sendText(myNewMessage, username, friendUsername)
-        .then(sendText(otherNewMessage, friendUsername, username))
+        sendText(myNewMessage, username, friendUsername,1)
+        .then(sendText(otherNewMessage, friendUsername, username,2))
         .then(document.getElementById("textMsg").value = "");
         setMessageInput('');
         console.log("im here");
@@ -306,10 +306,10 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     
       
     // Update database of the sender with the new message
-    async function sendText(newMessage, sender, receiver){
+    async function sendText(newMessage, sender, receiver, hasUnreadMessages){
         try {
             const encodedMessage = encodeURIComponent(JSON.stringify(newMessage));
-            const response = await axios.post(`http://localhost:3000/messages?message=${encodedMessage}&username=${sender}&friendUsername=${receiver}`);
+            const response = await axios.post(`http://localhost:3000/messages?message=${encodedMessage}&username=${sender}&friendUsername=${receiver}&hasUnreadMessages=${hasUnreadMessages}`);
             console.log(response.data);
             setChangeList(true);
            
