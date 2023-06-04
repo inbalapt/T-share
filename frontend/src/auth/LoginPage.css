@@ -1,4 +1,200 @@
 
+
+/*LoginPage.css */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap');
+
+
+.login-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+}
+
+.left-section, .right-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 2rem;
+}
+
+.left-section {
+    justify-content: flex-start;
+    width: 40%;
+    background-color: #f8f9fa;
+}
+
+.right-section {
+    width: 60%;
+    background-color: #e5d2d1;
+    justify-content: center;
+}
+
+.login-page .left-section img {
+  position: absolute;
+  top: 2em;
+}
+.login-page .head-login1 {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 3.12em;
+    padding-top: 1.7em;
+    padding-bottom: 0.5em;
+    color: #666;
+}
+
+.login-page .head-login2 {
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    
+    font-size: 3.8em;
+    padding-bottom: 0.5em;
+    color: #666;
+}
+
+
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    padding: 2rem;
+    background: #fff;
+    box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);
+}
+
+.login-item-label {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.login-item-label input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.login-item-label input:focus {
+    border-color: #dabab8;
+    box-shadow: 0 0 2px #dabab89e;
+    outline: none;
+}
+
+.login-item-label input::placeholder {
+    color: #ddd;
+    opacity: 1;
+}
+
+.login-form-head {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: bolder;
+    color: #666;
+}
+
+.did-regis {
+
+    color: #6c757d;
+    text-align: center;
+}
+
+.login-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.login-btn button {
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #e5d2d1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn button:hover {
+    background-color: #dabab8;
+}
+
+.h {
+    color: rgb(173, 205, 210);
+    
+  }
+.h:hover {
+    color: rgba(64, 104, 112, 0.5);
+  }
+
+/*
+.login-page {
+    display: flex;
+    justify-content: flex-start; 
+    height: 100%;
+    width: 100%;
+}
+
+.left-section {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: aquamarine;
+    font-family: 'Oswald', sans-serif;
+    
+}
+
+.right-section {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: blanchedalmond;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 0 auto;
+    display: flex;
+    font-weight: bold;
+    justify-content: space-between;
+    margin-top: 20px;
+    
+
+}
+.login-item-label{
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    justify-content: space-between;
+    row-gap: 8px;
+    margin-top: 20px;
+}
+
+.did-regis {
+    margin-top: 20px;
+    display: flex;
+}
+
+.login-form-head{
+    padding-top: 3em;
+    font-size: 2em;
+    font-weight: bolder;
+}
+*/
+
+/*
 .App-header{
     text-align: center;
     color: #fff;
@@ -12,23 +208,7 @@
     padding: 50px;
 
 }
-.fooo{
-    background-color: rgb(240, 226, 225, 0.8);  
-    border-color: transparent;
-    position:relative;
-    height: 120%;
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    padding-top: 2vh;
-    padding-bottom: 5vh;
-    padding-left: 5vh;
-    padding-right: 5vh;
-    vertical-align: center;
-    border-radius: 25px;
-    font-size: 3.8vh !important;
-    color: rgb(73, 134, 148);
-}
+
 
 .loggg{
     padding-bottom: 1vh;
@@ -43,8 +223,8 @@ img[type="logoBig"] {
     padding-bottom: 1.5vh;
   }
 
-  row.justify-content-md-center{
-    /*padding: 20vh;*/
+  .login-page row.justify-content-md-center{
+
     flex-shrink: 0;
     width: 100%;
     max-width: 100%;
@@ -56,14 +236,14 @@ img[type="logoBig"] {
     background-color: rgb(240, 226, 225, 0.8);
 }
 
-.row {
+.login-page row {
     --bs-gutter-x:0;
     --bs-gutter-y: 0;
 }
 
 
 
-input{
+.login-page input{
     background-color: rgb(240, 226, 225, 0.9);
     background-color: rgb(173, 205, 210,0.5);
     border-color: #ccc;
@@ -108,3 +288,4 @@ input{
     color:red;
     font-size:3vh;
 }
+*/

@@ -4,6 +4,7 @@ import { useState } from "react";
 import {Link, Route} from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import logo from './../logo.jpeg'
 
 
 function RegisterPage() {
@@ -108,50 +109,74 @@ function RegisterPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <body className="App-header">
-        <div className="row justify-content-md-center">
-          <div className="regis">
-            <div className="loggg">
-              Register
-            </div>
-            <div>
-              Username: *<input type="text" name="username" placeholder="Enter Username" value={userData.username} onChange={handleInputChange} required maxLength="15"></input>
-            </div>
-            <div>
-              Password: *<input type="password" name="password" placeholder="Enter Password" value={userData.password} onChange={handleInputChange} required maxLength="15"></input>
-            </div>
-            <div>
-              Confirm Password: *<input type="password" name="confPassword" placeholder="Enter Password" required maxLength="15"></input>
-            </div>
-            <div>
-              Email: *<input type="email" name="email" placeholder="Enter Email" value={userData.email} onChange={handleInputChange} required maxLength="50"></input>
-            </div>
-            <div>
-              Full Name: *<input type="text" name="fullname" placeholder="Enter Full Name" value={userData.fullname} onChange={handleInputChange} required maxLength="25"></input>
-            </div>
-            <div>
-              Weight:<input type="number" name="weight" placeholder="Enter Weight" value={userData.weight} onChange={handleInputChange} max="200"></input>
-            </div>
-            <div>
-              Height:<input type="number" name="height" placeholder="Enter Height" value={userData.height} onChange={handleInputChange} max="200"></input>
-            </div>
-            <div>
-              City:<input type="text" name="city" placeholder="Enter City" value={userData.city} onChange={handleInputChange} maxLength="20"></input>
-            </div>
-            <div className='regi'>
-              <p> Already registered? <Link to='/' className="h">Click here</Link> to login</p>
-            </div>
-            <div className='reg-btn'>
-              {errorMessage && <div className="error-message">{errorMessage}</div>}
-              <button type="submit" className="btn btn-lg btn-primary" onClick={handleSubmit}>
-                Register
-              </button>
-            </div>
-          </div>
+    <div className='register-page'> 
+      <div className='left-section'>   
+          <img src={logo} alt='Logo' />  
+          <div className='head-welcome'>
+            <h1 className='head-login1'>Step into Sustainable Style </h1>
+            <h1 className='head-login2'>Welcome to T-Share </h1>       
+          </div>     
+      </div> 
+
+      <div className='right-section'>  
+      <form onSubmit={handleSubmit} className='register-form'>
+            <body className="App-header">
+                  <div className="register-form-head">
+                    Register
+                  </div>
+
+                  <label className='register-item-label'>
+                    <div>Username: <span className="required">*</span></div>
+                    <input type="text" name="username" placeholder="Enter Username" value={userData.username} onChange={handleInputChange} required maxLength="15"></input>
+                  </label>
+
+                  <label className='register-item-label'>
+                    <div>Password: <span className="required">*</span></div>
+                    <input type="password" name="password" placeholder="Enter Password" value={userData.password} onChange={handleInputChange} required maxLength="15"></input>
+                  </label>
+
+                  <label className='register-item-label'>
+                    <div>Confirm Password: <span className="required">*</span></div>
+                    <input type="password" name="confPassword" placeholder="Enter Password Again" required maxLength="15"></input>
+                  </label>
+
+                  <label className='register-item-label'>
+                    <div>Email: <span className="required">*</span></div>
+                    <input type="email" name="email" placeholder="Enter Email" value={userData.email} onChange={handleInputChange} required maxLength="50"></input>
+                  </label>
+
+                  <label className='register-item-label'>
+                    <div>Full Name: <span className="required">*</span></div>
+                    <input type="text" name="fullname" placeholder="Enter Full Name" value={userData.fullname} onChange={handleInputChange} required maxLength="25"></input>
+                  </label>
+                  
+                  <label className='register-item-label'>
+                    <div>City: <span className="required">*</span> </div>
+                    <input type="text" name="city" placeholder="Enter City" value={userData.city} onChange={handleInputChange} maxLength="20"></input>
+                  </label>
+                  
+                  <label className='register-item-label'>
+                    <div>Weight:</div>
+                    <input type="number" name="weight" placeholder="Enter Weight" value={userData.weight} onChange={handleInputChange} max="200"></input>
+                  </label>
+
+                  <label className='register-item-label'>
+                    <div>Height:</div>
+                    <input type="number" name="height" placeholder="Enter Height" value={userData.height} onChange={handleInputChange} max="200"></input>
+                  </label>
+
+
+                  <div className='did-login'>
+                    <p> Already registered? <Link to='/' className="h">Click here</Link> to login</p>
+                  </div>
+                  <div className='register-btn'>
+                    {errorMessage && <div className="error-message">{errorMessage}</div>}
+                    <button type="submit" className='submit-button'>Register</button>
+                  </div>
+                </body>
+          </form> 
         </div>
-      </body>
-    </form>
+    </div>
   );
 }
   
