@@ -27,6 +27,7 @@ const getCredit = async (username,setCredit) => {
       setAutocompleteResults([]);
       navigate(`/item/${result._id}`, { state: { username: username } });
     };
+    
     return (
       <div className="autocomplete-result"  onClick={navigateToItem}>
         <div className="image-container">

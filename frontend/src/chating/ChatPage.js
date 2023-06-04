@@ -12,14 +12,6 @@ const getFriendsList = async (username) => {
     try {
       const response = await axios.get(`http://localhost:3000/getFriends?username=${username}`);
       console.log(response.data.friends);
-      const sortedFriendsList = response.data.friends.sort((a, b) => {
-          
-        const lenA = a.messages.length;
-        const lenB = b.messages.length
-        const dateA = new Date(a.messages[lenA-1].realTime);
-        const dateB = new Date(b.messages[lenB-1].realTime);
-        return  dateB - dateA ;
-      });
       return response.data.friends;
     } catch (error) {
       console.error(error);
@@ -80,15 +72,6 @@ function ChatPage() {
       const fetchFriendsList = async () => {
         const friends = await getFriendsList(username);
         console.log(friends);
-        // Sort the friendsList based on the last realTime of messages
-        /*const sortedFriendsList = friends.sort((a, b) => {
-          
-          const lenA = a.messages.length;
-          const lenB = b.messages.length
-          const dateA = new Date(a.messages[lenA-1].realTime);
-          const dateB = new Date(b.messages[lenB-1].realTime);
-          return  dateB - dateA ;
-        });*/
 
         setFriendsList(friends);
         setChangeList(false);
@@ -105,14 +88,6 @@ function ChatPage() {
     useEffect(() => {
         const fetchFriendsList = async () => {
           const friends = await getFriendsList(username);
-          /*const sortedFriendsList = friends.sort((a, b) => {
-          
-            const lenA = a.messages.length;
-            const lenB = b.messages.length
-            const dateA = new Date(a.messages[lenA-1].realTime);
-            const dateB = new Date(b.messages[lenB-1].realTime);
-            return  dateB - dateA ;
-          });*/
   
           setFriendsList(friends);
         };

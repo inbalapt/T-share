@@ -251,6 +251,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
           content: fileId,
           createdAt: time
         }]};
+        console.log("file id is : " +fileId);
         user.friends.push(newFriend);
 
         // Save the updated user data
@@ -1030,6 +1031,7 @@ app.get('/autocomplete', async (req, res) => {
     // Perform the search query using the Item model
     const results = await Item.find({
       $or: [
+        { sellerFullName: { $regex: searchTerm, $options: 'i' } },
         { category: { $regex: searchTerm, $options: 'i' } },
         { color: { $regex: searchTerm, $options: 'i' } },
         { description: { $regex: searchTerm, $options: 'i' } },

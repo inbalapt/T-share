@@ -20,7 +20,7 @@
 .search-button {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 4px;
   background: transparent;
   border: none;
   color: inherit;
@@ -124,6 +124,10 @@
   padding: 0.5rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   list-style: none;
+  
+  max-height: 500px; /* Adjust the height as needed */
+  overflow-y: auto;
+  
 }
 
 .autocomplete-results li {

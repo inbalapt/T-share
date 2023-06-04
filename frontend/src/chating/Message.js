@@ -10,13 +10,17 @@ function Message({username, sender, msgType, content, createdAt }) {
     const [secondPart, setSecondPart] = useState('');
   
     useEffect(() => {
-      setIsLink(content.includes(substring));
+        if(content== 'text'){
+            setIsLink(content.includes(substring));
+        
+     
   
-      if (isLink) {
-        const parts = content.split(substring);
-        setFirstPart(parts[0].trim());
-        setSecondPart(substring + parts[1]);
-      }
+        if (isLink) {
+            const parts = content.split(substring);
+            setFirstPart(parts[0].trim());
+            setSecondPart(substring + parts[1]);
+        }
+    }
     }, [content, substring, isLink]);
 
     if (content === '') {

@@ -50,20 +50,7 @@ function ChatList({ username, myFullname, myProfile, friendsList, setFriendUsern
         chooseFriend(friendUsername);
         setFriendProduct(false);
     };
-
-   /* useEffect(()=>{
-      setSortedFriendsList(friendsList.sort((a, b) => {
-          
-        const lenA = a.messages.length;
-        const lenB = b.messages.length
-        const dateA = new Date(a.messages[lenA-1].realTime);
-        const dateB = new Date(b.messages[lenB-1].realTime);
-        return  dateB - dateA ;
-      }));
-      //console.log(sortedFriendsList);
-    },[friendsList]);*/
     
-
     return (
         <div className="chat-list-container">
             <div className="profile-container">
