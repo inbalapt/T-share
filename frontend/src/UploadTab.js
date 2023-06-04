@@ -1,10 +1,18 @@
 // OrderTab.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './OrderTab.css';
 import axios from 'axios';
 
 const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads}) => {
-
+    const [uploadIsBought, setUploadIsBought] = useState("");
+    useEffect(()=>{
+        if(upload.isBought){
+            setUploadIsBought("yes");
+        } else {
+            setUploadIsBought("no");
+        }
+        
+    },[upload])
     const deleteItem = async ()=>{
         try {
             const response = await axios.delete(`http://localhost:3000/deleteItem?itemId=${upload._id}&username=${upload.sellerUsername}`);
@@ -28,6 +36,7 @@ const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads}) => {
                 <div className="order-tab-section">{upload.description}</div>
                 <div className="order-tab-section">${upload.price}</div>
                 <div className="order-tab-section">{upload.condition}</div>
+                <div className="order-tab-section">{uploadIsBought}</div>
                 <div className="order-tab-section">
                     <i class="bi bi-trash3" onClick={deleteItem}></i>
                 </div>

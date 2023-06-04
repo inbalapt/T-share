@@ -11,6 +11,7 @@ import NavigationBar from '../NavigationBar';
 const getFriendsList = async (username) => {
     try {
       const response = await axios.get(`http://localhost:3000/getFriends?username=${username}`);
+      console.log(response.data.friends);
       return response.data.friends;
     } catch (error) {
       console.error(error);
@@ -37,6 +38,15 @@ const getProfilePhoto = async (username)=>{
   }
 }
 
+const hasNotUnread = async(username)=>{
+  try{
+    const formData = new FormData();
+    formData.append('username', username);
+    const response = await axios.post(`http://localhost:3000/changeNotUnreadMessages?username=${username}`);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
 
@@ -64,13 +74,16 @@ function ChatPage() {
       }
     }, [friendUsername]);
     
-
+    useEffect(()=>{
+      hasNotUnread(username);
+    },[]);
     
 
     useEffect(() => {
       const fetchFriendsList = async () => {
         const friends = await getFriendsList(username);
         console.log(friends);
+
         setFriendsList(friends);
         setChangeList(false);
       };
@@ -86,7 +99,7 @@ function ChatPage() {
     useEffect(() => {
         const fetchFriendsList = async () => {
           const friends = await getFriendsList(username);
-          console.log(friends);
+  
           setFriendsList(friends);
         };
         
@@ -106,11 +119,9 @@ function ChatPage() {
    
 
     async function chooseFriend(friendUsername){
-      console.log("enter");
         if(friendProduct){
           setAutomaticMessage('');
         }
-        console.log("automessage is " + automaticMessage)
         try {
             const url = `http://localhost:3000/getMessages?username=${username}&friendUsername=${friendUsername}`;
             const response = await axios.get(url);

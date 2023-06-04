@@ -4,7 +4,7 @@ import './DetailsOfProduct.css';
 import { useNavigate } from 'react-router-dom';
 import { FaTrophy } from 'react-icons/fa';
 import axios from 'axios';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 const BuyConfirmationModal = ({ onConfirmBuy, onCancelBuy }) => {
   return (
@@ -20,11 +20,32 @@ const BuyConfirmationModal = ({ onConfirmBuy, onCancelBuy }) => {
   );
 };
 
+const isItemFavorite = async(username, id)=>{
+  try {
+    const response = await axios.get(`http://localhost:3000/isFavItem?username=${username}&id=${id}`);
+    return response.data.isFavorite;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const DetailsOfProduct = ({ username, seller, description, price, size, collectionPoint, condition, color, brand, sellerUsername, pictures, id }) => {
+  const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const [showBuyConfirmation, setShowBuyConfirmation] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailMessage,setShowFailMessage] = useState(false);
+
+  useEffect(()=>{
+    isItemFavorite(username,id)
+    .then(isFavorite => {
+      if (isFavorite) {
+        setIsFavorite(true)
+      } else {
+        setIsFavorite(false)
+      }
+    })
+  }, [id]);
 
   const handleChatClick = (e) => {
     const automaticMessage = `Hi, I'm interested in this ${description}, http://localhost:3001/item/${id}`
@@ -35,6 +56,33 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
   async function handleBuyClick(){
     setShowBuyConfirmation(true);
   }
+
+  const handleFavoriteClick = async (e) => { // Add async keyword here
+    e.stopPropagation();
+    
+    
+    if(!isFavorite){
+      setIsFavorite(true);
+      try {
+      const response = await axios.post(`http://localhost:3000/addFavoriteItem?username=${username}&id=${id}`);
+      console.log(response.data);
+      return response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    } else{
+      setIsFavorite(false);
+      try {
+        const response = await axios.delete(`http://localhost:3000/removeFavoriteItem?username=${username}&id=${id}`);
+        console.log(response.data);
+        return response.data;
+        } catch (error) {
+          console.error(error);
+        }
+    }
+    
+    // Save the favorite item to the server !!! important
+  };
 
   const handleConfirmBuy = async() => {
     // Perform the buy operation or any additional logic
@@ -76,18 +124,27 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
 
   return (
     <div className="details-of-product">
-      <p className="seller">Seller: {seller}</p>
+      {brand && (<p className="brand">{brand}</p>)}
       <h2 className="description">{description}</h2>
+      <p className="price-details">Price: {price}</p>
       <p className="size">Size: {size}</p>
-      <p className="collection-point">Location: {collectionPoint}</p>
       <p className="condition">Condition: {condition}</p>
-      <p className="color">Color: {color}</p>
-      <p className="brand">Brand: {brand}</p>
-      <p className="price">Price: {price}</p>
+      {color && (<p className="color">Color: {color}</p>)}
+      
+      
+      <p className="seller">Seller: {seller}</p>
+      <p className="collection-point">From: {collectionPoint}</p>
       {username != sellerUsername && !showSuccessMessage && !showFailMessage &&
       <>
-       <button className="contact-seller-btn" onClick={handleChatClick}>Contact the seller</button>
       <button className="contact-seller-btn" onClick={handleBuyClick}>Buy</button>
+      
+        <button className="btn btn-light favorite-button details-btns" onClick={handleFavoriteClick}>
+          <i className={`bi ${isFavorite ? 'bi-heart-fill' : 'bi-heart'}`}></i>
+        </button>
+        <button className="btn btn-light chat-button details-btns" onClick={handleChatClick}>
+          <i className="bi bi-chat-dots"></i>
+        </button>
+      
       </>
       }
       {showBuyConfirmation && (

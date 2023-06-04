@@ -26,7 +26,7 @@ const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullNa
       e.stopPropagation();
       return;
     }
-    navigate(`/item/${_id}`);
+    navigate(`/item/${_id}`, { state: { username: username} });
   };
 
   const handleRemoveClick = (e) => {

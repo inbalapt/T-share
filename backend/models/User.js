@@ -74,6 +74,7 @@ const UserSchema = new mongoose.Schema(
         },
         city :{
           type: String,
+          require: true,
           default: ""
         },
         height:{
@@ -85,7 +86,8 @@ const UserSchema = new mongoose.Schema(
         credit:{
           type: Number,
           default: 30
-        }
+        },
+        hasUnreadMessages: { type: Boolean, default: false }
     },
     {timestamps:true}
 );

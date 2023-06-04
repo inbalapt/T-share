@@ -28,8 +28,11 @@
     margin-right: 8px; /* Add margin to create space between textarea and icons */
   }
   
-  i {
-    margin-right: 8px; /* Add margin to create space between icons */
+ 
+
+  .bi-image-fill,
+  .bi-camera-video{
+    margin-right: 8px;
   }
   
   i:hover {
@@ -47,12 +50,10 @@
     height: 100%;
     width: 67%;
     position: fixed;
-    top: 9%;
     display: flex;
     flex-direction: column;
-    top: 9%;
+    top: 11.5%;
     right:0;
-   
    
   }
   
@@ -95,7 +96,7 @@
     top: 72px; /* set the top value to the height of the chat-header plus padding */
     bottom: 72px; /* set the bottom value to the height of the chat-footer plus padding */
     width: 100%; /* set the width to full */
-    height: 67.4%;
+    height: 65.2%;
    
   }
   

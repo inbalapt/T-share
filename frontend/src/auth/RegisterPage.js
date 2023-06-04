@@ -13,7 +13,7 @@ function RegisterPage() {
     username: "",
     password: "",
     email: "",
-    fullname: "",
+    fullName: "",
     weight: "",
     height: "",
     city: ""
@@ -29,10 +29,11 @@ function RegisterPage() {
     const confPass = document.getElementsByName('confPassword')[0].value;
   
     // Check necessary fields 
-    if (userData.email == "" || userData.username == "" || userData.password == "" || userData.fullname == "" || confPass == "") {
+    if (userData.email == "" || userData.username == "" || userData.password == "" || userData.fullName == "" || confPass == "" || userData.city == "") {
       setErrorMessage('Please enter required fields.');
       return;
     }
+    console.log(userData.fullName);
    
 
     // Check if username is already taken
@@ -91,9 +92,8 @@ function RegisterPage() {
     try {
       const response = await axios.post("http://localhost:3000/auth/register", userData);
       console.log(response.data);
-      if(response.status == "201"){
-        console.log("201");
-        navigate("/ChatPage", { state: {username: userData.username }});
+      if(response.status == "200"){
+        navigate("../HomePage", { state: {username: userData.username }});
       }
     } catch (error) {
       console.log(error);

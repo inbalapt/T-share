@@ -20,7 +20,9 @@ import connectMongoDBSession from 'connect-mongodb-session';
 import { v4 as uuidv4 } from 'uuid';
 import {google} from 'googleapis';
 import fs from 'fs';
-
+import imageHashPackage from 'image-hash';
+import imageSSIM from 'image-ssim';
+import sharp from 'sharp';
 
 const drive = google.drive('v3');
 
@@ -42,6 +44,78 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 //app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/item-uploads", express.static(path.join(__dirname, "/item-uploads")));
+
+
+const imageHash = imageHashPackage.hashSync;
+
+async function resizeImage(imagePath, outputPath, width, height) {
+  try {
+    await sharp(imagePath).resize(width, height).toFile(outputPath);
+  } catch (error) {
+    throw new Error('Error resizing image: ' + error.message);
+  }
+}
+
+// Function to calculate the percentage similarity between two images
+async function calculateImageSimilarity(imagePath1, imagePath2) {
+  try {
+    // Resize the images to a lower resolution
+    const resizedImagePath1 = './uploads/resizedImage1.jpg';
+    const resizedImagePath2 = './uploads/resizedImage2.jpg';
+    const targetWidth = 800; // Adjust the desired width
+    const targetHeight = null; // Adjust the desired height, or set it to null to maintain aspect ratio
+
+    await resizeImage(imagePath1, resizedImagePath1, targetWidth, targetHeight);
+    await resizeImage(imagePath2, resizedImagePath2, targetWidth, targetHeight);
+
+    // Read and calculate perceptual hashes for the resized images
+    const image1 = await sharp(resizedImagePath1).raw().toBuffer();
+    const image2 = await sharp(resizedImagePath2).raw().toBuffer();
+
+    const hash1 = imageHash(image1, targetWidth, targetHeight, { bitDepth: 8 });
+    const hash2 = imageHash(image2, targetWidth, targetHeight, { bitDepth: 8 });
+
+    // Calculate the structural similarity index (SSIM) between the images
+    const ssim = await imageSSIM.default(resizedImagePath1, resizedImagePath2);
+
+    // Calculate the hamming distance between the hashes
+    const hammingDistance = calculateHammingDistance(hash1, hash2);
+    const similarityPercentage = (1 - hammingDistance / 64) * 100;
+
+    return {
+      similarityPercentage: similarityPercentage.toFixed(2),
+      ssim: ssim.toFixed(4),
+    };
+  } catch (error) {
+    throw new Error('Error calculating image similarity: ' + error.message);
+  }
+}
+
+// Function to calculate the hamming distance between two hashes
+function calculateHammingDistance(hash1, hash2) {
+  let distance = 0;
+  for (let i = 0; i < hash1.length; i++) {
+    if (hash1[i] !== hash2[i]) {
+      distance++;
+    }
+  }
+  return distance;
+}
+ // Example usage
+ const imagePath1 = './uploads/1685688029704.jpg';
+ const imagePath2 = './uploads/1685688029704.jpg';
+ 
+/*
+calculateImageSimilarity(imagePath1, imagePath2)
+  .then((result) => {
+    console.log('Similarity Percentage:', result.similarityPercentage + '%');
+    console.log('SSIM:', result.ssim);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+*/
+ 
 
 // Multer configuration
 /*const storage = multer.memoryStorage(); // Use memory storage for temporary file storage
@@ -154,8 +228,8 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
     const { myUsername, friendUsername, time} = req.query;
     // Upload the file to Google Drive
     const fileId = await uploadFileToDrive(req.file);
-     // Delete the image file from the uploads directory
-     fs.unlinkSync(req.file.path);
+    // Delete the image file from the uploads directory
+    fs.unlinkSync(req.file.path);
     // Find the user and friend documents from the database
     const [user, friend] = await Promise.all([
       User.findOne({ username: myUsername }),
@@ -177,6 +251,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
           content: fileId,
           createdAt: time
         }]};
+        console.log("file id is : " +fileId);
         user.friends.push(newFriend);
 
         // Save the updated user data
@@ -186,13 +261,14 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
           sender: false, // Message sent by the user
           msgType: "image",
           content: fileId,
-          createdAt: time
+          createdAt: time,
         }]};
+        friend.hasUnreadMessages = true;
         friend.friends.push(newUserFriend);
 
-        // Save the updated user data
-        await user.save();
-
+        // Save the updated friend data
+        await friend.save();
+        
       } else{
          
         // Update the user's messages
@@ -218,9 +294,10 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
             });
           }
         });
-
+        friend.hasUnreadMessages = true;
         // Save the updated user and friend to the database
         await Promise.all([user.save(), friend.save()]);
+        console.log(friend.username + friend.hasUnreadMessages);
       }
     
       
@@ -276,12 +353,12 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
             sender: false, // Message sent by the user
             msgType: "video",
             content: fileId,
-            createdAt: time
+            createdAt: time,
           }]};
           friend.friends.push(newUserFriend);
-  
+          friend.hasUnreadMessages = true;
           // Save the updated user data
-          await user.save();
+          await friend.save();
   
         } else{
         // Update the user's messages
@@ -307,7 +384,7 @@ app.post("/uploadVideo", upload.single("video"), async (req, res) => {
             });
           }
         });
-
+        friend.hasUnreadMessages = true;
         // Save the updated user and friend to the database
         await Promise.all([user.save(), friend.save()]);
       }
@@ -335,6 +412,7 @@ const itemStorage = multer.diskStorage({
 });
 
 const itemUpload = multer({ storage: itemStorage });
+
 
 // Endpoint for uploading item images
 app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
@@ -398,7 +476,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
 
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
+app.post("/auth/register", register);
 
 /* ROUTES */
 app.use("/auth", authRouter);
@@ -467,6 +545,27 @@ app.post('/buyItem', async (req, res) => {
   }
 });
 
+
+
+app.post("/changeNotUnreadMessages", async (req,res)=>{
+  const { username } = req.query;
+  try{
+    // Find the user by username
+    const user = await User.findOne({ username });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.hasUnreadMessages = false;
+    await user.save();
+    // Send a success response
+    return res.status(200);
+  } catch (error) {
+    console.error("Error updating user details", error);
+    // Send an error response
+    return res.status(500).json({ error: "Internal server error" });
+  }
+})
 
 app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
   try {
@@ -563,6 +662,23 @@ app.delete('/removeFavoriteItem', async (req, res) => {
   }
 });
 
+app.get('/hasUnreadMessages', (req, res)=> {
+  const { username } = req.query;
+
+  User.findOne({ username })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+      console.log(user.hasUnreadMessages);
+      return res.status(200).json({ has: user.hasUnreadMessages });
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'User has no this field.' });
+    });
+});
+
 app.get('/getFavItems', (req, res) => {
   const { username } = req.query;
 
@@ -600,10 +716,10 @@ app.get('/getItemById', (req, res) => {
         res.status(404).json({ error: 'Item not found' });
         return;
       }
-      if(item.isBought){
+     /* if(item.isBought){
         res.status(204).json({ error: 'Item is bought' });
         return;
-      }
+      }*/
       res.json(item);
     })
     .catch(error => {
@@ -673,6 +789,7 @@ app.post('/addNewFriend', async(req,res) =>{
       console.log("friend not found");
       return res.status(404).json({ error: 'User not found' });
     }
+    friendUser.hasUnreadMessages = true;
 
      // Check if the friendUsername is already in the user's friends array
      const userExists = friendUser.friends.some((friend) => friend.username === username);
@@ -685,11 +802,14 @@ app.post('/addNewFriend', async(req,res) =>{
       sender: false, // Message sent by the user
       msgType: type,
       content: content,
-      createdAt: createdAt}]};
+      createdAt: createdAt,
+    }]};
     friendUser.friends.push(newUserFriend);
      // Save the updated user data
+    friendUser.hasUnreadMessages = true;
+    
     await friendUser.save();
-
+    
     res.json({ success: true, message: 'Friend added successfully' });
     
   } catch (error) {
@@ -698,6 +818,8 @@ app.post('/addNewFriend', async(req,res) =>{
   }
 });
 
+
+/*
 // Retrieve items by category
 app.get('/items/:category', async (req, res) => {
   const category = req.params.category;
@@ -716,7 +838,39 @@ app.get('/items/:category', async (req, res) => {
     console.error('Error retrieving items:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});*/
+
+app.get('/items/:category', async (req, res) => {
+  const { category } = req.params;
+  const {username} = req.body;
+  const { page, limit } = req.query;
+
+  try {
+    let items;
+    if (category === 'all') {
+      // Retrieve all items from the database
+      items = await Item.find({ sellerUsername: { $ne: username }, isBought: { $ne: true } });
+    } else {
+      // Retrieve items based on the specified category
+      items = await Item.find({ category, sellerUsername: { $ne: username }, isBought: { $ne: true } });
+    }
+
+    // Pagination logic
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const slicedItems = items.slice(startIndex, endIndex);
+
+    // Assuming you have the total count of items available
+    const totalCount = items.length;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.json({ items: slicedItems, totalPages });
+  } catch (error) {
+    console.error('Error retrieving items:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
 
 
 app.get('/getUserDetails', async (req,res)=>{
@@ -860,7 +1014,6 @@ app.delete('/deleteItem', async (req, res) => {
     if (!item) {
       return res.status(404).json({ error: 'Item not found' });
     }
-
     // Remove the item from the Item database
     await Item.deleteOne({ _id: itemId });
 
@@ -956,6 +1109,7 @@ app.get('/autocomplete', async (req, res) => {
     // Perform the search query using the Item model
     const results = await Item.find({
       $or: [
+        { sellerFullName: { $regex: searchTerm, $options: 'i' } },
         { category: { $regex: searchTerm, $options: 'i' } },
         { color: { $regex: searchTerm, $options: 'i' } },
         { description: { $regex: searchTerm, $options: 'i' } },

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import './NavigationBar.css';
 import { Link } from 'react-router-dom';
 import logo from './logo.jpeg'
-import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate,  useLocation } from "react-router-dom";
 import axios from 'axios';
 
@@ -27,6 +27,7 @@ const getCredit = async (username,setCredit) => {
       setAutocompleteResults([]);
       navigate(`/item/${result._id}`, { state: { username: username } });
     };
+    
     return (
       <div className="autocomplete-result"  onClick={navigateToItem}>
         <div className="image-container">
@@ -49,12 +50,25 @@ const NavigationBar = () => {
   const [credit,setCredit] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [autocompleteResults, setAutocompleteResults] = useState([]);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
 
+  
   useEffect(()=>{
     getCredit(username,setCredit);
-  }, []);
+    const checkUnreadMessages = async ()=>{
+      try{
+        const response = await axios.get(`http://localhost:3000/hasUnreadMessages?username=${username}`)
+        setHasUnreadMessages(response.data.has);
+        console.log(response.data.has);
+      } catch (error) {
+        console.error(error);
+      }};
+    checkUnreadMessages();
+  }, [credit]);
 
-  function handleChat(){
+
+  async function handleChat(){
+    setHasUnreadMessages(false);
     navigate("../ChatPage", { state: {username: username }});
   }
   
@@ -173,12 +187,21 @@ const NavigationBar = () => {
             <i className="bi bi-heart fa-lg"></i>
             <i className="bi bi-heart-fill"></i>
           </a>
-          <a href="/account/balance" className="nav-link">
-            <i class="bi bi-coin" title={`Credit: ${credit}`}></i>
-          </a>
+          <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip id="credit-tooltip">Your credit is: {credit}</Tooltip>}
+            >
+              <a className="nav-link">
+                <i className="bi bi-coin"></i>
+              </a>
+            </OverlayTrigger>
+          
           <a href="/ChatPage" className="nav-link" onClick={handleChat}>
             <i className="bi bi-chat-dots"></i>
             <i className="bi bi-chat-dots-fill"></i>
+            {hasUnreadMessages && (
+              <span className="green-point"></span>
+            )}
           </a>
           <a href="/account" className="nav-link" onClick={handleAccount}>
             <i className="bi bi-person"></i>
@@ -186,7 +209,9 @@ const NavigationBar = () => {
           </a>
         </div>
       </div>
+    
     </nav>
+    
     </header>
   );
 };

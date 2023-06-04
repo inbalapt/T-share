@@ -35,7 +35,7 @@ router.get('/getMessages', async (req, res) => {
 /* Post a message in chat of contacts */
 router.post('/messages', async (req, res) => {
   try {
-    const { message, username, friendUsername } = req.query;
+    const { message, username, friendUsername, hasUnreadMessages } = req.query;
     const parsedMessage = JSON.parse(decodeURIComponent(message));
     delete parsedMessage._id;
     // Find the user in the database
@@ -54,7 +54,10 @@ router.post('/messages', async (req, res) => {
 
     // Add the new message to the friend's messages array
     friend.messages.push(parsedMessage);
-
+    if(hasUnreadMessages == 2){
+      console.log(user.username);
+      user.hasUnreadMessages = true;
+    }
     // Save the updated user data
     await user.save();
 

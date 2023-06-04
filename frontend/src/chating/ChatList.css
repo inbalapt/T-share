@@ -3,7 +3,7 @@
     height: 91%;
     background-color: #cccccc40;
     position: fixed;
-    top: 9%;
+    top: 11.5%;
     left: 0;
     border-right: 1px solid #ccc;
   }
@@ -33,7 +33,7 @@
   .chats-container {
     overflow: hidden;
     overflow-y: scroll;
-    height: calc(98% - 60px); /* set the height to take up the remaining space */
+    height: calc(95% - 60px); /* set the height to take up the remaining space */
     background-color:white;
   }
   
