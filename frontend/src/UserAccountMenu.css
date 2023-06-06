@@ -9,6 +9,9 @@
     align-items: center;
     margin-bottom: 2em;
   }
+  .menu-full-name{
+    color: #666;
+  }
   
   .initials {
     width: 50px;

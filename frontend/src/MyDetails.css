@@ -8,11 +8,17 @@
 }
 
 
+.my-details-title {
+    color: #666;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
 
 .my-details-label, .my-details-item {
     /* Add specific styles for labels and items */
     font-weight: bold;
     margin-top: 20px;
+    color: #666;
 }
 
 .my-details-form input, .my-details-view p {
@@ -26,15 +32,16 @@
     /* Add specific styles for the button */
     margin-top: 20px;
     cursor: pointer;
-    background-color: #4CAF50;
+    background-color: #e5d2d1;
     color: white;
     border: none;
     margin-bottom: 20px;
 }
+
 .my-details-button, .upload-item-form input[type="submit"] {
     margin-top: 20px;
     cursor: pointer;
-    background-color: #4CAF50;
+    background-color: #e0c4c4;
     color: white;
     border: none;
     padding: 12px 24px; /* More padding -> larger button */
@@ -46,5 +53,5 @@
 
 /* Change color on hover */
 .my-details-button:hover, .upload-item-form input[type="submit"]:hover {
-    background-color: #388E3C; /* A darker green */
+    background-color: #b3a0a0;; /* A darker */
 }

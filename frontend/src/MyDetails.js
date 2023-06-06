@@ -135,7 +135,7 @@ const MyDetails = ({username}) => {
     }
 
     return (
-        <div className="my-details-view">
+        <div className="my-details-view" >
             <h1 className="my-details-title">My Details</h1>
             <p className="my-details-item">City: {userDetails.city}</p>
             <p className="my-details-item">Height: {userDetails.height}</p>

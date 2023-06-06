@@ -118,7 +118,7 @@ function RegisterPage() {
           </div>     
       </div> 
 
-      <div className='right-section'>  
+      <div className='right-section' style={{ backgroundImage:`url(${`/pictures/userfeed.png`})`}} >  
       <form onSubmit={handleSubmit} className='register-form'>
             <body className="App-header">
                   <div className="register-form-head">

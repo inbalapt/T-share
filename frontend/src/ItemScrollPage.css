@@ -1,17 +1,25 @@
 /* src/components/ItemScrollPage.css */
 
-.category-header {
+.category-head-scroll {
     background-size: cover;
     background-position: center;
-    height: 20vw;
+    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
   }
   
-  .category-header h1 {
+  .category-head-scroll h1 {
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: left;
+    align-self: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 70px;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
   }
   
   

@@ -60,7 +60,7 @@ function getCategoryHeadline(category) {
     var content;
     // define the top category
     if (category === 'dresses') {
-        content = <div>Dresses</div>
+        content = <div >Dresses</div>
     } else if (category === 'tops') {
         content = <div>Tops</div>
     } else if (category === 'all') {
@@ -176,7 +176,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     <div>
       <NavigationBar />
      
-      <div className="category-header" style={{ backgroundImage:`url(${img})`}}>
+      <div className="category-head-scroll" style={{ backgroundImage:`url(${img})`}}>
         <h1>{content}</h1>
       </div>
       

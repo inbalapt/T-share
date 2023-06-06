@@ -31,7 +31,7 @@ const UserAccountMenu = ({ onMenuItemClick, selectedMenuItem, fullName }) => {
           {firstChar}
           {secondChar}
         </div>
-        <h2>Hi, {fullName}</h2>
+        <h2 className="menu-full-name">Hi, {fullName}</h2>
       </div>
       <div className="menu-items">
         {menuItems.map((item) => (

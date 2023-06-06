@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from './NavigationBar';
 import FavoriteItemCard from './FavoriteItemCard';
 import './ItemScrollPage.css';
+import './FavoriteItems.css'
 import logo from './logo.jpg';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -43,7 +44,7 @@ const FavoriteItems = () => {
   return (
     <div>
       <NavigationBar username={username} />
-      <div className="category-header">
+      <div className="category-header-favorite"  style={{ backgroundImage:`url(${`/pictures/favorites.jpg`})`}}>
         <h1>Favorite Items</h1>
       </div>
       <div className="filter-bar"></div>

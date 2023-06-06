@@ -70,7 +70,7 @@ function LoginPage() {
             </div> 
 
 
-            <div className='right-section'>
+            <div className='right-section' style={{ backgroundImage:`url(${`/pictures/userfeed.png`})`}}>
                 <form onSubmit={handleSubmit} className='login-form'>           
                     <body className="App-header">                   
                         <div className="login-form-head">

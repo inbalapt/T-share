@@ -5,7 +5,7 @@ import AccountOverview from './AccountOverview';
 import MyOrders from './MyOrders';
 import MyUploads from './MyUploads';
 import { useNavigate } from 'react-router-dom';
-//import './userAccount.css';
+import './UserAccountContent.css';
 
 const UserAccountContent = ({ selectedMenuItem, username, updateProducts, setUpdateProducts }) => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const UserAccountContent = ({ selectedMenuItem, username, updateProducts, setUpd
   } 
 
   return (
-    <div className="user-account-content">
+    <div className="user-account-content-part" >
     {selectedMenuItem === 'mydetails' && <MyDetails username={username}/>}
     {selectedMenuItem === 'upload' && <UploadItem username={username} setUpdateProducts={setUpdateProducts}/>}
     {selectedMenuItem === 'overview' && <AccountOverview username={username} />}
