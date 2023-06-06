@@ -111,15 +111,15 @@ const MyDetails = ({username}) => {
                 <h1 className="my-details-title">My Details</h1>
                 <label className="my-details-label">
                     City:
-                    <input type="text" name="city" value={userDetails.city} onChange={handleInputChange} />
+                    <input type="text" name="city" value={userDetails.city} placeholder="Enter City" onChange={handleInputChange} />
                 </label>
                 <label className="my-details-label">
                     Height:
-                    <input type="number" name="height" value={userDetails.height} onChange={handleInputChange} />
+                    <input type="number" name="height" value={userDetails.height} placeholder="Enter Height" onChange={handleInputChange} />
                 </label>
                 <label className="my-details-label">
                     Weight:
-                    <input type="number" name="weight" value={userDetails.weight} onChange={handleInputChange} />
+                    <input type="number" name="weight" value={userDetails.weight} placeholder="Enter Weight" onChange={handleInputChange} />
                 </label>
                 <label className="my-details-label">
                     Email:

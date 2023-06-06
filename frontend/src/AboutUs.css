@@ -6,16 +6,22 @@
     text-align: center;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #666;
   }
   
   .about-container h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 50px;
+    margin-bottom: 15px;
   }
   
   .about-container p {
     font-size: 17px;
     line-height: 1.88;
     margin-bottom: 10px;
+  }
+
+  .about-container .join-us {
+    font-weight: bold;
+    font-size: larger;
   }
   

@@ -170,7 +170,7 @@ const NavigationBar = () => {
     <header>
     <nav className="navbar fixed-top navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand" href="/"><img className='logo-img' src={logo} alt="Logo" /></Link>
+        <div className="navbar-brand"><img className='logo-img' src={logo} alt="Logo" onClick={handleHome} /></div>
         <div className="navbar-nav">
         <Nav className="me-auto">
               <Nav.Link onClick={handleHome}>Home</Nav.Link>
