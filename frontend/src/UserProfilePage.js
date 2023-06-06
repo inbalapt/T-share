@@ -149,8 +149,8 @@ const getFullname = async (username) => {
       <div className="user-header-profile">
       <div className="user-profile">
        
-        {userProfile !== "" && <img src={`https://drive.google.com/uc?export=view&id=${userProfile}`} alt="Profile" className="profile-image" />}
-        {userProfile == "" && <img src={defaultProfile} alt="Profile" className="profile-image" />}
+        {userProfile !== "" && <img src={`https://drive.google.com/uc?export=view&id=${userProfile}`} alt="Profile" className="profile-img" />}
+        {userProfile == "" && <img src={defaultProfile} alt="Profile" className="profile-img" />}
         
         <h2 className="profile-name">{userFullName}</h2>
         {userProName != username && !isFollowed &&  (<button className="follow-button" onClick={followUser}>Follow</button>)}
