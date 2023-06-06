@@ -46,7 +46,7 @@ const MyUploads = ({ username, setUpdateProducts, updateProducts }) => {
                 <span className="my-orders-header">Options:</span>
             </div>)}
             {uploads.map(upload => (
-                <UploadTab key={upload._id} upload={upload} setUpdateProducts={setUpdateProducts} uploads={uploads} setUploads={setUploads}/>
+                <UploadTab key={upload._id} upload={upload} setUpdateProducts={setUpdateProducts} uploads={uploads} setUploads={setUploads} username={username}/>
             ))}
         </div>
     );

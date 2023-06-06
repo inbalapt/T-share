@@ -146,3 +146,18 @@
   margin-left: 10px;
   padding:10px;
 }
+
+
+.my-item-title {
+  color: #666;
+  padding-top: 0.5em;
+  padding-bottom: 0em;
+}
+
+
+.my-item-form, .my-details-view {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  margin-top: auto;
+}

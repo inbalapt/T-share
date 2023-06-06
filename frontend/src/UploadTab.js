@@ -2,9 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import './OrderTab.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Cursor } from 'mongoose';
 
-const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads}) => {
+const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads, username}) => {
     const [uploadIsBought, setUploadIsBought] = useState("");
+    const navigate = useNavigate();
+
     useEffect(()=>{
         if(upload.isBought){
             setUploadIsBought("yes");
@@ -26,9 +30,13 @@ const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads}) => {
         }
     }
 
+    function handleItem(){
+        navigate(`/item/${upload._id}`, { state: { username: username} });
+    }
+
     return (
         
-        <div className="order-tab">
+        <div className="order-tab clickItem" onClick={handleItem}>
             <div className="order-tab-content">
                 <div className="order-tab-section order-tab-img-section">
                     <img className="order-tab-img" src={`https://drive.google.com/uc?export=view&id=${upload.pictures[0]}`} alt={upload.description} />

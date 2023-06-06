@@ -35,7 +35,16 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
   const [showBuyConfirmation, setShowBuyConfirmation] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailMessage,setShowFailMessage] = useState(false);
-
+  const [editMode, setEditMode] = useState(false);
+  const [itemDetails, setItemDetails] = useState({
+    price:price,
+    description:description,
+    condition:condition,
+    brand:brand,
+    size:size,
+    id:id,
+    images: [],
+  });
   useEffect(()=>{
     isItemFavorite(username,id)
     .then(isFavorite => {
@@ -126,6 +135,115 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     setShowBuyConfirmation(false);
   };
 
+  /////////////////////////////////////////
+  const handleInputChange = (event) => {
+    setItemDetails({
+        ...itemDetails,
+        [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleImageChange = async (event) => {  // <-- add this
+    // if there is more than 4 images to the product
+    if (event.target.files.length > 4) {
+        alert("You can only upload up to 4 images.");
+        event.target.value = null;  
+       
+    } else {
+        setItemDetails({
+            ...itemDetails,
+            images: event.target.files,
+        });
+    }
+};
+
+  const handleSubmit = (event) => {
+      event.preventDefault();
+      // TODO: Add logic to send the updated data to the server
+      
+      const uploadChangesToServer = async () => {
+          try {
+              const formData = new FormData();
+              formData.append('username', username);
+              if(itemDetails.description !== null){
+                  formData.append('description', itemDetails.description);
+              } 
+              if(itemDetails.price !== null){
+                  formData.append('price', itemDetails.price);
+              }
+              if(itemDetails.brand !== null){
+                  formData.append('brand', itemDetails.brand);
+              }
+              if(itemDetails.condition !== null){
+                  formData.append('condition', itemDetails.condition);
+              }
+              if(itemDetails.size !== null){
+                formData.append('size', itemDetails.size);
+            }
+            
+            for (let i = 0; i < itemDetails.images.length; i++) {
+              formData.append('images', itemDetails.images[i]);
+          }
+              formData.append('id', itemDetails.id);
+              
+              const response = await axios.post(`http://localhost:3000/updateItemDetails`, formData, {
+                  headers: {
+                      "Content-Type": "multipart/form-data",
+                  },
+              });
+
+      
+            console.log(response.data);
+          } catch (error) {
+              console.log('Error updating item:', error);
+              // Handle error case, e.g., show an error message to the user
+          }
+      
+      }
+      uploadChangesToServer();
+      setEditMode(false);
+  };
+//////////////////////////////
+
+
+  if (editMode) {
+    return (
+        <form onSubmit={handleSubmit} className="my-item-form details-of-product">
+            <h1 className="my-item-title">Item Details</h1>
+            <label className="my-details-label">
+                Description:  
+                <input type="text" name="description" value={itemDetails.description} onChange={handleInputChange} />
+            </label>
+            <label className="my-details-label">
+                Price:  
+                <input type="number" name="price" value={itemDetails.price} onChange={handleInputChange} />
+            </label>
+            <label className="my-details-label">
+                Condition:  
+                <input type="text" name="condition" value={itemDetails.condition} onChange={handleInputChange} />
+            </label>
+            <label className="my-details-label">
+                Brand: 
+                <input type="brand" name="brand" value={itemDetails.brand} onChange={handleInputChange} />
+            </label>
+            <label className="my-details-label">
+                Size: 
+                <input type="size" name="size" value={itemDetails.size} onChange={handleInputChange} />
+            </label>
+            <label className="my-details-label">
+              <div className='field-row-label'>
+                  Product Images: 
+                  <span className={itemDetails.images.length === 0 ? "dot-visible" : "dot-hidden"}></span>
+                  </div>
+                  <input type="file" name="image" multiple onChange={handleImageChange} className="upload-item-input"/>
+                
+            </label>
+        
+            <button type="submit" className="my-details-button">Save Changes</button>
+        </form>
+    );
+  }
+
   return (
     <div className="details-of-product">
       {brand && (<p className="brand">{brand}</p>)}
@@ -150,6 +268,9 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
         </button>
       
       </>
+      }
+      {username === sellerUsername && !showSuccessMessage && !showFailMessage &&
+      <button className="contact-seller-btn" onClick={() => setEditMode(true)}>Edit</button>
       }
       {showBuyConfirmation && (
         <BuyConfirmationModal

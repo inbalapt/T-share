@@ -665,6 +665,60 @@ app.post("/changeNotUnreadMessages", async (req,res)=>{
   }
 })
 
+app.post("/updateItemDetails", itemUpload.array("images", 4), async (req, res) => {
+  try {
+    // Access the updated user details
+    const { username, price,description,condition,brand,size, id} = req.body;
+
+    const images = req.files; // Get the uploaded images as an array of files
+
+    // Upload each image file to Google Drive
+    const uploadedImageIds = await Promise.all(images.map(uploadFileToDrive));
+    // Delete the uploaded image files from the server
+    images.forEach((image) => {
+      fs.unlinkSync(image.path);
+    });
+    
+    const item = await Item.findById(id);
+
+    if (!item) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    if (price) {
+      item.price = price;
+    }
+    if (description) {
+      item.description = description;
+    }
+    if (condition) {
+      item.condition = condition;
+    }
+    if (brand) {
+      item.brand = brand;
+    }
+    if (size) {
+      item.size = size;
+    }
+    console.log(uploadedImageIds);
+    if (uploadedImageIds.length !== 0) {
+      item.pictures= uploadedImageIds; 
+    }
+
+
+    // Save the updated user
+    await item.save();
+
+    // Send a success response
+    return res.json(item);
+  } catch (error) {
+    console.error("Error updating item details", error);
+    // Send an error response
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
   try {
     // Access the updated user details
