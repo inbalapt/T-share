@@ -38,15 +38,16 @@ const ItemPage = () => {
   const [item, setItem] = useState(null);
   const [isBought, setIsBought] = useState(false);
   const [isDeleted, setIsDeleded] = useState(false);
+  const [pictures,setPictures] = useState([]);
 
   useEffect(() => {
     const fetchItem = async () => {
       const itemDetails = await getItemDetails(id, setItem,setIsBought, setIsDeleded);
       setItem(itemDetails);
+      setPictures(itemDetails.pictures);
     };
     fetchItem();
   }, [id]);
-
 
  
   const NotValidItem = () => {
@@ -71,7 +72,7 @@ const ItemPage = () => {
       {(!isBought && !isDeleted && item !== null) && (
       <><NavigationBar username={username}/>
       <div className="item-page">
-        {item.pictures && <ImagesView images={item.pictures} />}
+        {item.pictures && <ImagesView images={pictures}/>}
         <DetailsOfProduct
           id={id}
           username={username}
@@ -85,6 +86,7 @@ const ItemPage = () => {
           brand={item.brand}
           sellerUsername={item.sellerUsername}
           pictures={item.pictures}
+          setPictures={setPictures}
         />
       </div>
       </>)}
