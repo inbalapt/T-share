@@ -1,4 +1,158 @@
+/* RegisterPage.css*/
 
+.register-page {
+  display: flex;
+  height: 150vh;
+  justify-content: space-between;
+  align-items: center;
+  background: #f5f5f5;
+}
+
+.left-section, .right-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.register-page .left-section {
+  justify-content: flex-start;
+  width: 40%;
+  background-color: #f8f9fa;
+}
+
+.right-section {
+  width: 60%;
+  background-color: #e5d2d1;
+}
+
+/*
+.head-welcome{
+  position: absolute;
+  top: 12rem;
+}
+
+.register-page .left-section img {
+  
+}
+*/
+
+.register-page  .head-login1 {
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+
+  font-size: 50px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  color: #666;
+}
+
+.register-page .head-login2 {
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+  
+  font-size: 3.8em;
+  padding-bottom: 0.5em;
+  color: #666;
+}
+
+
+
+.register-form-head {
+  font-size: 2em;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: bolder;
+  color: #666;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.1);
+}
+
+.register-item-label {
+  position: relative;
+  margin-bottom: 1rem;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+
+
+.register-item-label  input {
+  display: block;
+  width: 100%;
+  height: calc(1.5em + 0.75rem + 2px);
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.register-item-label  input::placeholder {
+  color: #ddd;
+  opacity: 1;
+}
+
+.required{
+  color: red;
+}
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+.register-btn {
+  display: flex;
+  justify-content: center;
+}
+
+.submit-button {
+  padding: 0.5rem 2rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #e5d2d1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #dabab8;
+}
+
+.did-login {
+  margin: 1rem 0;
+  font-size: 0.875rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.h {
+  color: rgb(173, 205, 210);
+  text-decoration: none;
+}
+
+.h:hover {
+  color: rgba(64, 104, 112, 0.5);
+  text-decoration: underline;
+}
+
+
+
+/*
 .App-header {
     text-align: center;
     color: #fff;
@@ -106,3 +260,4 @@
   }
 
  
+*/

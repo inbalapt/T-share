@@ -1,10 +1,11 @@
-//import './LoginPage.css'
+import './LoginPage.css'
 import './RegisterPage'
 import {Link, Route} from 'react-router-dom'
 import { useState } from "react";
 import ReactDOM from 'react-dom';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import logo from './../logo.jpeg'
 
 function LoginPage() {
     let navigate = useNavigate();
@@ -55,37 +56,52 @@ function LoginPage() {
           ...prevState,
           [name]: value
         }));
-    };
+    };  
+
+  
     return (          
-        <form onSubmit={handleSubmit}>
-             {!true && (<div className="line"></div>)}
-            <body className="App-header">
-                <div className="row justify-content-md-center">
+        <div className='login-page'>
+            <div className='left-section'> 
                 
-                    <div className="regis">
-                        <div className="loggg">
+                <img src={logo} alt='Logo' />  
+                <h1 className='head-login1'>Step into Sustainable Style </h1>
+                <h1 className='head-login2'>Welcome to T-Share </h1>
+                 
+            </div> 
+
+
+            <div className='right-section'>
+                <form onSubmit={handleSubmit} className='login-form'>           
+                    <body className="App-header">                   
+                        <div className="login-form-head">
                             Login
                         </div>
-                        <div>
-                            Username:<input type="username" name="username" placeholder="Enter Username" onChange={handleInputChange}></input>
-                        </div>
-                        <div>
-                            Password:<input type="password" name="password" placeholder="Enter Password" onChange={handleInputChange}></input>
-                        </div>
-                        <div className="regi">
+
+                        <label className='login-item-label'>
+                            <div>Username:</div>
+                            <input type="username" name="username" placeholder="Enter Username" onChange={handleInputChange}></input>
+                        </label>
+
+                        <label className='login-item-label'>
+                            <div> Password:</div>
+                            <input type="password" name="password" placeholder="Enter Password" onChange={handleInputChange}></input>
+                        </label>
+
+
+                        <div className="did-regis">
                             <p> Not registered? <Link to='/RegisterPage' className="h">Click here</Link> to register</p>
                         </div>
+
                         <div className='login-btn'>
                             {errorMessage && <div className="error-message">{errorMessage}</div>}
                             <button type="submit" className="btn btn-lg btn-primary">
                                 Login
-                            </button>
+                            </button> 
                         </div>
-                    </div>
-
-                </div>
-            </body>
-        </form>
+                    </body>
+                </form> 
+            </div>
+        </div>
     );
 }
 
