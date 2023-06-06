@@ -19,14 +19,33 @@
     font-weight: bold;
     margin-top: 20px;
     color: #666;
+    width: 100%;
+    
 }
 
-.my-details-form input, .my-details-view p {
+.my-details-label input::placeholder {
+    color: #ddd;
+    opacity: 1;
+}
+
+.my-details-form input {
+    margin-top: 5px;
+    padding: 5px;
+    width: 100%;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+   
+}
+
+.my-details-view p {
     margin-top: 5px;
     padding: 5px;
    
 }
-
 .my-details-button {
     /* Add specific styles for the button */
     margin-top: 20px;
