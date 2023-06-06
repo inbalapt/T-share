@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './OrderTab.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Cursor } from 'mongoose';
+//import { Cursor } from 'mongoose';
 
 const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads, username}) => {
     const [uploadIsBought, setUploadIsBought] = useState("");

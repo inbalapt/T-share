@@ -42,15 +42,10 @@
   padding: 0;
   padding-right: 0.5rem;
   padding-left: 0.5rem;
+  font-size: 1.3rem;
 }
 
 /*... Other styles ...*/ 
-
-.icons .nav-link {
-  padding: 0;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
-}
 
 .icons .nav-link.bi-heart-fill {
   display: none;
@@ -63,12 +58,7 @@
 .icons .nav-link:hover .bi-heart-fill {
   display: inline-block;
 }
-.icons .nav-link {
-  padding: 0;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
-  font-size: 1.3rem;
-}
+
 
 .icons .nav-link .bi-heart-fill {
   display: none;
@@ -111,6 +101,7 @@
 
 .logo-img {
   height: 2.3em;
+  cursor: pointer;
 }
 
 .autocomplete-results {
@@ -188,4 +179,7 @@
 .no-arrow-dropdown {
   padding: 0!important;
   margin: 0, import !important;
+}
+.no-arrow-dropdown .dropdown-toggle::after {
+  display: none;
 }
