@@ -44,3 +44,9 @@
     box-sizing: border-box; /* add this line */
     width: 130%;
 }
+
+
+.my-uploads h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}

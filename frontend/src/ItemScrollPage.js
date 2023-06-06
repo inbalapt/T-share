@@ -89,8 +89,8 @@ const getCategoryItems = async (category,username, setItems) => {
 
 const getCategoryItems = async (category, username, page, limit, setItems) => {
   try {
-    const response = await axios.get(`http://localhost:3000/items/${category}?username=${username}`, {
-      params: { page, limit }
+    const response = await axios.get(`http://localhost:3000/items/${category}`, {
+      params: { page, limit,username }
     });
     console.log(response.data);
     setItems(response.data.items);

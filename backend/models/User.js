@@ -61,16 +61,20 @@ const UserSchema = new mongoose.Schema(
         },
         friends: [FriendSchema],        
         myUploads: {
-            type: Array,
+            type: [String],
             default: [],
         },
         myBoughts: {
-            type: Array,
+            type: [String],
             default: [],
         },
         favItems: {
             type: [String],
             default: [],
+        },
+        following: {
+          type: [String],
+          default: [],
         },
         city :{
           type: String,

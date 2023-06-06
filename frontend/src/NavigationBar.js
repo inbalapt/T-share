@@ -7,6 +7,7 @@ import logo from './logo.jpeg'
 import { Container, Navbar, Nav, NavDropdown, Form, FormControl, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate,  useLocation } from "react-router-dom";
 import axios from 'axios';
+import defaultProfile from './chating/defaultProfile.png';
 
 // Get credit of user
 const getCredit = async (username,setCredit) => {
@@ -20,22 +21,37 @@ const getCredit = async (username,setCredit) => {
     }
   };
 
-  const AutocompleteResult = ({ result, username, setSearchTerm, setAutocompleteResults }) => {
+  const AutocompleteResult = ({ result, username, setSearchTerm, setAutocompleteResults, searchField, profile }) => {
     const navigate = useNavigate();
-    const navigateToItem = () => {
+    const navigateToItem = (e) => {
+      if(e.target.closest('.seller')){
+        e.stopPropagation();
+        return;
+      }
       setSearchTerm("");
       setAutocompleteResults([]);
-      navigate(`/item/${result._id}`, { state: { username: username } });
+      if(searchField!= "sellerFullName"){
+        navigate(`/item/${result._id}`, { state: { username: username } });
+      } else{
+        navigate(`/userPage/${result.sellerUsername}`, { state: { username: username} });      
+      }
+      
     };
+    function handleUser(){
+      navigate(`/userPage/${result.sellerUsername}`, { state: { username: username} });      
+    }
     
     return (
       <div className="autocomplete-result"  onClick={navigateToItem}>
         <div className="image-container">
-          <img src={`https://drive.google.com/uc?export=view&id=${result.pictures[0]}`} alt="Item" className="item-image" />
+          {searchField != "sellerFullName" &&(<img src={`https://drive.google.com/uc?export=view&id=${result.pictures[0]}`} alt="Item" className="item-image" />)}
+          {searchField == "sellerFullName" && profile !== "" && (<img src={`https://drive.google.com/uc?export=view&id=${profile}`} alt="item" className="item-image" />)}
+          {searchField == "sellerFullName" && profile == "" && (<img src={defaultProfile} alt="Item" className="item-image" />)}
         </div>
         <div className="details-container">
-          <div className="description">{result.description}</div>
-          <div className="seller">{result.sellerFullName}</div>
+        {searchField != "sellerFullName" &&(<div className="description">{result.description}</div>)}
+        {searchField == "sellerFullName" &&(<div className="description">{result.sellerFullName}</div>)}
+        {searchField != "sellerFullName" &&(<div className="seller" onClick={handleUser}>{result.sellerFullName}</div>)}
         </div>
       </div>
     );
@@ -51,8 +67,9 @@ const NavigationBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [autocompleteResults, setAutocompleteResults] = useState([]);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  const [searchField,setSearchField] = useState("");
+  const [profile, setProfile] = useState("");
 
-  
   useEffect(()=>{
     getCredit(username,setCredit);
     const checkUnreadMessages = async ()=>{
@@ -96,6 +113,10 @@ const NavigationBar = () => {
     
   }
 
+  function handleFeed(){
+    navigate(`/userPage/${username}`, { state: { username: username} });      
+  }
+
   
 
   useEffect(() => {
@@ -108,7 +129,10 @@ const NavigationBar = () => {
               username: username,
             },
           });
-          setAutocompleteResults(response.data);
+          setAutocompleteResults(response.data.results);
+          setSearchField(response.data.searchField);
+          console.log(response.data.profile);
+          setProfile(response.data.profile);
         } else {
           setAutocompleteResults([]); // Clear the autocomplete results if the search term is less than two characters
         }
@@ -172,7 +196,7 @@ const NavigationBar = () => {
             <ul className="autocomplete-results">
               {autocompleteResults.map((result) => (
                 <li key={result._id}>
-                  <AutocompleteResult result={result} username={username} setSearchTerm={setSearchTerm} setAutocompleteResults={setAutocompleteResults}/>
+                  <AutocompleteResult result={result} username={username} setSearchTerm={setSearchTerm} setAutocompleteResults={setAutocompleteResults} searchField={searchField} profile={profile}/>
                 </li>
               ))}
             </ul>
@@ -182,7 +206,21 @@ const NavigationBar = () => {
             <i className="bi bi-search"></i>
           </button>
         </form>
+        
         <div className="d-flex icons">
+           <NavDropdown id="basic-nav-dropdown" title={
+            <>
+                <i className="bi bi-person"></i>
+                <i className="bi bi-person-fill"></i>
+                </>
+            } className="no-arrow-dropdown" align="end">
+              <NavDropdown.Item  onClick={handleFeed}>
+                My Feed
+              </NavDropdown.Item>
+              <NavDropdown.Item onClick={handleAccount}>
+                Settings
+              </NavDropdown.Item>
+            </NavDropdown>
           <a href="/favorites" className="nav-link" onClick={handleFavorites}>
             <i className="bi bi-heart fa-lg"></i>
             <i className="bi bi-heart-fill"></i>
@@ -203,10 +241,13 @@ const NavigationBar = () => {
               <span className="green-point"></span>
             )}
           </a>
-          <a href="/account" className="nav-link" onClick={handleAccount}>
+          {false && (<a href="/account" className="nav-link" onClick={handleAccount}>
             <i className="bi bi-person"></i>
             <i className="bi bi-person-fill"></i>
-          </a>
+          </a>)}
+        
+         
+
         </div>
       </div>
     

@@ -33,18 +33,18 @@ const MyUploads = ({ username, setUpdateProducts, updateProducts }) => {
     }, [updateProducts]);
     
 
-
+    console.log(uploads);
 
     return (
         <div className="my-uploads">
             <h1>My Products</h1>
-            <div className="my-orders-headers">
+            {uploads.length != 0 && (<div className="my-orders-headers">
                 <span className="my-orders-header">Description:</span>
                 <span className="my-orders-header">Price:</span>
                 <span className="my-orders-header">Condition:</span>
                 <span className="my-orders-header">Bought:</span>
                 <span className="my-orders-header">Options:</span>
-            </div>
+            </div>)}
             {uploads.map(upload => (
                 <UploadTab key={upload._id} upload={upload} setUpdateProducts={setUpdateProducts} uploads={uploads} setUploads={setUploads}/>
             ))}

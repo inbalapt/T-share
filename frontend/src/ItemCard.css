@@ -29,6 +29,10 @@
   .item-card:hover .item-overlay {
     opacity: 1;
   }
+
+  .text-muted:hover{
+    text-decoration: underline;
+  }
   
   .favorite-button,
   .chat-button {

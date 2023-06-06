@@ -22,7 +22,7 @@ const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullNa
   const seller = sellerFullName;
 
   const handleClick = (e) => {
-    if (e.target.closest('.remove-button')) {
+    if (e.target.closest('.remove-button') || e.target.closest('.text-muted')) {
       e.stopPropagation();
       return;
     }
@@ -34,6 +34,9 @@ const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullNa
     onRemove(_id);
   };
 
+  const handleSellerName = async (e)=>{
+    navigate(`/userPage/${sellerUsername}`, { state: { username: username} });
+  }
 
   const handleChatClick = (e) => {
     const automaticMessage = `Hi, I'm interested in this ${description}, http://localhost:3001/item/${_id}`
@@ -55,7 +58,7 @@ const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullNa
       <div className="card-body">
         <h5 className="card-title">{description}</h5>
         <p className="card-text">
-          <small className="text-muted">Seller: {seller}</small>
+          <small className="text-muted" onClick={handleSellerName}>Seller: {seller}</small>
         </p>
         <p className="card-text price">${price}</p>
       </div>

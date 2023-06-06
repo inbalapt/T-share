@@ -28,6 +28,7 @@ const UserAccountMenu = ({ onMenuItemClick, selectedMenuItem, fullName }) => {
     <div className="user-account-main-menu">
       <div className="user-info">
         <div className="initials">
+          
           {firstChar}
           {secondChar}
         </div>

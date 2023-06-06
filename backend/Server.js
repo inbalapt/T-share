@@ -251,7 +251,7 @@ app.post("/uploadImage", upload.single("image"), async (req, res) => {
           content: fileId,
           createdAt: time
         }]};
-        console.log("file id is : " +fileId);
+      
         user.friends.push(newFriend);
 
         // Save the updated user data
@@ -429,8 +429,6 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       fs.unlinkSync(image.path);
     });
     
-    console.log("uploaded: ");
-    console.log(uploadedImageIds)
     // Find the user by username
     const user = await User.findOne({ username });
 
@@ -475,6 +473,106 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
 });
 
 
+
+// Endpoint for uploading item images
+app.post("/followUser", async (req, res) => {
+  try {
+    const { username, userProName } = req.body;
+    
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      console.log("User not found");
+      // Handle the case when the user is not found
+      // For example, return an error response
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    
+    const userToFollow = await User.find({ username:userProName});
+    if(!userToFollow){
+      console.log("userToFollow not found");
+    }
+    user.following.push(userProName);
+    // Save the updated user
+    await user.save();
+    
+    console.log('User added to following array.');
+    res.json(200);
+  } catch (error) {
+    console.error('Error following user:', error);
+    // Send an error response
+    res.sendStatus(500); 
+  }
+});
+
+
+
+// Endpoint for uploading item images
+app.delete("/unfollowUser", async (req, res) => {
+  try {
+    const { username, userProName } = req.body;
+    
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      console.log("User not found");
+      // Handle the case when the user is not found
+      // For example, return an error response
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    
+    const userToFollow = await User.find({ username:userProName});
+    if(!userToFollow){
+      console.log("userToFollow not found");
+    }
+    if(user.following.includes(userProName)){
+      user.following = user.following.filter((item) => item !== userProName);
+    }
+    // Save the updated user
+    await user.save();
+    
+    console.log('User removed from following array.');
+    res.json(200);
+  } catch (error) {
+    console.error('Error following user:', error);
+    // Send an error response
+    res.sendStatus(500); 
+  }
+});
+
+
+app.get("/checkIfFollowed", async(req,res)=>{
+  try {
+    const { username, userProName } = req.query;
+    
+    const user = await User.findOne({ username: username });
+    if (!user) {
+      console.log("User not found");
+      // Handle the case when the user is not found
+      // For example, return an error response
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    
+    const userToFollow = await User.find({ username:userProName});
+    if(!userToFollow){
+      console.log("userToFollow not found");
+    }
+
+    if(user.following.includes(userProName)){
+      return res.json({followed: true});
+    }
+    else {
+      return res.json({followed: false});
+    }
+    res.json(200);
+  } catch (error) {
+    console.error('Error following user:', error);
+    // Send an error response
+    res.sendStatus(500); 
+  }
+});
+
 /* ROUTES WITH FILES */
 app.post("/auth/register", register);
 
@@ -511,7 +609,7 @@ app.post('/buyItem', async (req, res) => {
 
     const item = await Item.findOne({ _id: itemId });
     if (item.isBought) {
-      return res.status(204).json({ error: 'Item is already bought' });
+      return res.status(404).json({ error: 'Item is already bought' });
     }
 
     // Decrease user's credit
@@ -574,8 +672,6 @@ app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
 
      // Upload image file to Google Drive
      const fileId = await uploadFileToDrive(req.file);
-     console.log("uploaded: ");
-     console.log(fileId)
     
 
     // Find the user by username
@@ -632,7 +728,6 @@ app.post('/addFavoriteItem', async(req,res) =>{
     user.favItems.push(id);
     // Save the updated user
     await user.save();
-    console.log(user.favItems);
     res.json(user.favItems);
   } catch (error) {
     console.error(error);
@@ -671,7 +766,7 @@ app.get('/hasUnreadMessages', (req, res)=> {
         res.status(404).json({ error: 'User not found' });
         return;
       }
-      console.log(user.hasUnreadMessages);
+  
       return res.status(200).json({ has: user.hasUnreadMessages });
     })
     .catch(error => {
@@ -842,12 +937,12 @@ app.get('/items/:category', async (req, res) => {
 
 app.get('/items/:category', async (req, res) => {
   const { category } = req.params;
-  const {username} = req.body;
-  const { page, limit } = req.query;
-
+  const { page, limit,username } = req.query;
+  
   try {
     let items;
     if (category === 'all') {
+      
       // Retrieve all items from the database
       items = await Item.find({ sellerUsername: { $ne: username }, isBought: { $ne: true } });
     } else {
@@ -870,6 +965,47 @@ app.get('/items/:category', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.get('/getUserItems', async (req, res) => {
+ 
+  const { page, limit, userProName } = req.query;
+  
+  
+  try {
+
+    const user = await User.findOne({username:userProName});
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    const itemsIds = user.myUploads;
+    
+    Item.find({ _id: { $in: itemsIds }, isBought: { $ne: true } })
+      .then(items => {
+          // Pagination logic
+          const startIndex = (page - 1) * limit;
+          const endIndex = page * limit;
+          const slicedItems = items.slice(startIndex, endIndex);
+
+          // Assuming you have the total count of items available
+          const totalCount = items.length;
+          const totalPages = Math.ceil(totalCount / limit);
+
+          res.json({ items: slicedItems, totalPages });    
+      })
+      .catch(error => {
+        console.error('Error retrieving favorite items:', error);
+        res.status(500).json({ error: 'Failed to retrieve favorite items' });
+      });
+
+
+ 
+  } catch (error) {
+    console.error('Error retrieving items:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 
@@ -1106,21 +1242,36 @@ app.get('/autocomplete', async (req, res) => {
   try {
     const searchTerm = req.query.term; // Get the search term from the request query
     const username = req.query.username;
-    // Perform the search query using the Item model
+    const searchFields = ['sellerFullName', 'category', 'color', 'description', 'brand'];
+    const searchConditions = searchFields.map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    }));
+    
     const results = await Item.find({
-      $or: [
-        { sellerFullName: { $regex: searchTerm, $options: 'i' } },
-        { category: { $regex: searchTerm, $options: 'i' } },
-        { color: { $regex: searchTerm, $options: 'i' } },
-        { description: { $regex: searchTerm, $options: 'i' } },
-        { brand: { $regex: searchTerm, $options: 'i' } },
-      ],
+      $or: searchConditions,
       sellerUsername: { $ne: username },
     })
-      .limit(10) // Limit the number of results to 10
-      .select('_id sellerUsername sellerFullName pictures description price size itemLocation category condition color brand isBought time')
+      .limit(10)
+      .select('_id sellerUsername sellerFullName pictures description price size itemLocation category condition color brand isBought time');
+    
+    let searchField = '';
+    
+    // Find the matching field based on the search term
+    for (const field of searchFields) {
+      if (results.some((item) => item[field].toLowerCase().includes(searchTerm.toLowerCase()))) {
+        searchField = field;
+        break;
+      }
+    }
+    if(searchField == "sellerFullName"){
+      const user = await User.findOne({ username: results[0].sellerUsername });
+      const photo = user.picturePath;
+      console.log("photo : "+photo);
+      return res.json({results: results, searchField: searchField, profile: photo});
+    }
+    console.log(searchField);
 
-    res.json(results);
+    res.json({results: results, searchField:searchField, profile: ""});
   } catch (error) {
     console.error('Error searching items:', error);
     res.status(500).json({ error: 'An error occurred while searching items' });
