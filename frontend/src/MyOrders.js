@@ -45,12 +45,12 @@ const MyOrders = ({ username }) => {
     return (
         <div className="my-orders">
             <h1>My Orders</h1>
-            <div className="my-orders-headers">
+            {orders!== [] && (<div className="my-orders-headers">
                 <span className="my-orders-header">Description:</span>
                 <span className="my-orders-header">Price:</span>
                 <span className="my-orders-header">Date:</span>
                 <span className="my-orders-header">Seller:</span>
-            </div>
+            </div>)}
             {orders.map(order => (
                 <OrderTab key={order.id} order={order} />
             ))}

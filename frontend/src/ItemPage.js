@@ -47,22 +47,6 @@ const ItemPage = () => {
     fetchItem();
   }, [id]);
 
- /* if(isBought){
-    setTimeout(()=>{
-      navigate("../HomePage", { state: { username: username } });
-    }, 3000);
-    return <div>Item is already sold!</div>
-  }
-  if(isDeleted){
-    setTimeout(()=>{
-      navigate("../HomePage", { state: { username: username } });
-    }, 3000);
-    return <div>Item is deleted by the seller.</div>
-  }*/
-
-  /*if (item === null) {
-    return <div>Loading...</div>
-  }*/
 
  
   const NotValidItem = () => {

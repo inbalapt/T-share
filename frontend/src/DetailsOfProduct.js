@@ -57,6 +57,10 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     setShowBuyConfirmation(true);
   }
 
+  const handleSellerName = async (e)=>{
+    navigate(`/userPage/${sellerUsername}`, { state: { username: username} });
+  }
+
   const handleFavoriteClick = async (e) => { // Add async keyword here
     e.stopPropagation();
     
@@ -132,7 +136,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
       {color && (<p className="color">Color: {color}</p>)}
       
       
-      <p className="seller">Seller: {seller}</p>
+      <p className="seller" onClick={handleSellerName}>Seller: {seller}</p>
       <p className="collection-point">From: {collectionPoint}</p>
       {username != sellerUsername && !showSuccessMessage && !showFailMessage &&
       <>

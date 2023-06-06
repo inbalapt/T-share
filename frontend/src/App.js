@@ -18,6 +18,7 @@ import UserAccountPage from './UserAccountPage';
 import UploadItem from './UploadItem';
 import UserAccountMenu from './UserAccountMenu';
 import TempAccount from './TempAccount';
+import UserProfilePage from './UserProfilePage';
 
 
 
@@ -34,7 +35,7 @@ function App() {
           <Route path='/favorites' element={<FavoriteItems/>} />
           <Route path='/account' element={<UserAccountPage/>}></Route>
           <Route path='/test' element={<TempAccount/>}></Route>
-          
+          <Route path='/userPage/:userProName' element={<UserProfilePage   />}></Route>
         </Routes>
   </BrowserRouter>
   );

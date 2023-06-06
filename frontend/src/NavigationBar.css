@@ -180,3 +180,12 @@
   border-radius: 50%;
   margin-left: 5px;
 }
+
+.dropdown::after{
+  display: none !important; 
+}
+
+.no-arrow-dropdown {
+  padding: 0!important;
+  margin: 0, import !important;
+}

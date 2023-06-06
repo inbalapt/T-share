@@ -13,15 +13,26 @@ const isItemFavorite = async(username, id)=>{
   }
 }
 
-const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, price, description, item }) => {
+const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, price, description, item, flag }) => {
   console.log(username);
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
+  console.log("flag is : " + flag);
   const picture1 = pictures[0];
   console.log(picture1);
   const photo = `https://drive.google.com/uc?export=view&id=${picture1}`;
   console.log(photo);
   console.log(_id);
+  const [isMyFeed, setIsMyFeed] = useState(false)
+  
+  useEffect(()=>{
+    if(sellerUsername === username){
+      setIsMyFeed(true);
+    } else{
+      setIsMyFeed(false);
+    }
+  }, [sellerUsername]);
+  
 
   useEffect(()=>{
     isItemFavorite(username,_id)
@@ -36,12 +47,16 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
   
 
   const handleClick = (e) => {
-    if (e.target.closest('.favorite-button') || e.target.closest('.chat-button')) {
+    if (e.target.closest('.favorite-button') || e.target.closest('.chat-button') || e.target.closest('.text-muted')) {
       e.stopPropagation();
       return;
     }
     navigate(`/item/${_id}`, { state: { username: username} });
   };
+
+  const handleSellerName = async (e)=>{
+    navigate(`/userPage/${sellerUsername}`, { state: { username: username} });
+  }
 
   const handleFavoriteClick = async (e) => { // Add async keyword here
     e.stopPropagation();
@@ -77,20 +92,24 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
 
   return (
     <div className="card item-card" onClick={handleClick}>
+      
       <div className="item-overlay">
+      {!isMyFeed && (
+        <>
         <button className="btn btn-light favorite-button" onClick={handleFavoriteClick}>
           <i className={`bi ${isFavorite ? 'bi-heart-fill' : 'bi-heart'}`}></i>
         </button>
         <button className="btn btn-light chat-button" onClick={handleChatClick}>
           <i className="bi bi-chat-dots"></i>
         </button>
+        </>)}
       </div>
       <img src={photo} className="card-img-top" alt={description} />
       <div className="card-body">
         <h5 className="card-title">{description}</h5>
-        <p className="card-text">
-          <small className="text-muted">Seller: {sellerFullName}</small>
-        </p>
+        {!isMyFeed && !flag && (<p className="card-text">
+        <small className="text-muted" onClick={handleSellerName}>Seller: {sellerFullName}</small>
+        </p>)}
         <p className="card-text price">${price}</p>
       </div>
     </div>

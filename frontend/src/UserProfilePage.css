@@ -1,0 +1,78 @@
+.user-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  
+  }
+
+  .user-header-profile{
+    width: 100%;
+    background-color: #e5d2d180;
+  }
+  
+  .user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top:70px;
+    /* Add background image or custom styles for the profile image */
+  }
+  
+  .profile-name {
+    margin-top: 10px;
+    font-size: 20px;
+  }
+  
+  .follow-button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    padding-left:20px;
+   
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(92, 79, 79, 0.637);
+    color:white;
+    cursor: pointer;
+  }
+  /*
+  .item-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .item-card {
+    width: 200px;
+    height: 200px;
+    background-color: #ccc;
+    
+  }
+  */
+
+  .bi-check-lg{
+    margin-right:8px;
+  }
+
+  .following-button{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    padding-left:13px;
+   
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(92 79 79 / 33%);
+    color:white;
+    cursor: pointer;
+  }
