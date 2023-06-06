@@ -1,16 +1,28 @@
 /* src/pages/FavoriteItems.css */
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  
-  .row {
-    margin: 0 -15px;
-  }
-  
-  .row > .col {
-    padding: 0 15px;
-  }
-  
+
+  .category-header-favorite {
+    background-size: cover;
+    background-position: center;
+    height: 330px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background-size: cover; /* Resize the background image to cover the entire container */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-position: center; /* Center the image within the container */
+    
+    /* other styles */
+}
+.category-header-favorite h1 {
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: left;
+  align-self: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 70px;
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+}

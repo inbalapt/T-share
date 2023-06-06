@@ -2,6 +2,7 @@
 
 .upload-item-form {
     display: flex;
+    justify-self: flex-start;
     flex-direction: column;
     width: 400px;
     margin: 0 auto;
@@ -13,6 +14,7 @@
     font-weight: bold;
     justify-content: space-between;
     margin-top: 20px;
+    color: #666;
 }
 
 .field-row-label{
@@ -47,6 +49,7 @@
 }
 
 .upload-item-title {
+  color: #666;
     /* Add any specific styles for the title here */
 }
 

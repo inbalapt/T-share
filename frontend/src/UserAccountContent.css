@@ -1,0 +1,8 @@
+
+
+.user-account-content-part .my-uploads {
+    width: 85%;
+    padding-left: 1em;  /* optional, creates some space between the menu and the content */
+    box-sizing: border-box;
+  }
+  

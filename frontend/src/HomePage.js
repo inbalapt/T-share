@@ -1,5 +1,4 @@
 import React from 'react';
-import './ItemScrollPage.css';
 import NavigationBar from './NavigationBar';
 import { useNavigate, useLocation } from "react-router-dom";
 import './HomePage.css';
