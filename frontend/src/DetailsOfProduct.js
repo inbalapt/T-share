@@ -29,13 +29,14 @@ const isItemFavorite = async(username, id)=>{
   }
 }
 
-const DetailsOfProduct = ({ username, seller, description, price, size, collectionPoint, condition, color, brand, sellerUsername, pictures, id }) => {
+const DetailsOfProduct = ({ username, seller, description, price, size, collectionPoint, condition, color, brand, sellerUsername, pictures, id, setUpdate, setPictures }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const [showBuyConfirmation, setShowBuyConfirmation] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailMessage,setShowFailMessage] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
   const [itemDetails, setItemDetails] = useState({
     price:price,
     description:description,
@@ -194,6 +195,9 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
 
       
             console.log(response.data);
+            if(response.data){
+              setPictures(response.data.pictures);
+            }
           } catch (error) {
               console.log('Error updating item:', error);
               // Handle error case, e.g., show an error message to the user
@@ -202,8 +206,9 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
       }
       uploadChangesToServer();
       setEditMode(false);
+      
+      //setUpdate(true);
   };
-//////////////////////////////
 
 
   if (editMode) {
@@ -211,24 +216,36 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
         <form onSubmit={handleSubmit} className="my-item-form details-of-product">
             <h1 className="my-item-title">Item Details</h1>
             <label className="my-details-label">
+            <div className='field-row-label'>
                 Description:  
-                <input type="text" name="description" value={itemDetails.description} onChange={handleInputChange} />
+                </div>
+                <input type="text" name="description" value={itemDetails.description} onChange={handleInputChange} className="upload-item-input"/>
             </label>
             <label className="my-details-label">
+            <div className='field-row-label'>
                 Price:  
-                <input type="number" name="price" value={itemDetails.price} onChange={handleInputChange} />
+                </div>
+                <input type="number" name="price" value={itemDetails.price} onChange={handleInputChange} className="upload-item-input"/>
             </label>
             <label className="my-details-label">
+            <div className='field-row-label'>
                 Condition:  
-                <input type="text" name="condition" value={itemDetails.condition} onChange={handleInputChange} />
+                </div>
+                <input type="text" name="condition" value={itemDetails.condition} onChange={handleInputChange} className="upload-item-input"/>
             </label>
             <label className="my-details-label">
+            <div className='field-row-label'>
                 Brand: 
-                <input type="brand" name="brand" value={itemDetails.brand} onChange={handleInputChange} />
+                </div>
+                <input type="brand" name="brand" value={itemDetails.brand} onChange={handleInputChange} className="upload-item-input"/>
             </label>
             <label className="my-details-label">
-                Size: 
-                <input type="size" name="size" value={itemDetails.size} onChange={handleInputChange} />
+              <div className='field-row-label'>
+              Size:  
+              </div>
+              <select name="size" onChange={handleInputChange} className="upload-item-input">
+                  {sizes.map(size => <option value={size} key={size}>{size}</option>)}
+              </select>
             </label>
             <label className="my-details-label">
               <div className='field-row-label'>
@@ -246,12 +263,12 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
 
   return (
     <div className="details-of-product">
-      {brand && (<p className="brand">{brand}</p>)}
-      <h2 className="description">{description}</h2>
-      <p className="price-details">Price: {price}</p>
-      <p className="size">Size: {size}</p>
-      <p className="condition">Condition: {condition}</p>
-      {color && (<p className="color">Color: {color}</p>)}
+      {brand && (<p className="brand">{itemDetails.brand}</p>)}
+      <h2 className="description">{itemDetails.description}</h2>
+      <p className="price-details">Price: {itemDetails.price}</p>
+      <p className="size">Size: {itemDetails.size}</p>
+      <p className="condition">Condition: {itemDetails.condition}</p>
+      {color && (<p className="color">Color: {itemDetails.color}</p>)}
       
       
       <p className="seller" onClick={handleSellerName}>Seller: {seller}</p>
