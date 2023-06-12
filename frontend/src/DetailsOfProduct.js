@@ -265,12 +265,10 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     <div className="details-of-product">
       {brand && (<p className="brand">{itemDetails.brand}</p>)}
       <h2 className="description">{itemDetails.description}</h2>
-      <p className="price-details">Price: {itemDetails.price}</p>
+      <p className="price-details-des">Price: <span className="price-details">{itemDetails.price} <i className="bi bi-coin"></i></span> </p>
       <p className="size">Size: {itemDetails.size}</p>
       <p className="condition">Condition: {itemDetails.condition}</p>
       {color && (<p className="color">Color: {itemDetails.color}</p>)}
-      
-      
       <p className="seller" onClick={handleSellerName}>Seller: {seller}</p>
       <p className="collection-point">From: {collectionPoint}</p>
       {username != sellerUsername && !showSuccessMessage && !showFailMessage &&
@@ -285,10 +283,12 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
         </button>
       
       </>
+
       }
       {username === sellerUsername && !showSuccessMessage && !showFailMessage &&
       <button className="contact-seller-btn" onClick={() => setEditMode(true)}>Edit</button>
       }
+
       {showBuyConfirmation && (
         <BuyConfirmationModal
           onConfirmBuy={handleConfirmBuy}

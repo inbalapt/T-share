@@ -17,11 +17,11 @@
 .seller{
   font-size: 14px;
   font-weight: bold;
-  color: gray;
+  color: #666;
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   color: gray;
 }
@@ -37,22 +37,26 @@
 }
 
 .description {
-  font-size: 25px;
+  font-size: 40px;
   font-weight: bold;
+  font-family: 'Oswald', sans-serif;
   color: #333;
 }
 
 .price-details {
   font-size: 20px;
   font-weight:bold;
-  color: #f60;
+  color: rgb(255, 55, 0);
 }
 
 .size,
 .condition,
-.color {
+.color,
+.price-details-des {
   font-size: 15px;
   margin-bottom: 10px;
+  font-weight:bold;
+  color: #666;
 }
 
 .contact-seller-btn {
@@ -61,8 +65,8 @@
   font-size: 16px;
   font-weight: bold;
   padding: 10px 100px;
-  background-color: rgb(173, 205, 210, 0.5);
-  color: #000000;
+  color: #fff;
+  background-color: #e5d2d1;
   text-align: center;
   text-decoration: none;
   border-radius: 4px;
@@ -72,8 +76,8 @@
 }
 
 .contact-seller-btn:hover {
-  border: 1px solid gray;
-  background-color: rgb(211, 210, 210);
+  
+  background-color: #dabab8;
 }
 
 
@@ -142,7 +146,16 @@
 }
 
 .details-btns{
-  background-color: rgb(173, 205, 210, 0.5);
+  color: #fff;
+  background-color: #e5d2d1;
+  margin-left: 10px;
+  padding:10px;
+}
+
+
+.details-btns:hover{
+  color: #666;
+  background-color: #dabab8;
   margin-left: 10px;
   padding:10px;
 }

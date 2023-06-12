@@ -1,10 +1,13 @@
 import './RegisterPage.css'
 import * as React from 'react';
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import {Link, Route} from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from './../logo.jpeg'
+import cityCSV from './city_list.csv';
+import Select from 'react-select';
+import Papa from 'papaparse'; // Add this line
 
 
 function RegisterPage() {
@@ -19,6 +22,54 @@ function RegisterPage() {
     city: ""
   });
   const [errorMessage, setErrorMessage] = useState(null);
+  
+  // create and fetch city list
+  const [cityList, setCityList] = useState([]);
+
+  useEffect(() => {
+    Papa.parse(cityCSV, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        console.log(results); // Add this line to inspect the results
+        const cities = results.data.map(row => row.City);
+        setCityList(cities);
+      },
+       error: function(err) {
+        console.log('An error occurred:', err); // This should print the error if one occurred
+      }
+    });
+  }, []);
+  
+/*
+  useEffect(() => {
+    axios.get('./city-list.csv')
+      .then(response => {
+        Papa.parse(response.data, {
+          header: true,
+          complete: function(results) {
+            console.log(results); // This should print the results if parsing is successful
+            const cities = results.data.map(row => row.City);
+            setCityList(cities);
+          },
+          error: function(err) {
+            console.log('An error occurred:', err); // This should print the error if one occurred
+          }
+        });
+      })
+      .catch(error => console.error('Error fetching CSV file:', error));
+  }, []);
+  */
+  
+
+  const cityOptions = cityList.map(city => ({ value: city, label: city })); 
+
+  const handleCityChange = (selectedOption) => {
+    setUserData(prevState => ({
+      ...prevState,
+      city: selectedOption ? selectedOption.value : ""
+    }));
+  };
   
   const handleSubmit = async (event) => {
 
@@ -147,12 +198,24 @@ function RegisterPage() {
 
                   <label className='register-item-label'>
                     <div>Full Name: <span className="required">*</span></div>
-                    <input type="text" name="fullname" placeholder="Enter Full Name" value={userData.fullname} onChange={handleInputChange} required maxLength="25"></input>
+                    <input type="text" name="fullName" placeholder="Enter Full Name" value={userData.fullName} onChange={handleInputChange} required maxLength="25"></input>
                   </label>
                   
                   <label className='register-item-label'>
-                    <div>City: <span className="required">*</span> </div>
-                    <input type="text" name="city" placeholder="Enter City" value={userData.city} onChange={handleInputChange} maxLength="20"></input>
+                      <div>City: <span className="required">*</span> </div>
+                        <Select 
+                          options={cityOptions} 
+                          isClearable
+                          placeholder="Enter City"
+                          onChange={handleCityChange}
+                          styles={{
+                              placeholder: base => ({
+                                  ...base,
+                                  color: '#ddd',
+                                  opacity: 1,
+                              }),
+                          }}
+                        />
                   </label>
                   
                   <label className='register-item-label'>
