@@ -156,14 +156,14 @@ const NavigationBar = () => {
 
   }, [searchTerm]);
 
-  function handleSearchSubmit(e) {
+  /*function handleSearchSubmit(e) {
     e.preventDefault(); 
     // Navigate to first result page
     handleItem(autocompleteResults[0]._id);
     // You can access the current value of the search term using the `searchTerm` state variable
     console.log(searchTerm);
     setSearchTerm(""); // Clear the search term after submission if needed
-  }
+  }*/
   
   
   return (
@@ -183,7 +183,7 @@ const NavigationBar = () => {
               </NavDropdown>
             </Nav>
         </div>
-        <form className="d-flex search-bar" onSubmit={handleSearchSubmit}>
+        <form className="d-flex search-bar" onSubmit={(e) => e.preventDefault()}>
           <input
             className="form-control me-2"
             type="search"
@@ -202,7 +202,7 @@ const NavigationBar = () => {
             </ul>
           )}
 
-          <button className="btn search-button" type="submit">
+          <button className="btn search-button">
             <i className="bi bi-search"></i>
           </button>
         </form>

@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
-import path from "path";
+import path, { resolve } from "path";
 import { fileURLToPath } from "url";
 import { register } from "./controllers/auth.js";
 import User from "./models/User.js";
@@ -20,9 +20,114 @@ import connectMongoDBSession from 'connect-mongodb-session';
 import { v4 as uuidv4 } from 'uuid';
 import {google} from 'googleapis';
 import fs from 'fs';
-import imageHashPackage from 'image-hash';
-import imageSSIM from 'image-ssim';
-import sharp from 'sharp';
+import vision from '@google-cloud/vision';
+import nlp from 'compromise';
+import { ComputerVisionClient } from "@azure/cognitiveservices-computervision";
+import { ApiKeyCredentials } from "@azure/ms-rest-js";
+import { ClarifaiStub, grpc } from 'clarifai-nodejs-grpc';
+
+
+const stub = ClarifaiStub.grpc();
+
+const metadata = new grpc.Metadata();
+metadata.set("authorization", "Key 75f1751d1d244811b2b9d3b4d239de76");
+
+function predictImage(inputs){
+  return new Promise((resolve, reject) =>{
+    stub.PostModelOutputs(
+      {
+          // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
+          model_id: "aaa03c23b3724a16a56b629203edc62c",
+          inputs: inputs
+      },
+      metadata,
+      (err, response) => {
+          if (err) {
+              reject("Error: " + err);
+              return;
+          }
+  
+          if (response.status.code !== 10000) {
+              console.log("Received failed status: " + response.status.description + "\n" + response.status.details);
+              return;
+          }
+          let results = [];
+          for (const c of response.outputs[0].data.concepts) {
+              console.log(c.name + ": " + c.value);
+              results.push({
+                name: c.name,
+                value: c.value
+              })
+          }
+          resolve(results);
+      }
+  );
+  })
+}
+
+const inputs = [{data: {image:{url: `https://drive.google.com/uc?export=view&id=1NIVXahAgCODdMLkR6Pd5708Jmvu-SAHf`}}}]
+predictImage(inputs);
+
+// Replace with your own endpoint and access key
+const endpoint = "https://inbalandnoa.cognitiveservices.azure.com/";
+const accessKey = "e1eada4bfffa44cf9d6644861dd93f96";
+
+const credentials = new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-Key": accessKey } });
+const client = new ComputerVisionClient(credentials, endpoint);
+
+// Function to capture an image
+async function captureImage(imageFile) {
+  try {
+    // Read the image file
+    const imageBuffer = fs.readFileSync(imageFile);
+
+    // Perform the image analysis using ComputerVisionClient
+    const result = await client.analyzeImageInStream(imageBuffer, { visualFeatures: ["Tags", "Description"] });
+
+    // Process the result
+    /*console.log("Tags:");
+    result.tags.forEach((tag) => console.log(tag.name));*/
+    console.log("Description:");
+    //result.description.forEach((caption) => console.log(caption.text));
+    console.log(result.description.captions[0].text);
+    ///////////////////////////// description
+    
+  const description = result.description.captions[0].text;
+
+  // Find the index of the phrase "on a"
+  const onAIndex = description.indexOf("on a");
+
+  let cleanedDescription;
+
+  if (onAIndex !== -1) {
+    // Remove the portion of the sentence after "on a" using substring
+    cleanedDescription = description.substring(0, onAIndex).trim();
+  } else {
+    // Keep the entire sentence
+    cleanedDescription = description;
+  }
+
+  console.log("cleaned : " +cleanedDescription);
+
+  const doc = nlp(cleanedDescription);
+
+  // Get the nouns related to the cloth item
+  const clothNouns = doc.nouns().out('array');
+
+  // Get the adjectives related to the cloth item
+  const clothAdjectives = doc.adjectives().out('array');
+
+  console.log('Nouns:', clothNouns);
+  console.log('Adjectives:', clothAdjectives);
+
+
+  return cleanedDescription;
+  } catch (error) {
+    console.error("An error occurred during image capture:", error);
+  }
+}
+
+
 
 const drive = google.drive('v3');
 
@@ -46,80 +151,25 @@ app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 app.use("/item-uploads", express.static(path.join(__dirname, "/item-uploads")));
 
 
-const imageHash = imageHashPackage.hashSync;
+async function quickstart() {
 
-async function resizeImage(imagePath, outputPath, width, height) {
-  try {
-    await sharp(imagePath).resize(width, height).toFile(outputPath);
-  } catch (error) {
-    throw new Error('Error resizing image: ' + error.message);
-  }
-}
-
-// Function to calculate the percentage similarity between two images
-async function calculateImageSimilarity(imagePath1, imagePath2) {
-  try {
-    // Resize the images to a lower resolution
-    const resizedImagePath1 = './uploads/resizedImage1.jpg';
-    const resizedImagePath2 = './uploads/resizedImage2.jpg';
-    const targetWidth = 800; // Adjust the desired width
-    const targetHeight = null; // Adjust the desired height, or set it to null to maintain aspect ratio
-
-    await resizeImage(imagePath1, resizedImagePath1, targetWidth, targetHeight);
-    await resizeImage(imagePath2, resizedImagePath2, targetWidth, targetHeight);
-
-    // Read and calculate perceptual hashes for the resized images
-    const image1 = await sharp(resizedImagePath1).raw().toBuffer();
-    const image2 = await sharp(resizedImagePath2).raw().toBuffer();
-
-    const hash1 = imageHash(image1, targetWidth, targetHeight, { bitDepth: 8 });
-    const hash2 = imageHash(image2, targetWidth, targetHeight, { bitDepth: 8 });
-
-    // Calculate the structural similarity index (SSIM) between the images
-    const ssim = await imageSSIM.default(resizedImagePath1, resizedImagePath2);
-
-    // Calculate the hamming distance between the hashes
-    const hammingDistance = calculateHammingDistance(hash1, hash2);
-    const similarityPercentage = (1 - hammingDistance / 64) * 100;
-
-    return {
-      similarityPercentage: similarityPercentage.toFixed(2),
-      ssim: ssim.toFixed(4),
-    };
-  } catch (error) {
-    throw new Error('Error calculating image similarity: ' + error.message);
-  }
-}
-
-// Function to calculate the hamming distance between two hashes
-function calculateHammingDistance(hash1, hash2) {
-  let distance = 0;
-  for (let i = 0; i < hash1.length; i++) {
-    if (hash1[i] !== hash2[i]) {
-      distance++;
-    }
-  }
-  return distance;
-}
- // Example usage
- const imagePath1 = './uploads/1685688029704.jpg';
- const imagePath2 = './uploads/1685688029704.jpg';
- 
-/*
-calculateImageSimilarity(imagePath1, imagePath2)
-  .then((result) => {
-    console.log('Similarity Percentage:', result.similarityPercentage + '%');
-    console.log('SSIM:', result.ssim);
-  })
-  .catch((error) => {
-    console.error(error);
+  // Creates a client
+  const client = new vision.ImageAnnotatorClient({
+    keyFilename: './vision-tshare.json',
   });
-*/
- 
+
+  // Performs label detection on the image file
+  const [result] = await client.labelDetection('./uploads/1685688029704.jpg');
+  const labels = result.labelAnnotations;
+  console.log('Labels:');
+  labels.forEach(label => {
+    console.log(label.description)
+    console.log(label.score)});
+}
+//quickstart();
+
 
 // Multer configuration
-/*const storage = multer.memoryStorage(); // Use memory storage for temporary file storage
-const upload = multer({ storage });*/
 const MongoDBStore = connectMongoDBSession(session);
 
 // Function to upload a file to Google Drive
@@ -421,6 +471,10 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
     const { username,description, price, size, category, condition, color, brand } = req.body;
     //const images = req.files.map((file) => file.filename); // Get the filenames of the uploaded images
     const images = req.files; // Get the uploaded images as an array of files
+    
+    // AI description
+    const AIDescription = await captureImage(`${images[0].path}`);
+    const cleanedDescription = AIDescription.charAt(0).toUpperCase() + AIDescription.slice(1);
 
     // Upload each image file to Google Drive
     const uploadedImageIds = await Promise.all(images.map(uploadFileToDrive));
@@ -437,7 +491,8 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       // Item properties
       sellerUsername: username,
       sellerFullName: user.fullName,
-      description,
+      description: cleanedDescription,
+      userDescription: description,
       price,
       size,
       itemLocation: 'Haifa',
@@ -774,10 +829,17 @@ app.post('/addFavoriteItem', async(req,res) =>{
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const item = Item.findOne({_id: id});
-    if(item.isBought){
-      return res.status(204).json({ error: 'Item is already bought' });
+    const item = await Item.findOne({_id: id});
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
+    if(item.isBought){
+      return res.status(404).json({ error: 'Item is already bought' });
+    }
+   
+    item.likes.push(username);
+    console.log(item.likes);
+    await item.save();
     // Add item id to favItems
     user.favItems.push(id);
     // Save the updated user
@@ -797,7 +859,9 @@ app.delete('/removeFavoriteItem', async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
+    const item = await Item.findOne({_id: id});
+    item.likes = item.likes.filter(userLike => userLike !== username);
+    await item.save();
     // Remove the item from the favItems array
     user.favItems = user.favItems.filter(itemId => itemId !== id);
 
@@ -1304,6 +1368,7 @@ app.get('/autocomplete', async (req, res) => {
     const results = await Item.find({
       $or: searchConditions,
       sellerUsername: { $ne: username },
+      isBought: {$ne:true}
     })
       .limit(10)
       .select('_id sellerUsername sellerFullName pictures description price size itemLocation category condition color brand isBought time');

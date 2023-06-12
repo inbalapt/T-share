@@ -17,6 +17,10 @@ const ItemSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    userDescription: {
+      type: String,
+      required: true,
+    },
     price: {
       type: Number,
       required: true,
@@ -55,7 +59,11 @@ const ItemSchema = new mongoose.Schema({
     time: {
       type: Date,
       default: Date.now
-    }
+    },
+    likes: {
+      type: [String],
+      default: [],
+    },
   },
   {timestamps:true}
 );
