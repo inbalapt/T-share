@@ -103,8 +103,15 @@ async function captureImage(imageFile) {
     // Remove the portion of the sentence after "on a" using substring
     cleanedDescription = description.substring(0, onAIndex).trim();
   } else {
-    // Keep the entire sentence
-    cleanedDescription = description;
+    const fromAIndex = description.indexOf("from a");
+    if(fromAIndex !== -1){
+      // Remove the portion of the sentence after "on a" using substring
+      cleanedDescription = description.substring(0, fromAIndex).trim();
+    }
+    else{
+      // Keep the entire sentence
+      cleanedDescription = description;
+    }
   }
 
   console.log("cleaned : " +cleanedDescription);
