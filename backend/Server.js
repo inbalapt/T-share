@@ -146,16 +146,29 @@ async function captureImage(imageFile, category) {
       itemCategory = "pants";
     }
 
-    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse", "cylindrical object"];
+    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse", "cylindrical", "object"];
 
+    let numberOfWords = 0;
+    let cutSentence = false;
     const updatedSentence = modifiedDescription
       .split(" ")
       .map((word) => {
+        if (cutSentence) {
+          return "";
+        }
+    
         if (wordList.includes(word.toLowerCase())) {
-          if((category == "top" && (word == "shirt" || word == "t-shirt")) || (category == "pants" && word == "shorts")){
+          if ((category == "top" && (word == "shirt" || word == "t-shirt")) || (category == "pants" && word == "shorts")) {
             return word;
           }
-          return itemCategory;
+    
+          numberOfWords = numberOfWords + 1;
+          if (numberOfWords === 1) {
+            return itemCategory;
+          } else if (numberOfWords === 2) {
+            cutSentence = true;
+            return "";
+          }
         }
         return word;
       })
