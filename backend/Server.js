@@ -27,7 +27,6 @@ import { ApiKeyCredentials } from "@azure/ms-rest-js";
 import { ClarifaiStub, grpc } from 'clarifai-nodejs-grpc';
 
 
-
 /* Clarifai labels for image */
 const stub = ClarifaiStub.grpc();
 
@@ -70,9 +69,11 @@ function predictImage(inputs){
   })
 }
 
+
+
 // Replace with your own endpoint and access key
-const endpoint = "https://inbalandnoa.cognitiveservices.azure.com/";
-const accessKey = "e1eada4bfffa44cf9d6644861dd93f96";
+const endpoint = "https://visioninbalnoa.cognitiveservices.azure.com/";
+const accessKey = "d5f5ec9903af476bb0fa2a05baf1ecde";
 
 const credentials = new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-Key": accessKey } });
 const client = new ComputerVisionClient(credentials, endpoint);
