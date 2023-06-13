@@ -79,7 +79,7 @@ const credentials = new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-K
 const client = new ComputerVisionClient(credentials, endpoint);
 
 // Function to capture an image
-async function captureImage(imageFile) {
+async function captureImage(imageFile, category) {
   try {
     // Read the image file
     const imageBuffer = fs.readFileSync(imageFile);
@@ -95,48 +95,113 @@ async function captureImage(imageFile) {
     console.log(result.description.captions[0].text);
     ///////////////////////////// description
     
-  const description = result.description.captions[0].text;
+    const description = result.description.captions[0].text;
 
-  // Find the index of the phrase "on a"
-  const onAIndex = description.indexOf("on a");
+    // Find the index of the phrase "on a"
+    const onAIndex = description.indexOf("on a");
 
-  let cleanedDescription;
+    let cleanedDescription;
 
-  if (onAIndex !== -1) {
-    // Remove the portion of the sentence after "on a" using substring
-    cleanedDescription = description.substring(0, onAIndex).trim();
-  } else {
-    const fromAIndex = description.indexOf("from a");
-    if(fromAIndex !== -1){
+    if (onAIndex !== -1) {
       // Remove the portion of the sentence after "on a" using substring
-      cleanedDescription = description.substring(0, fromAIndex).trim();
+      cleanedDescription = description.substring(0, onAIndex).trim();
+    } else {
+      const fromAIndex = description.indexOf("from a");
+      if(fromAIndex !== -1){
+        // Remove the portion of the sentence after "on a" using substring
+        cleanedDescription = description.substring(0, fromAIndex).trim();
+      }
+      else{
+        // Keep the entire sentence
+        cleanedDescription = description;
+      }
     }
-    else{
-      // Keep the entire sentence
-      cleanedDescription = description;
+
+    let modifiedDescription = cleanedDescription;
+    if (cleanedDescription.startsWith("a ")) {
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 1);
     }
-  }
+    if (cleanedDescription.startsWith("close-up of a ")) {
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 6);
+    }
+    if (cleanedDescription.startsWith("a stack of ")) {
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 10);
+    }
 
-  let modifiedDescription= cleanedDescription
-  if (cleanedDescription.startsWith("a ")) {
-    modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 1);
-  }
+   
 
-  console.log("cleaned : " +modifiedDescription);
+    console.log("cleaned : " +modifiedDescription);
 
-  /*const doc = nlp(cleanedDescription);
+    let itemCategory;
+    if (category == "dresses"){
+      itemCategory = "dress";
+    }
+    if (category == "tops"){
+      itemCategory = "top";
+    }
+    if (category == "skirts"){
+      itemCategory = "skirt";
+    }
+    if (category == "pants"){
+      itemCategory = "pants";
+    }
 
-  // Get the nouns related to the cloth item
-  const clothNouns = doc.nouns().out('array');
+    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse"];
 
-  // Get the adjectives related to the cloth item
-  const clothAdjectives = doc.adjectives().out('array');
+    const updatedSentence = modifiedDescription
+      .split(" ")
+      .map((word) => {
+        if (wordList.includes(word.toLowerCase())) {
+          if((category == "top" && (word == "shirt" || word == "t-shirt")) || (category == "pants" && word == "shorts")){
+            return word;
+          }
+          return itemCategory;
+        }
+        return word;
+      })
+      .join(" ");
 
-  console.log('Nouns:', clothNouns);
-  console.log('Adjectives:', clothAdjectives);*/
+    console.log(updatedSentence);
 
 
-  return modifiedDescription;
+    const doc = nlp(modifiedDescription);
+
+    // Get the nouns related to the cloth item
+   /* const clothNouns = doc.nouns().out('array');
+
+    // Get the adjectives related to the cloth item
+    const clothAdjectives = doc.adjectives().out('array');
+
+    console.log('Nouns:', clothNouns);
+    console.log('Adjectives:', clothAdjectives);
+
+    if (clothNouns.length > 0) {
+      const firstNoun = clothNouns[0];
+      if(firstNoun !== "dress" && firstNoun !== "top" && firstNoun !== "shirt" && firstNoun !== "skirt"  && firstNoun !== "pants" && firstNoun !== "shorts"){
+        let itemCategory;
+        if (category == "dresses"){
+          itemCategory = "dress";
+        }
+        if (category == "tops"){
+          itemCategory = "top";
+        }
+        if (category == "skirts"){
+          itemCategory = "skirt";
+        }
+        if (category == "pants"){
+          itemCategory = "pants";
+        }
+        const updatedDescription = modifiedDescription.replace(firstNoun, itemCategory);
+        console.log(updatedDescription);
+        return updatedDescription;
+      }
+    } else {
+      console.log('No cloth nouns found.');
+    }*/
+  
+
+
+    return updatedSentence;
   } catch (error) {
     console.error("An error occurred during image capture:", error);
   }
@@ -488,7 +553,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
     const images = req.files; // Get the uploaded images as an array of files
     
     // AI description
-    const AIDescription = await captureImage(`${images[0].path}`);
+    const AIDescription = await captureImage(`${images[0].path}`, category);
     const cleanedDescription = AIDescription.charAt(0).toUpperCase() + AIDescription.slice(1);
 
     // Upload each image file to Google Drive
@@ -516,7 +581,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       userDescription: description,
       price,
       size,
-      itemLocation: 'Haifa',
+      itemLocation: user.city,
       category,
       condition,
       color,
@@ -753,7 +818,7 @@ app.post("/changeNotUnreadMessages", async (req,res)=>{
 app.post("/updateItemDetails", itemUpload.array("images", 4), async (req, res) => {
   try {
     // Access the updated user details
-    const { username, price,description,condition,brand,size, id} = req.body;
+    const { username, price,description,condition,color,brand,size, id} = req.body;
 
     const images = req.files; // Get the uploaded images as an array of files
 
@@ -778,6 +843,9 @@ app.post("/updateItemDetails", itemUpload.array("images", 4), async (req, res) =
     }
     if (condition) {
       item.condition = condition;
+    }
+    if (color) {
+      item.color = color;
     }
     if (brand) {
       item.brand = brand;
@@ -1347,6 +1415,7 @@ mongoose
 import http from "http";
 import { Server } from "socket.io";
 import { env } from "process";
+
 
 
 const server = http.createServer(app);

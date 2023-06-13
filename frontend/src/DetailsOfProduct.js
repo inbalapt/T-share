@@ -41,6 +41,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     price:price,
     description:description,
     condition:condition,
+    color:color,
     brand:brand,
     size:size,
     id:id,
@@ -178,6 +179,9 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
               if(itemDetails.condition !== null){
                   formData.append('condition', itemDetails.condition);
               }
+              if(itemDetails.color !== null){
+                formData.append('color', itemDetails.color);
+            }
               if(itemDetails.size !== null){
                 formData.append('size', itemDetails.size);
             }
@@ -235,6 +239,12 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
             </label>
             <label className="my-details-label">
             <div className='field-row-label'>
+                Color: 
+                </div>
+                <input type="text" name="color" value={itemDetails.color} onChange={handleInputChange} className="upload-item-input"/>
+            </label>
+            <label className="my-details-label">
+            <div className='field-row-label'>
                 Brand: 
                 </div>
                 <input type="brand" name="brand" value={itemDetails.brand} onChange={handleInputChange} className="upload-item-input"/>
@@ -243,7 +253,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
               <div className='field-row-label'>
               Size:  
               </div>
-              <select name="size" onChange={handleInputChange} className="upload-item-input">
+              <select name="size" value={itemDetails.size} onChange={handleInputChange} className="upload-item-input">
                   {sizes.map(size => <option value={size} key={size}>{size}</option>)}
               </select>
             </label>
@@ -268,7 +278,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
       <p className="price-details-des">Price: <span className="price-details">{itemDetails.price} <i className="bi bi-coin"></i></span> </p>
       <p className="size">Size: {itemDetails.size}</p>
       <p className="condition">Condition: {itemDetails.condition}</p>
-      {color && (<p className="color">Color: {itemDetails.color}</p>)}
+      {itemDetails.color && (<p className="color">Color: {itemDetails.color}</p>)}
       <p className="seller" onClick={handleSellerName}>Seller: {seller}</p>
       <p className="collection-point">From: {collectionPoint}</p>
       {username != sellerUsername && !showSuccessMessage && !showFailMessage &&

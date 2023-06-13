@@ -30,7 +30,11 @@ const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads, username}) 
         }
     }
 
-    function handleItem(){
+    function handleItem(e){
+        if (e.target.closest('.delete-button')) {
+            e.stopPropagation();
+            return;
+          }
         navigate(`/item/${upload._id}`, { state: { username: username} });
     }
 
@@ -46,7 +50,7 @@ const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads, username}) 
                 <div className="order-tab-section">{upload.condition}</div>
                 <div className="order-tab-section">{uploadIsBought}</div>
                 <div className="order-tab-section">
-                    <i class="bi bi-trash3" onClick={deleteItem}></i>
+                    <i class="bi bi-trash3 delete-button" onClick={deleteItem}></i>
                 </div>
             </div>
             

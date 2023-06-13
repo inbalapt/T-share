@@ -20,7 +20,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
     });
 
     const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'];
-    const categories = ['dresses', 'tops', 'pants' , 'skirts' , 'other']
+    const categories = ['dresses', 'tops', 'pants' , 'skirts']
     const handleChange = (event) => {
         setItem({
             ...item,
