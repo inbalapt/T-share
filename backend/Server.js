@@ -146,7 +146,7 @@ async function captureImage(imageFile, category) {
       itemCategory = "pants";
     }
 
-    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse"];
+    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse", "cylindrical object"];
 
     const updatedSentence = modifiedDescription
       .split(" ")
