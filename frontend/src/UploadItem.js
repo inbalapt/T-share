@@ -106,7 +106,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
             <label className="upload-item-label">
                 <div className='field-row-label'>
                 Category:
-                 <span className={item.category ? "dot-hidden" : "dot-visible"}>*</span>
+                <span className="required">*</span>
                  </div>
                 <select name="category" required onChange={handleChange} className="upload-item-input">
                     {categories.map(category => <option value={category} key={category}>{category}</option>)}
@@ -118,7 +118,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
             <label className="upload-item-label">
                 <div className='field-row-label'>
                 Product Description: 
-                <span className={item.description ? "dot-hidden" : "dot-visible"}>*</span>
+                <span className="required">*</span>
                 </div>
                 <input type="text" name="description" required onChange={handleChange} className="upload-item-input"/>
                 
@@ -128,7 +128,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
             <label className="upload-item-label">
                 <div className='field-row-label'>
                 Price: 
-                 <span className={item.price ? "dot-hidden" : "dot-visible"}>*</span>
+                <span className="required">*</span>
                  </div>
                 <input type="number" name="price" required min="0" onChange={handleChange} className="upload-item-input"/>
                 
@@ -138,7 +138,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
 
                 <div className='field-row-label'>
                 Size:  
-                <span className={item.size ? "dot-hidden" : "dot-visible"}>*</span>
+                <span className="required">*</span>
                 </div>
                 <select name="size" required onChange={handleChange} className="upload-item-input">
                     {sizes.map(size => <option value={size} key={size}>{size}</option>)}
@@ -151,7 +151,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
             <label className="upload-item-label">
                 <div className='field-row-label'>
                 Condition:  
-                <span className={item.condition ? "dot-hidden" : "dot-visible"}>*</span> 
+                <span className="required">*</span>
                 </div>
                 <input type="text" name="condition" required onChange={handleChange} className="upload-item-input"/>
                
@@ -171,7 +171,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
             <label className="upload-item-label">
             <div className='field-row-label'>
                 Product Images: 
-                <span className={item.images.length === 0 ? "dot-visible" : "dot-hidden"}>*</span>
+                <span className="required">*</span>
                 </div>
                 <input type="file" name="images" required multiple onChange={handleImageChange} className="upload-item-input"/>
                 
