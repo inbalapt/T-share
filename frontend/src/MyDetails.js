@@ -1,7 +1,10 @@
 // MyDetails.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './MyDetails.css';
 import axios from 'axios';
+import Select from 'react-select';
+import cityCSV from './auth/city_list.csv';
+import Papa from 'papaparse'; 
 
 const getUserDetails = async(username,setUserDetails)=>{
     try {
@@ -10,8 +13,7 @@ const getUserDetails = async(username,setUserDetails)=>{
         setUserDetails((prevUserDetails) => ({
             ...prevUserDetails,
             city: response.data.city,
-            height: response.data.height,
-            weight: response.data.weight,
+            size: response.data.size || '', 
             credit: response.data.credit,
             email: response.data.email,
             image: response.data.image
@@ -27,12 +29,46 @@ const MyDetails = ({username}) => {
     const [editMode, setEditMode] = useState(false);
     const [userDetails, setUserDetails] = useState({
         city: '',
-        height: '',
-        weight: '',
+        size: '', 
         credit: '',
         email: '',
         image: '',
     });
+    const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'];
+
+    const sizeOptions = sizes.map(size => ({value: size, label: size}));
+    
+    const handleSizeChange = (selectedOption) => {
+        setUserDetails((prevUserDetails) => ({
+            ...prevUserDetails,
+            size: selectedOption ? selectedOption.value : ""
+        }));
+    };
+
+    const [cityList, setCityList] = useState([]);
+
+
+  useEffect(() => {
+    Papa.parse(cityCSV, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        console.log(results); // Add this line to inspect the results
+        const cities = results.data.map(row => row.City);
+        setCityList(cities);
+      },
+       error: function(err) {
+        console.log('An error occurred:', err); // This should print the error if one occurred
+      }
+    });
+  }, []);
+    const cityOptions = cityList.map(city => ({ value: city, label: city })); 
+    const handleCityChange = (selectedOption) => {
+        setUserDetails(prevState => ({
+        ...prevState,
+        city: selectedOption ? selectedOption.value : ""
+        }));
+    };
 
     useEffect(() => {
         getUserDetails(username, setUserDetails);
@@ -75,11 +111,8 @@ const MyDetails = ({username}) => {
                 if(userDetails.email !== null){
                     formData.append('email', userDetails.email);
                 }
-                if(userDetails.height !== null){
-                    formData.append('height', userDetails.height);
-                }
-                if(userDetails.weight !== null){
-                    formData.append('weight', userDetails.weight);
+                if(userDetails.size !== null){
+                    formData.append('size', userDetails.size);
                 }
                
                 if (userDetails.image !== null) {
@@ -109,21 +142,45 @@ const MyDetails = ({username}) => {
         return (
             <form onSubmit={handleSubmit} className="my-details-form">
                 <h1 className="my-details-title">My Details</h1>
+                <label className='my-details-label'>
+                      <div>City:</div>
+                        <Select 
+                          options={cityOptions} 
+                          placeholder={userDetails.city || "Enter City"}
+                          onChange={handleCityChange}
+                          styles={{
+                              placeholder: base => ({
+                                  ...base,
+                                  color: '#ddd',
+                                  opacity: 1,
+                              }),
+                          }}
+                        />
+                  </label>
+
                 <label className="my-details-label">
-                    City:
-                    <input type="text" name="city" value={userDetails.city} placeholder="Enter City" onChange={handleInputChange} />
-                </label>
-                <label className="my-details-label">
-                    Height:
-                    <input type="number" name="height" value={userDetails.height} placeholder="Enter Height" onChange={handleInputChange} />
-                </label>
-                <label className="my-details-label">
-                    Weight:
-                    <input type="number" name="weight" value={userDetails.weight} placeholder="Enter Weight" onChange={handleInputChange} />
+
+                    <div>
+                    Size:  
+                    </div>
+                    <Select name="size" onChange={handleSizeChange}
+                      options={sizeOptions} 
+                      placeholder={userDetails.size || "Enter Size"}
+                      styles={{
+                        placeholder: base => ({
+                            ...base,
+                            color: '#ddd',
+                            opacity: 1,
+                        }),
+                    }}
+                    />
+
+
+
                 </label>
                 <label className="my-details-label">
                     Email:
-                    <input type="email" name="email" value={userDetails.email} onChange={handleInputChange} />
+                    <input type="email" name="email" /*value={userDetails.email}*/ placeholder={userDetails.email} onChange={handleInputChange} />
                 </label>
                 <label className="my-details-label">
                 Profile Image:
@@ -138,8 +195,7 @@ const MyDetails = ({username}) => {
         <div className="my-details-view" >
             <h1 className="my-details-title">My Details</h1>
             <p className="my-details-item">City: {userDetails.city}</p>
-            <p className="my-details-item">Height: {userDetails.height}</p>
-            <p className="my-details-item">Weight: {userDetails.weight}</p>
+            <p className="my-details-item">Size: {userDetails.size}</p>
             <p className="my-details-item">Email: {userDetails.email}</p>
             <button onClick={() => setEditMode(true)} className="my-details-button">Edit</button>
         </div>

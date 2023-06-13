@@ -27,6 +27,8 @@ import { ApiKeyCredentials } from "@azure/ms-rest-js";
 import { ClarifaiStub, grpc } from 'clarifai-nodejs-grpc';
 
 
+
+/* Clarifai labels for image */
 const stub = ClarifaiStub.grpc();
 
 const metadata = new grpc.Metadata();
@@ -53,20 +55,20 @@ function predictImage(inputs){
           }
           let results = [];
           for (const c of response.outputs[0].data.concepts) {
-              console.log(c.name + ": " + c.value);
-              results.push({
-                name: c.name,
-                value: c.value
-              })
+              const ignoreLabels = ["no person", "fashion", "wear", "cutout", "one","winter", "isolated", "model", "architecture", "wood", "indoors","people","portrait", "facial expression", "adult", "girl", "kitchenware", "happiness", "room", "creativity", "child", "looking", "brunette", "enjoyment", "cooking", "family", "person", "illustration", "desktop","vector"]
+              if(!ignoreLabels.includes(c.name) && c.value >= 0.9){
+                //console.log(c.name + ": " + c.value);
+                results.push({
+                  name: c.name,
+                  value: c.value
+                })
+              }
           }
           resolve(results);
       }
   );
   })
 }
-
-const inputs = [{data: {image:{url: `https://drive.google.com/uc?export=view&id=1NIVXahAgCODdMLkR6Pd5708Jmvu-SAHf`}}}]
-predictImage(inputs);
 
 // Replace with your own endpoint and access key
 const endpoint = "https://inbalandnoa.cognitiveservices.azure.com/";
@@ -114,9 +116,14 @@ async function captureImage(imageFile) {
     }
   }
 
-  console.log("cleaned : " +cleanedDescription);
+  let modifiedDescription= cleanedDescription
+  if (cleanedDescription.startsWith("a ")) {
+    modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 1);
+  }
 
-  const doc = nlp(cleanedDescription);
+  console.log("cleaned : " +modifiedDescription);
+
+  /*const doc = nlp(cleanedDescription);
 
   // Get the nouns related to the cloth item
   const clothNouns = doc.nouns().out('array');
@@ -125,10 +132,10 @@ async function captureImage(imageFile) {
   const clothAdjectives = doc.adjectives().out('array');
 
   console.log('Nouns:', clothNouns);
-  console.log('Adjectives:', clothAdjectives);
+  console.log('Adjectives:', clothAdjectives);*/
 
 
-  return cleanedDescription;
+  return modifiedDescription;
   } catch (error) {
     console.error("An error occurred during image capture:", error);
   }
@@ -490,6 +497,12 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       fs.unlinkSync(image.path);
     });
     
+    
+    const inputs = [{data: {image:{url: `https://drive.google.com/uc?export=view&id=${uploadedImageIds[0]}`}}}]
+    const labelsResults = await predictImage(inputs);
+    const labelsNames = labelsResults.map(label => label.name);
+    console.log(labelsNames);
+
     // Find the user by username
     const user = await User.findOne({ username });
 
@@ -508,7 +521,8 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       color,
       brand,
       pictures: uploadedImageIds, 
-      isBought: false
+      isBought: false,
+      labels: labelsNames
     });
 
     // Save the item to the item database
@@ -550,13 +564,17 @@ app.post("/followUser", async (req, res) => {
       return;
     }
     
-    const userToFollow = await User.find({ username:userProName});
+    const userToFollow = await User.findOne({ username:userProName});
     if(!userToFollow){
       console.log("userToFollow not found");
     }
     user.following.push(userProName);
     // Save the updated user
     await user.save();
+
+    // update followers
+    userToFollow.followers.push(username);
+    await userToFollow.save();
     
     console.log('User added to following array.');
     res.json(200);
@@ -583,7 +601,7 @@ app.delete("/unfollowUser", async (req, res) => {
       return;
     }
     
-    const userToFollow = await User.find({ username:userProName});
+    const userToFollow = await User.findOne({ username:userProName});
     if(!userToFollow){
       console.log("userToFollow not found");
     }
@@ -592,7 +610,11 @@ app.delete("/unfollowUser", async (req, res) => {
     }
     // Save the updated user
     await user.save();
-    
+
+    // update followers.
+    userToFollow.followers = userToFollow.followers.filter((followerUsername) => followerUsername !== username)
+    await userToFollow.save();
+
     console.log('User removed from following array.');
     res.json(200);
   } catch (error) {
@@ -784,7 +806,7 @@ app.post("/updateItemDetails", itemUpload.array("images", 4), async (req, res) =
 app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
   try {
     // Access the updated user details
-    const { username, city, height, weight, credit, email } = req.body;
+    const { username, city, size, credit, email } = req.body;
 
      // Upload image file to Google Drive
      const fileId = await uploadFileToDrive(req.file);
@@ -800,11 +822,8 @@ app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
     if (city) {
       user.city = city;
     }
-    if (!isNaN(height)) {
-      user.height = height;
-    }
-    if (!isNaN(weight)) {
-      user.weight = weight;
+    if (!isNaN(size)) {
+      user.size = size;
     }
     if (email) {
       user.email = email;
@@ -1139,8 +1158,7 @@ app.get('/getUserDetails', async (req,res)=>{
     const { username } = req.query;
     const user = await User.findOne({ username });
     res.status(200).json({ city: user.city,
-    height: user.height,
-    weight: user.weight,
+    size: user.size,
     credit: user.credit,
     email: user.email,
     image: user.picturePath });

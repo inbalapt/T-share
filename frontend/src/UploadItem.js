@@ -19,7 +19,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
         images: [],  
     });
 
-    const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+    const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'];
     const categories = ['dresses', 'tops', 'pants' , 'skirts' , 'other']
     const handleChange = (event) => {
         setItem({
@@ -55,7 +55,8 @@ const UploadItem = ({username, setUpdateProducts}) => {
                     formData.append('category', "dresses");
                 } else {formData.append('category', item.category);}
                 if(item.size == ''){
-                    formData.append('size', 32);
+                    console.log("hhheh")
+                    formData.append('size', '32');
                 } else {formData.append('size', item.size);}
                 formData.append('description', item.description);
                 formData.append('price', item.price);

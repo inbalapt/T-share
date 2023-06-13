@@ -17,8 +17,7 @@ export const register = async (req, res) => {
             myBoughts,
             favItems,
             city,
-            height,
-            weight,
+            size,
             credit,
         } = req.body;
         
@@ -36,8 +35,7 @@ export const register = async (req, res) => {
             myBoughts,
             favItems,
             city,
-            height,
-            weight,
+            size,
             credit: 50
         });
         const savedUser = await newUser.save();

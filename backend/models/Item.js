@@ -29,7 +29,7 @@ const ItemSchema = new mongoose.Schema({
     size: {
       type: String,
       required: true,
-      enum: ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'], // Add your category options here
+      enum: ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'],
     },
     itemLocation: {
       type: String,
@@ -61,6 +61,10 @@ const ItemSchema = new mongoose.Schema({
       default: Date.now
     },
     likes: {
+      type: [String],
+      default: [],
+    },
+    labels: {
       type: [String],
       default: [],
     },

@@ -7,7 +7,7 @@ import axios from "axios";
 import logo from './../logo.jpeg'
 import cityCSV from './city_list.csv';
 import Select from 'react-select';
-import Papa from 'papaparse'; // Add this line
+import Papa from 'papaparse'; 
 
 
 function RegisterPage() {
@@ -17,14 +17,14 @@ function RegisterPage() {
     password: "",
     email: "",
     fullName: "",
-    weight: "",
-    height: "",
+    size: "",
     city: ""
   });
   const [errorMessage, setErrorMessage] = useState(null);
-  
+  const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'];
   // create and fetch city list
   const [cityList, setCityList] = useState([]);
+
 
   useEffect(() => {
     Papa.parse(cityCSV, {
@@ -62,8 +62,17 @@ function RegisterPage() {
   */
   
 
-  const cityOptions = cityList.map(city => ({ value: city, label: city })); 
+  
 
+  const sizeOptions = sizes.map(size => ({value: size, label: size}));
+  const handleSizeChange = (selectedOption) => {
+    setUserData(prevState => ({
+      ...prevState,
+      size: selectedOption ? selectedOption.value : ""
+    }));
+  };
+
+  const cityOptions = cityList.map(city => ({ value: city, label: city })); 
   const handleCityChange = (selectedOption) => {
     setUserData(prevState => ({
       ...prevState,
@@ -217,18 +226,24 @@ function RegisterPage() {
                           }}
                         />
                   </label>
-                  
-                  <label className='register-item-label'>
-                    <div>Weight:</div>
-                    <input type="number" name="weight" placeholder="Enter Weight" value={userData.weight} onChange={handleInputChange} max="200"></input>
+
+                  <label className="register-item-label">
+                    <div>
+                    Size:  
+                    </div>
+                    <Select name="size" onChange={handleSizeChange}
+                      options={sizeOptions} 
+                      isClearable
+                      placeholder="Enter Size"
+                      styles={{
+                        placeholder: base => ({
+                            ...base,
+                            color: '#ddd',
+                            opacity: 1,
+                        }),
+                    }}
+                    />
                   </label>
-
-                  <label className='register-item-label'>
-                    <div>Height:</div>
-                    <input type="number" name="height" placeholder="Enter Height" value={userData.height} onChange={handleInputChange} max="200"></input>
-                  </label>
-
-
                   <div className='did-login'>
                     <p> Already registered? <Link to='/' className="h">Click here</Link> to login</p>
                   </div>

@@ -36,7 +36,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showFailMessage,setShowFailMessage] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50', 'XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+  const sizes = ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'];
   const [itemDetails, setItemDetails] = useState({
     price:price,
     description:description,

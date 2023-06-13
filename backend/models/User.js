@@ -76,16 +76,19 @@ const UserSchema = new mongoose.Schema(
           type: [String],
           default: [],
         },
+        followers: {
+          type: [String],
+          default: [],
+        },
         city :{
           type: String,
           require: true,
           default: ""
         },
-        height:{
-          type: Number,
-        },
-        weight:{
-          type: Number,
+        size: {
+          type: String,
+          required: true,
+          enum: ['32', '34', '36', '38', '40', '42', '44', '46', '48', '50'],
         },
         credit:{
           type: Number,
@@ -99,7 +102,7 @@ const UserSchema = new mongoose.Schema(
 
 
 const User = mongoose.model("User", UserSchema);
-const saltRounds = 10; // Number of salt rounds for bcrypt to generate
+/*const saltRounds = 10; // Number of salt rounds for bcrypt to generate
 const plainPassword = 'inbal123'; // The password entered by the user
 
 bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -177,8 +180,8 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
       password: passwordHash, // Store the hashed password in the database
       email: 'inbalapt@gmail.com',
       friends: [],
-      myUploads: [/*"1uczlF23Zc_wv0YHsu60jHpyAS8uzfOLq"*/]
-    });
+      myUploads: [/*"1uczlF23Zc_wv0YHsu60jHpyAS8uzfOLq"]
+   /* });
 
     // Add a friend and their messages
     const friend = {
@@ -290,6 +293,6 @@ bcrypt.genSalt(saltRounds, (err, salt) => {
         console.error('Error saving user:', error);
       });
   });
-});
+});*/
 
 export default User;
