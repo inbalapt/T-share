@@ -62,6 +62,16 @@
     overflow: hidden;
   }
 
+  .card-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* Maximum number of lines */
+    -webkit-box-orient: vertical;
+  }
+  .card-title:hover {
+    -webkit-line-clamp: initial; /* Show all lines when hovering */
+  }
   
 
   .favorite-button .bi-heart {
@@ -71,6 +81,7 @@
     
   }
 
+  
   
   .favorite-button:hover .bi-heart,
   .favorite-button .bi-heart-fill {

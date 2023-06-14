@@ -47,6 +47,20 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     id:id,
     images: [],
   });
+
+  useEffect(()=>{
+    setItemDetails({
+      price:price,
+      description:description,
+      condition:condition,
+      color:color,
+      brand:brand,
+      size:size,
+      id:id,
+      images: [],
+    })
+  },[pictures])
+
   useEffect(()=>{
     isItemFavorite(username,id)
     .then(isFavorite => {
@@ -273,12 +287,12 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
 
   return (
     <div className="details-of-product">
-      {brand && (<p className="brand">{itemDetails.brand}</p>)}
+      {itemDetails.brand && (<p className="brand">{itemDetails.brand.charAt(0).toUpperCase() + itemDetails.brand.slice(1)}</p>)}
       <h2 className="description">{itemDetails.description}</h2>
       <p className="price-details-des">Price: <span className="price-details">{itemDetails.price} <i className="bi bi-coin"></i></span> </p>
       <p className="size">Size: {itemDetails.size}</p>
-      <p className="condition">Condition: {itemDetails.condition}</p>
-      {itemDetails.color && (<p className="color">Color: {itemDetails.color}</p>)}
+      <p className="condition">Condition: {itemDetails.condition.charAt(0).toUpperCase() + itemDetails.condition.slice(1)}</p>
+      {itemDetails.color && (<p className="color">Color: {itemDetails.color.charAt(0).toUpperCase() + itemDetails.color.slice(1)}</p>)}
       <p className="seller" onClick={handleSellerName}>Seller: {seller}</p>
       <p className="collection-point">From: {collectionPoint}</p>
       {username != sellerUsername && !showSuccessMessage && !showFailMessage &&

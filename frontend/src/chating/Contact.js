@@ -27,7 +27,6 @@ function Contact({ username, messages, activeContact, handleChatClick, getFullna
     // Compare 'lastRealTime' with the target date
     if (lastRealTimeDate < targetDate) {
       // 'lastRealTime' is yesterday
-      console.log("lastRealTime is yesterday.");
       setTimeToWrite("Yesterday");
       targetDate.setDate(currentDate.getDate() - 2);
       if (lastRealTimeDate < targetDate) {
@@ -45,7 +44,6 @@ function Contact({ username, messages, activeContact, handleChatClick, getFullna
       }
     } else {
       // 'lastRealTime' is today or later
-      console.log("lastRealTime is today or later.");
       setTimeToWrite(lastMessageTime);
     }
   },[messages]);
