@@ -69,8 +69,6 @@ function predictImage(inputs){
   })
 }
 
-
-
 // Replace with your own endpoint and access key
 const endpoint = "https://visioninbalnoa.cognitiveservices.azure.com/";
 const accessKey = "d5f5ec9903af476bb0fa2a05baf1ecde";
@@ -121,11 +119,19 @@ async function captureImage(imageFile, category) {
     if (cleanedDescription.startsWith("a ")) {
       modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 1);
     }
-    if (cleanedDescription.startsWith("close-up of a ")) {
-      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 6);
+    if (cleanedDescription.startsWith("a close-up of a ")) {
+      console.log("~!!!");
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 15);
     }
     if (cleanedDescription.startsWith("a stack of ")) {
       modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 10);
+    }
+    if (modifiedDescription.startsWith("pair of ") && category == "skirts") {
+      const searchPattern = "pair of";
+      const replacement = "skirt";
+
+      modifiedDescription = modifiedDescription.replace(searchPattern, "").trim() + " " + replacement;
+      console.log(modifiedDescription);
     }
 
    
@@ -146,7 +152,7 @@ async function captureImage(imageFile, category) {
       itemCategory = "pants";
     }
 
-    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse", "cylindrical", "object"];
+    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels","towel", "purse", "cylindrical", "object","bag", "underwear", "puzzle", "piece"];
 
     let numberOfWords = 0;
     let cutSentence = false;
@@ -161,6 +167,10 @@ async function captureImage(imageFile, category) {
           if ((category == "top" && (word == "shirt" || word == "t-shirt")) || (category == "pants" && word == "shorts")) {
             return word;
           }
+          if(word == "piece"){
+            cutSentence = true;
+            return itemCategory;
+          }
     
           numberOfWords = numberOfWords + 1;
           if (numberOfWords === 1) {
@@ -174,7 +184,12 @@ async function captureImage(imageFile, category) {
       })
       .join(" ");
 
-    console.log(updatedSentence);
+    const pattern1 = `with a white background`;
+    const pattern2 = `with a strap`;
+
+    const veryUpdatedSentence = updatedSentence.replace(pattern1, "").replace(pattern2, "");
+
+    console.log(veryUpdatedSentence);
 
 
     const doc = nlp(modifiedDescription);
@@ -214,7 +229,7 @@ async function captureImage(imageFile, category) {
   
 
 
-    return updatedSentence;
+    return veryUpdatedSentence;
   } catch (error) {
     console.error("An error occurred during image capture:", error);
   }
