@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@azure/cognitiveservices-computervision": "^8.2.0",
+    "@azure/ms-rest-js": "^2.6.6",
     "@google-cloud/vision": "^3.1.3",
     "@googleapis/drive": "^5.1.0",
     "async": "^3.2.4",

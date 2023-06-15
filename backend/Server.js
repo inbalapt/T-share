@@ -25,7 +25,7 @@ import nlp from 'compromise';
 import { ComputerVisionClient } from "@azure/cognitiveservices-computervision";
 import { ApiKeyCredentials } from "@azure/ms-rest-js";
 import { ClarifaiStub, grpc } from 'clarifai-nodejs-grpc';
-
+import axios from "axios";
 
 /* Clarifai labels for image */
 const stub = ClarifaiStub.grpc();
@@ -1161,9 +1161,12 @@ app.get('/items/:category', async (req, res) => {
   }
 });*/
 
+
 app.get('/items/:category', async (req, res) => {
   const { category } = req.params;
-  const { page, limit,username } = req.query;
+  const { page, limit,username , sort} = req.query;
+  
+
   
   try {
     let items;
@@ -1175,6 +1178,55 @@ app.get('/items/:category', async (req, res) => {
       // Retrieve items based on the specified category
       items = await Item.find({ category, sellerUsername: { $ne: username }, isBought: { $ne: true } });
     }
+
+    /*
+    if (sort === 'relevance') {
+      // Get relevant item IDs from Python server
+      const response = await axios.post('http://localhost:5000/recommend', {
+        userId: username,
+        itemType: category
+      });
+      // Assuming that the Python server returns an array of IDs in descending order of relevance
+      const relevantIds = response.data;
+        // Sort items based on the order of relevant IDs
+      items.sort((a, b) => relevantIds.indexOf(a._id.toString()) - relevantIds.indexOf(b._id.toString()));
+      } else if (sort === 'priceHighToLow') {
+        items.sort((a, b) => b.price - a.price);
+      } else if (sort === 'priceLowToHigh') {
+        items.sort((a, b) => a.price - b.price);
+      } // You can add more sorting conditions here
+
+      */
+
+
+      if (sort === 'relevent') {
+        console.log("i am inside relevent")
+        try {
+          // If the sort option is 'relevance', communicate with Python server
+          // Call the Python server and pass it the 'username'
+          // Assume the Python server returns a list of item ids in recommended order
+          // Map this list of ids to the items array
+          // Use axios or any other library to make a POST request to the Python server
+          const response = await axios.post('http://localhost:5000/recommend', { userId: username, itemType: category });
+          const recommendedItemIds = response.data.ids;
+          console.log(recommendedItemIds)
+          console.log("i am try to get data from flask")
+  
+          // Filter out items not included in the recommendation
+          items = items.filter(item => recommendedItemIds.includes(item._id.toString()));
+          // Sort based on the recommended order
+          items.sort((a, b) => recommendedItemIds.indexOf(a._id.toString()) - recommendedItemIds.indexOf(b._id.toString()));
+        } catch(err) {
+          console.error('Failed to retrieve recommendations:', err);
+          // Possibly handle this error in some other way, e.g., sending a status 500 response
+        }
+      } else if (sort === 'priceLowToHigh') {
+        items.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+      } else if (sort === 'priceHighToLow') {
+        items.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+      } // You can add more sorting conditions here
+
+      
 
     // Pagination logic
     const startIndex = (page - 1) * limit;
