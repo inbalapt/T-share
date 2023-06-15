@@ -87,10 +87,10 @@ const getCategoryItems = async (category,username, setItems) => {
   }
 }*/
 
-const getCategoryItems = async (category, username, page, limit, setItems) => {
+const getCategoryItems = async (category, username, page, limit, sort ,setItems) => {
   try {
     const response = await axios.get(`http://localhost:3000/items/${category}`, {
-      params: { page, limit,username }
+      params: { page, limit,username, sort }
     });
     console.log(response.data);
     setItems(response.data.items);
@@ -106,7 +106,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     // the category of the page (like dresses, tops etc..)
     const { category } = useParams();
     // The type of how we sort our products.
-    const [sortType, setSortType] = useState("relevent");
+    const [sortType, setSortType] = useState("popularity");
     const [items, setItems] = useState([]);
     const location = useLocation();
     const username = location.state.username;
@@ -118,12 +118,16 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     
     useEffect(() => {
       const fetchItems = async () => {
-        const totalPages = await getCategoryItems(category, username, currentPage, itemsPerPage, setItems);
+        const totalPages = await getCategoryItems(category, username, currentPage, itemsPerPage, sortType, setItems);
         // Optionally, you can store the total number of pages in a state variable if needed
         setTotalPages(totalPages);
       };
       fetchItems();
-    }, [category, currentPage, itemsPerPage, username]);
+    }, [category, currentPage, itemsPerPage, username, sortType]);
+
+    useEffect(() => {
+      setCurrentPage(1);
+    }, [sortType]);
     
 
     
@@ -149,7 +153,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
         setSortType(e.target.value);
       };
 
-
+/*
     // if the sort type (relevent, price: low to high etc..) had change - change the order
     // of the items according to that.
       useEffect(() => {
@@ -171,6 +175,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     
         setItems(sortedItems);
       }, [sortType]);
+*/
 
   return (
     <div>
