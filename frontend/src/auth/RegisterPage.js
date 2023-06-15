@@ -40,29 +40,7 @@ function RegisterPage() {
       }
     });
   }, []);
-  
-/*
-  useEffect(() => {
-    axios.get('./city-list.csv')
-      .then(response => {
-        Papa.parse(response.data, {
-          header: true,
-          complete: function(results) {
-            console.log(results); // This should print the results if parsing is successful
-            const cities = results.data.map(row => row.City);
-            setCityList(cities);
-          },
-          error: function(err) {
-            console.log('An error occurred:', err); // This should print the error if one occurred
-          }
-        });
-      })
-      .catch(error => console.error('Error fetching CSV file:', error));
-  }, []);
-  */
-  
 
-  
 
   const sizeOptions = sizes.map(size => ({value: size, label: size}));
   const handleSizeChange = (selectedOption) => {
@@ -89,7 +67,7 @@ function RegisterPage() {
     const confPass = document.getElementsByName('confPassword')[0].value;
   
     // Check necessary fields 
-    if (userData.email == "" || userData.username == "" || userData.password == "" || userData.fullName == "" || confPass == "" || userData.city == "") {
+    if (userData.email == "" || userData.username == "" || userData.password == "" || userData.fullName == "" || confPass == "" || userData.city == "" || userData.size == "") {
       setErrorMessage('Please enter required fields.');
       return;
     }
@@ -229,7 +207,7 @@ function RegisterPage() {
 
                   <label className="register-item-label">
                     <div>
-                    Size:  
+                    Size: <span className="required">*</span> 
                     </div>
                     <Select name="size" onChange={handleSizeChange}
                       options={sizeOptions} 
@@ -249,7 +227,9 @@ function RegisterPage() {
                   </div>
                   <div className='register-btn'>
                     {errorMessage && <div className="error-message">{errorMessage}</div>}
+                    
                     <button type="submit" className='submit-button'>Register</button>
+                  
                   </div>
                 </body>
           </form> 

@@ -19,7 +19,7 @@ const ItemSchema = new mongoose.Schema({
     },
     userDescription: {
       type: String,
-      required: true,
+      //required: true,
     },
     price: {
       type: Number,

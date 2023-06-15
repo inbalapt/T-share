@@ -94,7 +94,7 @@ function LoginPage() {
 
                         <div className='login-btn'>
                             {errorMessage && <div className="error-message">{errorMessage}</div>}
-                            <button type="submit" className="btn btn-lg btn-primary">
+                            <button  className="btn btn-lg btn-primary submit-button">
                                 Login
                             </button> 
                         </div>

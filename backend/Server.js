@@ -229,7 +229,7 @@ async function captureImage(imageFile, category, color) {
       itemCategory = "pants";
     }
 
-    const wordList = ["hat","book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels","towel", "purse", "cylindrical", "object","bag", "underwear", "puzzle", "piece", "toilet", "paper", "roll", "candy", "bars"];
+    const wordList = ["fabric", "hat","book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels","towel", "purse", "cylindrical", "object","bag", "underwear", "puzzle", "piece", "toilet", "paper", "roll", "candy", "bars"];
 
     let numberOfWords = 0;
     let cutSentence = false;
@@ -628,7 +628,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
       sellerUsername: username,
       sellerFullName: user.fullName,
       description: cleanedDescription,
-      userDescription: description,
+      //userDescription: description,
       price,
       size,
       itemLocation: user.city,

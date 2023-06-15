@@ -87,16 +87,21 @@ const getCategoryItems = async (category,username, setItems) => {
   }
 }*/
 
-const getCategoryItems = async (category, username, page, limit, sort ,setItems) => {
+const getCategoryItems = async (category, username, page, limit, sort ,setItems, setLoading) => {
   try {
+    if(sort=="relevent"){
+      setLoading(true);
+    }
+    
     const response = await axios.get(`http://localhost:3000/items/${category}`, {
       params: { page, limit,username, sort }
     });
-    console.log(response.data);
     setItems(response.data.items);
+    setLoading(false);
     return response.data.totalPages; // Return the total number of pages from the server
   } catch (error) {
     console.error(error);
+    setLoading(false);
   }
 }
 
@@ -113,12 +118,13 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(28);
     const [totalPages, setTotalPages] = useState(0);
+    const [loading, setLoading] = useState(false);
     
 
     
     useEffect(() => {
       const fetchItems = async () => {
-        const totalPages = await getCategoryItems(category, username, currentPage, itemsPerPage, sortType, setItems);
+        const totalPages = await getCategoryItems(category, username, currentPage, itemsPerPage, sortType, setItems, setLoading);
         // Optionally, you can store the total number of pages in a state variable if needed
         setTotalPages(totalPages);
       };
@@ -193,6 +199,12 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
           <option value="priceHighToLow">Price: High to Low</option>
         </select>
       </div>
+      {loading ? (
+        <div className="loading-animation">
+          <div className="spinner"></div>
+        </div>
+      ) : (
+        <>
       {totalPages > 1 && (<div className="pagination">
         <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
         <span>{currentPage}</span>
@@ -208,6 +220,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
         <span>{currentPage}</span>
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
       </div>)}
+      </>)}
     </div>
     
   );

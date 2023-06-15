@@ -10,7 +10,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
     const [uploadedImage, setUploadedImage] = useState(false);
     const [item, setItem] = useState({
         category: '',
-        description: '',
+        //description: '',
         price: '',
         size: '',
         condition: '',
@@ -58,7 +58,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
                     console.log("hhheh")
                     formData.append('size', '32');
                 } else {formData.append('size', item.size);}
-                formData.append('description', item.description);
+                //formData.append('description', item.description);
                 formData.append('price', item.price);
                 formData.append('condition', item.condition);
                 formData.append('color', item.color);
@@ -116,7 +116,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
                 
             </label>
 
-            <label className="upload-item-label">
+           {/* <label className="upload-item-label">
                 <div className='field-row-label'>
                 Product Description: 
                 <span className="required">*</span>
@@ -124,7 +124,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
                 <input type="text" name="description" required onChange={handleChange} className="upload-item-input"/>
                 
                 
-            </label>
+    </label>*/}
 
             <label className="upload-item-label">
                 <div className='field-row-label'>

@@ -152,7 +152,19 @@
 }
 
 
+.register-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+.error-message {
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  margin-top: 10px;
+}
 /*
 .App-header {
     text-align: center;
