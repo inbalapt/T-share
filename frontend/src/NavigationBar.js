@@ -23,6 +23,7 @@ const getCredit = async (username,setCredit) => {
 
   const AutocompleteResult = ({ result, username, setSearchTerm, setAutocompleteResults, searchField, profile }) => {
     const navigate = useNavigate();
+    console.log(result);
     const navigateToItem = (e) => {
       if(e.target.closest('.seller')){
         e.stopPropagation();
@@ -30,28 +31,22 @@ const getCredit = async (username,setCredit) => {
       }
       setSearchTerm("");
       setAutocompleteResults([]);
-      if(searchField!= "sellerFullName"){
-        navigate(`/item/${result._id}`, { state: { username: username } });
-      } else{
-        navigate(`/userPage/${result.sellerUsername}`, { state: { username: username} });      
-      }
-      
+      navigate(`/item/${result._id}`, { state: { username: username } });
     };
     function handleUser(){
+      setSearchTerm("");
+      setAutocompleteResults([]);
       navigate(`/userPage/${result.sellerUsername}`, { state: { username: username} });      
     }
     
     return (
       <div className="autocomplete-result"  onClick={navigateToItem}>
         <div className="image-container">
-          {searchField != "sellerFullName" &&(<img src={`https://drive.google.com/uc?export=view&id=${result.pictures[0]}`} alt="Item" className="item-image" />)}
-          {searchField == "sellerFullName" && profile !== "" && (<img src={`https://drive.google.com/uc?export=view&id=${profile}`} alt="item" className="item-image" />)}
-          {searchField == "sellerFullName" && profile == "" && (<img src={defaultProfile} alt="Item" className="item-image" />)}
+          <img src={`https://drive.google.com/uc?export=view&id=${result.pictures[0]}`} alt="Item" className="item-image" />
         </div>
         <div className="details-container">
-        {searchField != "sellerFullName" &&(<div className="description">{result.description}</div>)}
-        {searchField == "sellerFullName" &&(<div className="description">{result.sellerFullName}</div>)}
-        {searchField != "sellerFullName" &&(<div className="seller" onClick={handleUser}>{result.sellerFullName}</div>)}
+        <div className="description">{result.description}</div>
+       <div className="seller" onClick={handleUser}>{result.sellerFullName}</div>
         </div>
       </div>
     );
@@ -147,9 +142,10 @@ const NavigationBar = () => {
 
   useEffect(() => {
     const handleSearchTermChange = () => {
-      if (searchTerm.length <= 2) {
+      if (searchTerm.length <= 2 || searchTerm.length === 0) {
         setAutocompleteResults([]); // Clear the autocomplete results if the search term is less than two characters
       }
+    
     };
 
     handleSearchTermChange(); // Handle the search term change initially
@@ -192,7 +188,7 @@ const NavigationBar = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          {autocompleteResults.length > 0 && (
+          {searchTerm && autocompleteResults.length > 0 && (
             <ul className="autocomplete-results">
               {autocompleteResults.map((result) => (
                 <li key={result._id}>

@@ -3,17 +3,11 @@ import React, { useState, useEffect } from 'react';
 import DetailsOfProduct from './DetailsOfProduct';
 import NavigationBar from './NavigationBar';
 import ImagesView from './ImagesView';
-import logo from './logo.jpg'
-import photo1 from './temp_clothes/photo1.jpg'
-import photo2 from './temp_clothes/photo2.jpg'
-import photo3 from './temp_clothes/photo3.jpg'
-import photo4 from './temp_clothes/photo4.jpg'
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ItemPage.css';
 
-let item1 = {images: [photo1, photo2, photo3, photo4] , seller: "jon", description:"floweral dress" , price: "30" ,
- size: "s", collectionPoint: "tel aviv" , condition: "used" ,color: "multi" , brand: "zara"}
+
 
 
  const getItemDetails = async (id, setItem, setIsBought, setIsDeleded) => {
@@ -41,6 +35,7 @@ const ItemPage = () => {
   const [pictures,setPictures] = useState([]);
 
   useEffect(() => {
+    console.log(id);
     const fetchItem = async () => {
       const itemDetails = await getItemDetails(id, setItem,setIsBought, setIsDeleded);
       setItem(itemDetails);

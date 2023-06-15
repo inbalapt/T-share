@@ -26,6 +26,76 @@ import { ComputerVisionClient } from "@azure/cognitiveservices-computervision";
 import { ApiKeyCredentials } from "@azure/ms-rest-js";
 import { ClarifaiStub, grpc } from 'clarifai-nodejs-grpc';
 import axios from "axios";
+import { Configuration, OpenAIApi } from "openai";
+
+const drive = google.drive('v3');
+
+const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+//const TOKEN_PATH = ['https://oauth2.googleapis.com/token'];
+const GOOGLE_API_FOLDER_ID = '16-kMzJPiwurJ1doLa7mNjFc6hUs_c0Ig';
+/* CONFIGURATIONS */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config();
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("common"));
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+//app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+app.use("/item-uploads", express.static(path.join(__dirname, "/item-uploads")));
+
+
+const config = new Configuration({
+	apiKey: `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`,
+});
+
+const openai = new OpenAIApi(config);
+const runPrompt = async (description, color) => {
+  console.log(description, color);
+	const prompt = `
+    please answer only with the updated description. without additions!! 
+    i will give you description of AI about a cloth, and color that i (truth telling) write about the cloth. if there is a contradiction between the color in the description to the color that i wrote, please fix it according to the color that i wrote.  if the color doesn't appear in the description, add it!
+    description: blue dress
+    color: white
+    for this the updated description (and what i want you to reply), will be exactly this: white dress
+    if there is not a contradiction, return me the description. 
+    description: ${description}
+    color: ${color}
+    `;
+
+	const response = await openai.createCompletion({
+		model: "text-davinci-003",
+		prompt: prompt,
+		max_tokens: 2048,
+		temperature: 1,
+	});
+
+	const chatUpdatedDescription = response.data.choices[0].text;
+  let updated = chatUpdatedDescription;
+  if(updated.includes(":")){
+    updated = updated.split(":")[1].trim();
+  }
+  if (updated.endsWith(".")) {
+    updated = updated.slice(0, -1);
+  }
+  
+  return updated;
+  
+};
+/*const description1="floral skirt"
+const color1="green";
+const description2="white dress"
+const color2="purple";
+const description3="white dress with paints"
+const color3="purple";
+runPrompt(description1,color1).then(
+runPrompt(description2,color2)).then(
+runPrompt(description3,color3));*/
 
 /* Clarifai labels for image */
 const stub = ClarifaiStub.grpc();
@@ -69,8 +139,6 @@ function predictImage(inputs){
   })
 }
 
-
-
 // Replace with your own endpoint and access key
 const endpoint = "https://visioninbalnoa.cognitiveservices.azure.com/";
 const accessKey = "d5f5ec9903af476bb0fa2a05baf1ecde";
@@ -79,7 +147,7 @@ const credentials = new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-K
 const client = new ComputerVisionClient(credentials, endpoint);
 
 // Function to capture an image
-async function captureImage(imageFile, category) {
+async function captureImage(imageFile, category, color) {
   try {
     // Read the image file
     const imageBuffer = fs.readFileSync(imageFile);
@@ -118,14 +186,29 @@ async function captureImage(imageFile, category) {
     }
 
     let modifiedDescription = cleanedDescription;
-    if (cleanedDescription.startsWith("a ")) {
+    if (cleanedDescription.startsWith("a close-up of a ")) {
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 15);
+    }
+    else if (cleanedDescription.startsWith("a stack of ")) {
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 10);
+    }
+    else if(cleanedDescription.startsWith("a woman's hand holding a ")){
+      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 24);
+    }
+    else if(cleanedDescription.startsWith("a group of ")){
+      console.log("here!");
+      modifiedDescription = cleanedDescription.split("of ")[1].trim();
+    }
+    else if (cleanedDescription.startsWith("a ")) {
       modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 1);
     }
-    if (cleanedDescription.startsWith("close-up of a ")) {
-      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 6);
-    }
-    if (cleanedDescription.startsWith("a stack of ")) {
-      modifiedDescription = cleanedDescription.substring(cleanedDescription.indexOf(" ") + 10);
+    
+    if (modifiedDescription.startsWith("pair of ") && category == "skirts") {
+      const searchPattern = "pair of";
+      const replacement = "skirt";
+
+      modifiedDescription = modifiedDescription.replace(searchPattern, "").trim() + " " + replacement;
+      console.log(modifiedDescription);
     }
 
    
@@ -146,7 +229,7 @@ async function captureImage(imageFile, category) {
       itemCategory = "pants";
     }
 
-    const wordList = ["book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels", "purse", "cylindrical", "object"];
+    const wordList = ["hat","book", "pillow", "rectangle", "garment", "cloth", "dress", "shirt", "pants","diapers","diaper","ball","flag", "bracelet", "necklace", "tie", "towels","towel", "purse", "cylindrical", "object","bag", "underwear", "puzzle", "piece", "toilet", "paper", "roll", "candy", "bars"];
 
     let numberOfWords = 0;
     let cutSentence = false;
@@ -161,6 +244,10 @@ async function captureImage(imageFile, category) {
           if ((category == "top" && (word == "shirt" || word == "t-shirt")) || (category == "pants" && word == "shorts")) {
             return word;
           }
+          if(word == "piece"){
+            cutSentence = true;
+            return itemCategory;
+          }
     
           numberOfWords = numberOfWords + 1;
           if (numberOfWords === 1) {
@@ -174,74 +261,24 @@ async function captureImage(imageFile, category) {
       })
       .join(" ");
 
-    console.log(updatedSentence);
+    const pattern1 = `with a white background`;
+    const pattern2 = `with a strap`;
+    const pattern3 = `over her head`;
 
+    const veryUpdatedSentence = updatedSentence.replace(pattern1, "").replace(pattern2, "").replace(pattern3, "");
+    var finalDesctiption = veryUpdatedSentence;
+    if(color !== ""){
+      finalDesctiption = await runPrompt(veryUpdatedSentence, color);
+    }
+    
+    console.log("final : " + finalDesctiption);
 
-    const doc = nlp(modifiedDescription);
-
-    // Get the nouns related to the cloth item
-   /* const clothNouns = doc.nouns().out('array');
-
-    // Get the adjectives related to the cloth item
-    const clothAdjectives = doc.adjectives().out('array');
-
-    console.log('Nouns:', clothNouns);
-    console.log('Adjectives:', clothAdjectives);
-
-    if (clothNouns.length > 0) {
-      const firstNoun = clothNouns[0];
-      if(firstNoun !== "dress" && firstNoun !== "top" && firstNoun !== "shirt" && firstNoun !== "skirt"  && firstNoun !== "pants" && firstNoun !== "shorts"){
-        let itemCategory;
-        if (category == "dresses"){
-          itemCategory = "dress";
-        }
-        if (category == "tops"){
-          itemCategory = "top";
-        }
-        if (category == "skirts"){
-          itemCategory = "skirt";
-        }
-        if (category == "pants"){
-          itemCategory = "pants";
-        }
-        const updatedDescription = modifiedDescription.replace(firstNoun, itemCategory);
-        console.log(updatedDescription);
-        return updatedDescription;
-      }
-    } else {
-      console.log('No cloth nouns found.');
-    }*/
-  
-
-
-    return updatedSentence;
+    return finalDesctiption;
   } catch (error) {
     console.error("An error occurred during image capture:", error);
   }
 }
 
-
-
-const drive = google.drive('v3');
-
-const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
-//const TOKEN_PATH = ['https://oauth2.googleapis.com/token'];
-const GOOGLE_API_FOLDER_ID = '16-kMzJPiwurJ1doLa7mNjFc6hUs_c0Ig';
-/* CONFIGURATIONS */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-dotenv.config();
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(morgan("common"));
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-//app.use("/assets", express.static(path.join(__dirname, "public/assets")));
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-app.use("/item-uploads", express.static(path.join(__dirname, "/item-uploads")));
 
 
 async function quickstart() {
@@ -566,7 +603,7 @@ app.post("/uploadItem", itemUpload.array("images", 4), async (req, res) => {
     const images = req.files; // Get the uploaded images as an array of files
     
     // AI description
-    const AIDescription = await captureImage(`${images[0].path}`, category);
+    const AIDescription = await captureImage(`${images[0].path}`, category, color);
     const cleanedDescription = AIDescription.charAt(0).toUpperCase() + AIDescription.slice(1);
 
     // Upload each image file to Google Drive
@@ -914,6 +951,15 @@ app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
       user.picturePath = fileId;
     }
 
+    if(city){
+      console.log("HIII");
+      const userItems = user.myUploads;
+
+      await Item.updateMany(
+        { _id: { $in: userItems } },
+        { $set: { itemLocation: city } }
+      );
+    }
 
     // Save the updated user
     await user.save();
@@ -927,6 +973,8 @@ app.post("/updateUserDetails", upload.single("image"), async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 app.post('/addFavoriteItem', async(req,res) =>{
   try {
@@ -1480,6 +1528,7 @@ mongoose
 import http from "http";
 import { Server } from "socket.io";
 import { env } from "process";
+import { cloudidentity } from "googleapis/build/src/apis/cloudidentity/index.js";
 
 
 
@@ -1516,7 +1565,7 @@ io.on("connection", (socket) => {
 
 
 // Endpoint for autocomplete search
-app.get('/autocomplete', async (req, res) => {
+/*app.get('/autocomplete', async (req, res) => {
   try {
     const searchTerm = req.query.term; // Get the search term from the request query
     const username = req.query.username;
@@ -1530,7 +1579,7 @@ app.get('/autocomplete', async (req, res) => {
       sellerUsername: { $ne: username },
       isBought: {$ne:true}
     })
-      .limit(10)
+      .limit(20)
       .select('_id sellerUsername sellerFullName pictures description price size itemLocation category condition color brand isBought time');
     
     let searchField = '';
@@ -1542,15 +1591,58 @@ app.get('/autocomplete', async (req, res) => {
         break;
       }
     }
-    if(searchField == "sellerFullName"){
+    /*if(searchField == "sellerFullName"){
       const user = await User.findOne({ username: results[0].sellerUsername });
       const photo = user.picturePath;
       console.log("photo : "+photo);
       return res.json({results: results, searchField: searchField, profile: photo});
-    }
-    console.log(searchField);
+    }*/
+    /*console.log(searchField);
 
     res.json({results: results, searchField:searchField, profile: ""});
+  } catch (error) {
+    console.error('Error searching items:', error);
+    res.status(500).json({ error: 'An error occurred while searching items' });
+  }
+});
+*/
+app.get('/autocomplete', async (req, res) => {
+  try {
+    const searchTerm = req.query.term; // Get the search term from the request query
+    const username = req.query.username;
+    const searchFields = ['sellerFullName', 'category', 'color', 'description', 'brand'];
+
+    let results = [];
+
+    if (searchTerm.trim() !== '') {
+      const searchParts = searchTerm.split(' ').filter((part) => part !== '');
+      const regexPattern = searchParts.map((part) => `(?=.*${part})`).join('');
+      const searchConditions = searchFields.map((field) => ({
+        [field]: { $regex: regexPattern, $options: 'i' },
+      }));
+
+      results = await Item.find({
+        $or: searchConditions,
+        sellerUsername: { $ne: username },
+        isBought: { $ne: true },
+      })
+        .limit(20)
+        .select('_id sellerUsername sellerFullName pictures description price size itemLocation category condition color brand isBought time');
+    }
+
+    let searchField = '';
+
+    // Find the matching field based on the search term
+    for (const field of searchFields) {
+      if (results.some((item) => item[field].toLowerCase().includes(searchTerm.toLowerCase()))) {
+        searchField = field;
+        break;
+      }
+    }
+
+    console.log(searchField);
+
+    res.json({ results: results, searchField: searchField, profile: '' });
   } catch (error) {
     console.error('Error searching items:', error);
     res.status(500).json({ error: 'An error occurred while searching items' });
