@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../NavigationBar';
 import FavoriteItemCard from './FavoriteItemCard';
-import './ItemScrollPage.css';
+import '../mainPage/ItemScrollPage.css';
 import './FavoriteItems.css'
-import logo from './logo.jpg';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const getFavItems = async (username) => {
   try {
-    const response = await axios.get(`http://localhost:3000/getFavItems?username=${username}`);
+    const response = await axios.get(`http://localhost:3000/item/getFavItems?username=${username}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -35,7 +34,7 @@ const FavoriteItems = () => {
     setFavoriteItems(favoriteItems.filter((item) => item._id !== id));
 
     try {
-      await axios.delete(`http://localhost:3000/removeFavoriteItem?username=${username}&id=${id}`);
+      await axios.delete(`http://localhost:3000/item/removeFavoriteItem?username=${username}&id=${id}`);
     } catch (error) {
       console.error(error);
     }

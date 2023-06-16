@@ -72,3 +72,27 @@ export const login = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+
+// check if username is taken in registeration
+export const checkUsername = async (req, res) => {
+    const { username } = req.query;
+    const user = await User.findOne({ username });
+    if (user) {
+      res.json({ exists: true });
+    } else {
+      res.json({ exists: false });
+    }
+};
+
+
+// check if username is taken in registeration
+export const checkEmail = async (req, res) => {
+    const { email } = req.query;
+    const user = await User.findOne({ email });
+    if (user) {
+        res.json({ exists: true });
+    } else {
+        res.json({ exists: false });
+    }
+};

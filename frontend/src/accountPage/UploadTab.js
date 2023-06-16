@@ -19,7 +19,7 @@ const UploadTab = ({ upload, setUpdateProducts, uploads, setUploads, username}) 
     },[upload])
     const deleteItem = async ()=>{
         try {
-            const response = await axios.delete(`http://localhost:3000/deleteItem?itemId=${upload._id}&username=${upload.sellerUsername}`);
+            const response = await axios.delete(`http://localhost:3000/item/deleteItem?itemId=${upload._id}&username=${upload.sellerUsername}`);
             console.log(response.data);
             setUploads(uploads.filter((item) => item._id !== upload._id));
             setUpdateProducts(true);

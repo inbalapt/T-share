@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 const isItemFavorite = async(username, id)=>{
   try {
-    const response = await axios.get(`http://localhost:3000/isFavItem?username=${username}&id=${id}`);
+    const response = await axios.get(`http://localhost:3000/item/isFavItem?username=${username}&id=${id}`);
     return response.data.isFavorite;
   } catch (error) {
     console.error(error);
@@ -65,7 +65,7 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
     if(!isFavorite){
       setIsFavorite(true);
       try {
-      const response = await axios.post(`http://localhost:3000/addFavoriteItem?username=${username}&id=${_id}`);
+      const response = await axios.post(`http://localhost:3000/item/addFavoriteItem?username=${username}&id=${_id}`);
       console.log(response.data);
       return response.data;
       } catch (error) {
@@ -74,7 +74,7 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
     } else{
       setIsFavorite(false);
       try {
-        const response = await axios.delete(`http://localhost:3000/removeFavoriteItem?username=${username}&id=${_id}`);
+        const response = await axios.delete(`http://localhost:3000/item/removeFavoriteItem?username=${username}&id=${_id}`);
         console.log(response.data);
         return response.data;
         } catch (error) {

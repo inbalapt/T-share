@@ -10,7 +10,7 @@ import NavigationBar from '../NavigationBar';
 // List of friends names 
 const getFriendsList = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:3000/getFriends?username=${username}`);
+      const response = await axios.get(`http://localhost:3000/user/getFriends?username=${username}`);
       console.log(response.data.friends);
       return response.data.friends;
     } catch (error) {
@@ -21,7 +21,7 @@ const getFriendsList = async (username) => {
 // Get name of the user
 const getFullname = async (username) => {
   try {
-    const response = await axios.get(`http://localhost:3000/getFullname?username=${username}`);
+    const response = await axios.get(`http://localhost:3000/user/getFullname?username=${username}`);
     return response.data.fullName;
   } catch (error) {
     console.error(error);
@@ -30,7 +30,7 @@ const getFullname = async (username) => {
 
 const getProfilePhoto = async (username)=>{
   try {
-    const response = await axios.get(`http://localhost:3000/getProfile?username=${username}`);
+    const response = await axios.get(`http://localhost:3000/user/getProfile?username=${username}`);
     console.log(response.data.image);
     return response.data.image;
   } catch (error) {

@@ -22,7 +22,7 @@ const BuyConfirmationModal = ({ onConfirmBuy, onCancelBuy }) => {
 
 const isItemFavorite = async(username, id)=>{
   try {
-    const response = await axios.get(`http://localhost:3000/isFavItem?username=${username}&id=${id}`);
+    const response = await axios.get(`http://localhost:3000/item/isFavItem?username=${username}&id=${id}`);
     return response.data.isFavorite;
   } catch (error) {
     console.error(error);
@@ -93,7 +93,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     if(!isFavorite){
       setIsFavorite(true);
       try {
-      const response = await axios.post(`http://localhost:3000/addFavoriteItem?username=${username}&id=${id}`);
+      const response = await axios.post(`http://localhost:3000/item/addFavoriteItem?username=${username}&id=${id}`);
       console.log(response.data);
       return response.data;
       } catch (error) {
@@ -102,7 +102,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     } else{
       setIsFavorite(false);
       try {
-        const response = await axios.delete(`http://localhost:3000/removeFavoriteItem?username=${username}&id=${id}`);
+        const response = await axios.delete(`http://localhost:3000/item/removeFavoriteItem?username=${username}&id=${id}`);
         console.log(response.data);
         return response.data;
         } catch (error) {
@@ -116,7 +116,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
   const handleConfirmBuy = async() => {
     // Perform the buy operation or any additional logic
     try {
-      const response = await axios.post(`http://localhost:3000/buyItem?username=${username}&sellerUsername=${sellerUsername}&price=${price}&itemId=${id}`);
+      const response = await axios.post(`http://localhost:3000/item/buyItem?username=${username}&sellerUsername=${sellerUsername}&price=${price}&itemId=${id}`);
       //console.log(response.data);
       console.log(response.status); // Log the response status
      
@@ -205,7 +205,7 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
           }
               formData.append('id', itemDetails.id);
               
-              const response = await axios.post(`http://localhost:3000/updateItemDetails`, formData, {
+              const response = await axios.post(`http://localhost:3000/item/updateItemDetails`, formData, {
                   headers: {
                       "Content-Type": "multipart/form-data",
                   },

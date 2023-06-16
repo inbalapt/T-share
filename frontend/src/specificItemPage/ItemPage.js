@@ -1,7 +1,7 @@
 // src/components/ItemPage.js
 import React, { useState, useEffect } from 'react';
 import DetailsOfProduct from './DetailsOfProduct';
-import NavigationBar from './NavigationBar';
+import NavigationBar from '../NavigationBar';
 import ImagesView from './ImagesView';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -12,7 +12,7 @@ import './ItemPage.css';
 
  const getItemDetails = async (id, setItem, setIsBought, setIsDeleded) => {
   try {
-    const response = await axios.get(`http://localhost:3000/getItemById?id=${id}`);
+    const response = await axios.get(`http://localhost:3000/item/getItemById?id=${id}`);
     setIsBought(response.data.isBought);
     setItem(response.data);
     

@@ -12,7 +12,7 @@ import defaultProfile from './chating/defaultProfile.png';
 // Get credit of user
 const getCredit = async (username,setCredit) => {
     try {
-      const response = await axios.get(`http://localhost:3000/getCredit?username=${username}`);
+      const response = await axios.get(`http://localhost:3000/user/getCredit?username=${username}`);
       setCredit(response.data.credit);
       console.log(response.data.credit);
       return response.data.credit;
@@ -118,7 +118,7 @@ const NavigationBar = () => {
     const fetchAutocompleteResults = async () => {
       try {
         if (searchTerm.length > 2) {
-          const response = await axios.get(`http://localhost:3000/autocomplete`, {
+          const response = await axios.get(`http://localhost:3000/item/autocomplete`, {
             params: {
               term: searchTerm,
               username: username,

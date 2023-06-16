@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import OrderTab from './OrderTab';
 import './MyOrders.css';
-import logo from './logo.jpg';
 import axios from 'axios';
 
 const getOrders = async(username,setOrders)=>{
     try{
-        const response = await axios.get(`http://localhost:3000/getOrders?username=${username}`);
+        const response = await axios.get(`http://localhost:3000/item/getOrders?username=${username}`);
         setOrders(response.data);
         console.log(response.data);
         return response.data;
@@ -18,10 +17,7 @@ const getOrders = async(username,setOrders)=>{
 
 const MyOrders = ({ username }) => {
     // for testing
-    let tempOrders =[{image: logo , description: 'floral dress', price:'50' , date: '25/05/2023' , seller: 'Inbal Apt'},
-    {image: logo , description: 'floral dress', price:'70' , date: '25/05/2023' , seller: 'Inbal Apt'},
-    {image: logo , description: 'floral dress', price:'80' , date: '25/05/2023' , seller: 'Inbal Apt'},]
-
+    
     console.log("username " + username);
     const [orders, setOrders] = useState([]);
 

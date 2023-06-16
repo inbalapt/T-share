@@ -3,14 +3,14 @@ import './UserProfilePage.css';
 import { useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import ItemCard from './ItemCard';
-import NavigationBar from './NavigationBar';
-import defaultProfile from './chating/defaultProfile.png';
+import ItemCard from '../mainPage/ItemCard';
+import NavigationBar from '../NavigationBar';
+import defaultProfile from '../chating/defaultProfile.png';
 
 const getUserItems = async (userProName, page, limit, setItems) => {
   try {
     console.log(userProName)
-    const response = await axios.get(`http://localhost:3000/getUserItems?userProName=${userProName}&page=${page}&limit=${limit}`);
+    const response = await axios.get(`http://localhost:3000/item/getUserItems?userProName=${userProName}&page=${page}&limit=${limit}`);
     console.log(response.data);
     setItems(response.data.items);
     return response.data.totalPages; // Return the total number of pages from the server
@@ -22,7 +22,7 @@ const getUserItems = async (userProName, page, limit, setItems) => {
 // Get name of the user
 const getFullname = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:3000/getFullname?username=${username}`);
+      const response = await axios.get(`http://localhost:3000/user/getFullname?username=${username}`);
       return response.data.fullName;
     } catch (error) {
       console.error(error);
@@ -31,7 +31,7 @@ const getFullname = async (username) => {
   
   const getProfilePhoto = async (username)=>{
     try {
-      const response = await axios.get(`http://localhost:3000/getProfile?username=${username}`);
+      const response = await axios.get(`http://localhost:3000/user/getProfile?username=${username}`);
       console.log(response.data.image);
       return response.data.image;
     } catch (error) {
@@ -41,7 +41,7 @@ const getFullname = async (username) => {
 
   const checkFollowing= async (username,userProName, setIsFollowed) =>{
     try {
-      const response = await axios.get(`http://localhost:3000/checkIfFollowed?username=${username}&userProName=${userProName}`);
+      const response = await axios.get(`http://localhost:3000/user/checkIfFollowed?username=${username}&userProName=${userProName}`);
       setIsFollowed(response.data.followed);
       console.log(response.data.followed);
       return response.data;
@@ -113,7 +113,7 @@ const getFullname = async (username) => {
       }
         const response = await axios({
           method: 'post',
-          url: 'http://localhost:3000/followUser',
+          url: 'http://localhost:3000/user/followUser',
           data: body
       })
         console.log(response.data);
@@ -131,7 +131,7 @@ const getFullname = async (username) => {
       }
         const response = await axios({
           method: 'delete',
-          url: 'http://localhost:3000/unfollowUser',
+          url: 'http://localhost:3000/user/unfollowUser',
           data: body
       })
         console.log(response.data);

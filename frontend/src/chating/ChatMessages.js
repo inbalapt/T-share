@@ -13,7 +13,7 @@ var socket, selectedChatCompare;
 // Get id of friend
 const getID = async (username) => {
     try {
-      const response = await axios.get(`http://localhost:3000/getID?username=${username}`);
+      const response = await axios.get(`http://localhost:3000/user/getID?username=${username}`);
       return response.data._id;
     } catch (error) {
       console.error(error);
@@ -309,7 +309,13 @@ function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, ge
     async function sendText(newMessage, sender, receiver, hasUnreadMessages){
         try {
             const encodedMessage = encodeURIComponent(JSON.stringify(newMessage));
-            const response = await axios.post(`http://localhost:3000/messages?message=${encodedMessage}&username=${sender}&friendUsername=${receiver}&hasUnreadMessages=${hasUnreadMessages}`);
+            const requestData = {
+              message: encodedMessage,
+              username: sender,
+              friendUsername: receiver,
+              hasUnreadMessages: hasUnreadMessages
+            };            
+            const response = await axios.post(`http://localhost:3000/messages`, requestData);
             console.log(response.data);
             setChangeList(true);
            

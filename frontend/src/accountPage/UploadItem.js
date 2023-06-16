@@ -68,7 +68,7 @@ const UploadItem = ({username, setUpdateProducts}) => {
                     formData.append('images', item.images[i]);
                 }
         
-                const response = await axios.post(`http://localhost:3000/uploadItem`, formData, {
+                const response = await axios.post(`http://localhost:3000/item/uploadItem`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },

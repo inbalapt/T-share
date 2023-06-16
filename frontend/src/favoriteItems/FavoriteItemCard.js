@@ -3,18 +3,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './FavoriteItemCard.css';
-/*
-pictures:["1684837295465-_ש_(9).jpg"],
-      sellerUsername: 'inbal22',
-      sellerFullName: 'inbal',
-      description: 'dress',
-      price: 30,
-      size: '36',
-      itemLocation: 'Haifa',
-      category: 'dresses',
-      condition:'good',
-      color: 'pink',
-      brand: 'shein'*/
+
 const FavoriteItemCard = ({username, _id, pictures, sellerUsername, sellerFullName, price, size,itemLocation, category, condition, color, brand, description, onRemove }) => {
   const navigate = useNavigate();
 

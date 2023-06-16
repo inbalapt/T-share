@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import './MyDetails.css';
 import axios from 'axios';
 import Select from 'react-select';
-import cityCSV from './auth/city_list.csv';
+import cityCSV from '../auth/city_list.csv';
 import Papa from 'papaparse'; 
 
 const getUserDetails = async(username,setUserDetails)=>{
     try {
-        const response = await axios.get(`http://localhost:3000/getUserDetails?username=${username}`);
+        const response = await axios.get(`http://localhost:3000/user/getUserDetails?username=${username}`);
         console.log(response.data)
         setUserDetails((prevUserDetails) => ({
             ...prevUserDetails,
@@ -120,7 +120,7 @@ const MyDetails = ({username}) => {
                     formData.append('image', userDetails.image);
                 }
 
-                const response = await axios.post(`http://localhost:3000/updateUserDetails`, formData, {
+                const response = await axios.post(`http://localhost:3000/user/updateUserDetails`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },

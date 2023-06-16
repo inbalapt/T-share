@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import UploadTab from './UploadTab';
 import './MyOrders.css';
-import logo from './logo.jpg';
 import axios from 'axios';
 
 const getUploads = async(username,setUploads)=>{
     try{
-        const response = await axios.get(`http://localhost:3000/getUploads?username=${username}`);
+        const response = await axios.get(`http://localhost:3000/item/getUploads?username=${username}`);
         setUploads(response.data);
         console.log(response.data);
         return response.data;

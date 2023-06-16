@@ -4,13 +4,13 @@ import UserAccountContent from './UserAccountContent';
 import './UserAccountPage.css';  // <-- import here
 import { useLocation , Link ,useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import logo from './logo.jpeg'
+import logo from '../logo.jpeg'
 import UploadItem from './UploadItem';
 
 // Get name of the user
 const getFullname = async (username,setFullName) => {
   try {
-    const response = await axios.get(`http://localhost:3000/getFullname?username=${username}`);
+    const response = await axios.get(`http://localhost:3000/user/getFullname?username=${username}`);
     setFullName(response.data.fullName);
     return response.data.fullName;
   } catch (error) {
