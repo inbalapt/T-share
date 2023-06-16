@@ -35,17 +35,22 @@ function ContactMessages({currentMsgs, username}){
     );
 }
 
-
 const addNewFriend = async (username, friendUsername, textMessage, msgType, time) => {
-    try{
-      console.log("hi");
-      const response = await axios.post(`http://localhost:3000/addNewFriend?username=${username}&friendUsername=${friendUsername}&content=${textMessage}&type=${msgType}&createdAt=${time}`)
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-    }
+  try {
+    const response = await axios.post('http://localhost:3000/addNewFriend', {
+      username,
+      friendUsername,
+      content: textMessage,
+      type: msgType,
+      createdAt: time,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
   }
+};
+
   
 
 function ChatMessages({username ,friendUsername, currentMsgs, setCurrentMsgs, getFullname, getProfile, automaticMessage, itemPhoto, friends, setChangeList}){

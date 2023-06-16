@@ -64,8 +64,13 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
     
     if(!isFavorite){
       setIsFavorite(true);
+      
       try {
-      const response = await axios.post(`http://localhost:3000/item/addFavoriteItem?username=${username}&id=${_id}`);
+      const data = {
+        username: username,
+        id: _id
+      };
+      const response = await axios.post(`http://localhost:3000/item/addFavoriteItem`, data);
       console.log(response.data);
       return response.data;
       } catch (error) {
@@ -74,7 +79,7 @@ const ItemCard = ({ username, _id, pictures, sellerUsername, sellerFullName, pri
     } else{
       setIsFavorite(false);
       try {
-        const response = await axios.delete(`http://localhost:3000/item/removeFavoriteItem?username=${username}&id=${_id}`);
+        const response = await axios.delete(`http://localhost:3000/item/removeFavoriteItem`,  { data: { username, id:_id } });
         console.log(response.data);
         return response.data;
         } catch (error) {

@@ -93,16 +93,22 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
     if(!isFavorite){
       setIsFavorite(true);
       try {
-      const response = await axios.post(`http://localhost:3000/item/addFavoriteItem?username=${username}&id=${id}`);
-      console.log(response.data);
-      return response.data;
+        const data = {
+          username: username,
+          id: id
+        };
+    
+        const response = await axios.post('http://localhost:3000/item/addFavoriteItem', data);
+      
+        console.log(response.data);
+        return response.data;
       } catch (error) {
         console.error(error);
       }
     } else{
       setIsFavorite(false);
       try {
-        const response = await axios.delete(`http://localhost:3000/item/removeFavoriteItem?username=${username}&id=${id}`);
+        const response = await axios.delete(`http://localhost:3000/item/removeFavoriteItem`,  { data: { username, id } });
         console.log(response.data);
         return response.data;
         } catch (error) {
@@ -116,7 +122,13 @@ const DetailsOfProduct = ({ username, seller, description, price, size, collecti
   const handleConfirmBuy = async() => {
     // Perform the buy operation or any additional logic
     try {
-      const response = await axios.post(`http://localhost:3000/item/buyItem?username=${username}&sellerUsername=${sellerUsername}&price=${price}&itemId=${id}`);
+      const data = {
+        username: username,
+        sellerUsername: sellerUsername,
+        itemId: id,
+        price: price
+      };
+      const response = await axios.post(`http://localhost:3000/item/buyItem`, data);
       //console.log(response.data);
       console.log(response.status); // Log the response status
      

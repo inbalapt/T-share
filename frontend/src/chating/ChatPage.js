@@ -42,7 +42,7 @@ const hasNotUnread = async(username)=>{
   try{
     const formData = new FormData();
     formData.append('username', username);
-    const response = await axios.post(`http://localhost:3000/changeNotUnreadMessages?username=${username}`);
+    const response = await axios.post('http://localhost:3000/changeNotUnreadMessages', { username });
   } catch (error) {
     console.error(error);
   }

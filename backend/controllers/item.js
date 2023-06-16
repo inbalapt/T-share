@@ -7,7 +7,7 @@ import axios from "axios";
 
 export const buyItem = async (req, res) => {
   try {
-    const { username, sellerUsername, itemId, price } = req.query;
+    const { username, sellerUsername, itemId, price } = req.body;
 
     const item = await Item.findOne({ _id: itemId });
     if (item.isBought) {
@@ -48,7 +48,7 @@ export const buyItem = async (req, res) => {
 
 export const addFavoriteItem = async (req, res) => {
     try {
-      const { username, id } = req.query;
+      const { username, id } = req.body;
   
       const user = await User.findOne({ username });
   
@@ -79,7 +79,7 @@ export const addFavoriteItem = async (req, res) => {
   
 export const removeFavoriteItem = async (req, res) => {
     try {
-      const { username, id } = req.query;
+      const { username, id } = req.body;
   
       const user = await User.findOne({ username });
       if (!user) {
@@ -261,7 +261,7 @@ export const getOrders = (req, res) => {
   
 export const deleteItem = async (req, res) => {
     try {
-      const { itemId, username } = req.query;
+      const { itemId, username } = req.body;
   
       const user = await User.findOne({ username });
       if (!user) {

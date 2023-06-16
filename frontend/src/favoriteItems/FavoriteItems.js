@@ -34,7 +34,11 @@ const FavoriteItems = () => {
     setFavoriteItems(favoriteItems.filter((item) => item._id !== id));
 
     try {
-      await axios.delete(`http://localhost:3000/item/removeFavoriteItem?username=${username}&id=${id}`);
+      /*const data = {
+        username: username,
+        id: _id
+      };*/
+      await axios.delete(`http://localhost:3000/item/removeFavoriteItem`, { data: { username, id } });
     } catch (error) {
       console.error(error);
     }

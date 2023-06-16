@@ -65,7 +65,7 @@ export const postMessage = async(req,res) => {
 };
 
 export const changeNotUnreadMessages = async (req, res) => {
-    const { username } = req.query;
+    const { username } = req.body;
     try {
       // Find the user by username
       const user = await User.findOne({ username });
@@ -86,7 +86,7 @@ export const changeNotUnreadMessages = async (req, res) => {
   
   export const addNewFriend = async (req, res) => {
     try {
-      const { username, friendUsername, content, type, createdAt } = req.query;
+      const { username, friendUsername, content, type, createdAt } = req.body;
       // Find the user in the database
       // add to user's friend list, the friend user
   
