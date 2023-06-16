@@ -5,18 +5,6 @@ import { ComputerVisionClient } from "@azure/cognitiveservices-computervision";
 import { ApiKeyCredentials } from "@azure/ms-rest-js";
 import { ClarifaiStub, grpc } from 'clarifai-nodejs-grpc';
 import { Configuration, OpenAIApi } from "openai";
-/*
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Specify the destination folder to save the uploaded images
-  },
-  filename: (req, file, cb) => {
-    const uniqueFilename = `${Date.now()}-${file.originalname}`; // Append original file name as a unique identifier
-    cb(null, uniqueFilename); // Set a unique filename for the uploaded image
-  },
-});
-
-const upload = multer({ storage });*/
 
 const GOOGLE_API_FOLDER_ID = '16-kMzJPiwurJ1doLa7mNjFc6hUs_c0Ig';
 
@@ -57,12 +45,12 @@ async function uploadFileToDrive(file) {
   }
 }
 
-export { /*upload,*/ uploadFileToDrive };
+export { uploadFileToDrive };
 
 
 // Replace with your own endpoint and access key
 const endpoint = "https://visioninbalnoa.cognitiveservices.azure.com/";
-const accessKey = "d5f5ec9903af476bb0fa2a05baf1ecde";
+const accessKey = process.env.AZURE_KEY;
 
 const credentials = new ApiKeyCredentials({ inHeader: { "Ocp-Apim-Subscription-Key": accessKey } });
 const client = new ComputerVisionClient(credentials, endpoint);
@@ -77,12 +65,8 @@ export async function captureImage(imageFile, category, color) {
     const result = await client.analyzeImageInStream(imageBuffer, { visualFeatures: ["Tags", "Description"] });
 
     // Process the result
-    /*console.log("Tags:");
-    result.tags.forEach((tag) => console.log(tag.name));*/
     console.log("Description:");
-    //result.description.forEach((caption) => console.log(caption.text));
     console.log(result.description.captions[0].text);
-    ///////////////////////////// description
     
     const description = result.description.captions[0].text;
 
@@ -203,7 +187,7 @@ export async function captureImage(imageFile, category, color) {
 
 
 const config = new Configuration({
-	apiKey: `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`,
+	apiKey: process.env.OPENAI_KEY,
 });
 
 const openai = new OpenAIApi(config);
@@ -245,13 +229,13 @@ export const runPrompt = async (description, color) => {
 const stub = ClarifaiStub.grpc();
 
 const metadata = new grpc.Metadata();
-metadata.set("authorization", "Key 75f1751d1d244811b2b9d3b4d239de76");
+metadata.set("authorization", `Key ${process.env.CLARIFAI_KEY}`);
 
 export function predictImage(inputs){
   return new Promise((resolve, reject) =>{
     stub.PostModelOutputs(
       {
-          // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
+          // This is the model ID of a publicly available General model.
           model_id: "aaa03c23b3724a16a56b629203edc62c",
           inputs: inputs
       },
@@ -270,7 +254,6 @@ export function predictImage(inputs){
           for (const c of response.outputs[0].data.concepts) {
               const ignoreLabels = ["no person", "fashion", "wear", "cutout", "one","winter", "isolated", "model", "architecture", "wood", "indoors","people","portrait", "facial expression", "adult", "girl", "kitchenware", "happiness", "room", "creativity", "child", "looking", "brunette", "enjoyment", "cooking", "family", "person", "illustration", "desktop","vector"]
               if(!ignoreLabels.includes(c.name) && c.value >= 0.9){
-                //console.log(c.name + ": " + c.value);
                 results.push({
                   name: c.name,
                   value: c.value
