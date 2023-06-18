@@ -397,7 +397,6 @@ export const uploadItem = async (req, res) => {
       // AI description
       let AIDescription;
       if(color !== ""){
-        console.log(color);
         AIDescription = await captureImage(`${images[0].path}`, category, color);
       } else{
         
@@ -417,7 +416,6 @@ export const uploadItem = async (req, res) => {
       const inputs = [{data: {image:{url: `https://drive.google.com/uc?export=view&id=${uploadedImageIds[0]}`}}}]
       const labelsResults = await predictImage(inputs);
       const labelsNames = labelsResults.map(label => label.name);
-      console.log(labelsNames);
   
       // Find the user by username
       const user = await User.findOne({ username });
