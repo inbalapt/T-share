@@ -20,6 +20,7 @@
     "async": "^3.2.4",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
+    "chai": "^4.3.7",
     "clarifai": "^2.9.1",
     "clarifai-nodejs-grpc": "^8.0.0",
     "compromise": "^14.9.0",
@@ -45,6 +46,7 @@
     "ndarray": "^1.0.19",
     "openai": "^3.3.0",
     "sharp": "^0.32.1",
+    "sinon": "^15.1.2",
     "socket.io": "^4.6.1",
     "uuid": "^9.0.0"
   },
