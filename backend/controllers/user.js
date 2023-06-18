@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import Item from "../models/Item.js";
 import fs from "fs";
 import { uploadFileToDrive } from '../utils.js';
+import { resolveSoa } from "dns";
 
 
 export const getUserDetails =  async (req, res) => {
@@ -67,7 +68,7 @@ export const getCredit = async (req,res) =>{
     res.status(200).json({ credit:user.credit });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal server error');
+    res.status(500).json({error: 'Internal server error'});
   }
 };
 
@@ -184,9 +185,12 @@ export const updateUserDetails = async (req, res) => {
     // Access the updated user details
     const { username, city, size, credit, email } = req.body;
 
+    let fileId;
     // Upload image file to Google Drive
-    const fileId = await uploadFileToDrive(req.file);
-    fs.unlinkSync(req.file.path);
+    if(req.file){
+      fileId = await uploadFileToDrive(req.file);
+      fs.unlinkSync(req.file.path);
+    }
     
 
     // Find the user by username
@@ -223,9 +227,8 @@ export const updateUserDetails = async (req, res) => {
     console.log("User details updated");
 
     // Send a success response
-    return res.json(user);
+    return res.status(200).json(user);
   } catch (error) {
-    console.error("Error updating user details", error);
     // Send an error response
     return res.status(500).json({ error: "Internal server error" });
   }
