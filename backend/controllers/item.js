@@ -70,7 +70,7 @@ export const addFavoriteItem = async (req, res) => {
       user.favItems.push(id);
       // Save the updated user
       await user.save();
-      res.json(user.favItems);
+      res.status(200).json(user.favItems);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Server error' });
@@ -115,7 +115,7 @@ export const getFavItems = (req, res) => {
   
         Item.find({ _id: { $in: favItemIds }, isBought: { $ne: true } })
           .then(items => {
-            res.json(items);
+            res.status(200).json(items);
           })
           .catch(error => {
             console.error('Error retrieving favorite items:', error);
@@ -138,7 +138,7 @@ export const getItemById = (req, res) => {
           return;
         }
   
-        res.json(item);
+        res.status(200).json(item);
       })
       .catch(error => {
         console.error('Error retrieving item:', error);
@@ -158,9 +158,9 @@ export const isFavItem = (req, res) => {
   
         const itemExists = user.favItems.some((item) => item === id);
         if (itemExists) {
-          res.json({ isFavorite: true });
+          res.status(200).json({ isFavorite: true });
         } else {
-          res.json({ isFavorite: false });
+          res.status(200).json({ isFavorite: false });
         }
   
       })
@@ -193,7 +193,7 @@ export const getUserItems = async (req, res) => {
           const totalCount = items.length;
           const totalPages = Math.ceil(totalCount / limit);
   
-          res.json({ items: slicedItems, totalPages });
+          res.status(200).json({ items: slicedItems, totalPages });
         })
         .catch(error => {
           console.error('Error retrieving favorite items:', error);
@@ -219,7 +219,7 @@ export const getUploads = (req, res) => {
   
         Item.find({ _id: { $in: uploadsIds } })
           .then(items => {
-            res.json(items);
+            res.status(200).json(items);
           })
           .catch(error => {
             console.error('Error retrieving favorite items:', error);
@@ -246,7 +246,7 @@ export const getOrders = (req, res) => {
   
         Item.find({ _id: { $in: boughtsIds }, isBought: { $ne: false } })
           .then(items => {
-            res.json(items);
+            res.status(200).json(items);
           })
           .catch(error => {
             console.error('Error retrieving favorite items:', error);
@@ -324,7 +324,7 @@ export const autocomplete = async (req, res) => {
   
       console.log(searchField);
   
-      res.json({ results: results, searchField: searchField, profile: '' });
+      res.status(200).json({ results: results, searchField: searchField, profile: '' });
     } catch (error) {
       console.error('Error searching items:', error);
       res.status(500).json({ error: 'An error occurred while searching items' });
@@ -379,7 +379,7 @@ export const updateItemDetails = async (req, res) => {
       await item.save();
   
       // Send a success response
-      return res.json(item);
+      return res.status(200).json(item);
     } catch (error) {
       console.error("Error updating item details", error);
       // Send an error response
@@ -454,7 +454,7 @@ export const uploadItem = async (req, res) => {
       console.log('Item added to the user\'s myUploads array.');
   
       // Send a success response
-      res.json(item);
+      res.status(200).json(item);
     } catch (error) {
       console.error('Error uploading item:', error);
       // Send an error response
@@ -498,7 +498,7 @@ export const getItemsByCategory = async (req, res) => {
       const totalCount = items.length;
       const totalPages = Math.ceil(totalCount / limit);
   
-      res.json({ items: slicedItems, totalPages });
+      res.status(200).json({ items: slicedItems, totalPages });
     } catch (error) {
       console.error('Error retrieving items:', error);
       res.status(500).json({ error: 'Internal Server Error' });
