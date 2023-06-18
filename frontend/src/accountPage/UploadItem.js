@@ -55,7 +55,6 @@ const UploadItem = ({username, setUpdateProducts}) => {
                     formData.append('category', "dresses");
                 } else {formData.append('category', item.category);}
                 if(item.size == ''){
-                    console.log("hhheh")
                     formData.append('size', '32');
                 } else {formData.append('size', item.size);}
                 //formData.append('description', item.description);
@@ -95,6 +94,15 @@ const UploadItem = ({username, setUpdateProducts}) => {
         
         }
         uploadToServer();
+        setItem({
+            category: '',
+            price: '',
+            size: '',
+            condition: '',
+            color: '',
+            brand: '',
+            images: [],
+          });
         
     };
 

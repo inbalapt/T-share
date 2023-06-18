@@ -395,7 +395,15 @@ export const uploadItem = async (req, res) => {
       const images = req.files; // Get the uploaded images as an array of files
       
       // AI description
-      const AIDescription = await captureImage(`${images[0].path}`, category, color);
+      let AIDescription;
+      if(color !== ""){
+        console.log(color);
+        AIDescription = await captureImage(`${images[0].path}`, category, color);
+      } else{
+        
+        AIDescription = await captureImage(`${images[0].path}`, category, "");
+      }
+      
       const cleanedDescription = AIDescription.charAt(0).toUpperCase() + AIDescription.slice(1);
   
       // Upload each image file to Google Drive
