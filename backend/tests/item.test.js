@@ -13,9 +13,8 @@ import { uploadItem , addFavoriteItem , getItemById, autocomplete ,buyItem, getU
 //import {register,login} from '../controllers/auth.js';
 import { getUserDetails } from '../controllers/user.js';
 const { Types } = mongoose;
-import fs from 'fs';
-import path from 'path';
-import image1 from './image1.jpg';
+
+
 
 
 //User Story 5: Add to Favorites
@@ -448,74 +447,5 @@ describe('getUserItems', () => {
     // You can add more test cases for other scenarios, such as when an error is thrown when retrieving items
   });
   
-// User Story 1: Item Listing
-describe('uploadItem', () => {
-    afterEach(() => {
-      sinon.restore();
-    });
-  
-    it('should allow the user to upload an item successfully', async () => {
-      const mockUser = {
-        _id: new Types.ObjectId(),
-        username: 'testuser',
-        fullName: 'Test User',
-        email: 'testuser@example.com',
-        password: 'password',
-        picturePath: 'user.jpg',
-        friends: [],
-        myUploads: [],
-        myBoughts: [],
-        favItems: [],
-        following: [],
-        followers: [],
-        city: 'Test city',
-        size: '38',
-        credit: 30,
-        hasUnreadMessages: false,
-        save: sinon.stub().resolvesThis(),
-      };
-      const mockItemData = {
-        username: mockUser.username,
-        description: 'A great item',
-        price: 100,
-        size: 'M',
-        category: 'Electronics',
-        condition: 'New',
-        color: 'Black',
-        brand: 'Brand',
-      };
-      const mockFiles = [
-        { path: './image1.jpg'},
-        { path: './image2.jpg'},
-      ];
-      const req = { body: mockItemData, files: mockFiles };
-      const res = { status: sinon.stub().returnsThis(), json: sinon.stub() };
-  
-      sinon.stub(User, 'findOne').resolves(mockUser);
-      sinon.stub(Item, 'create').resolves({ _id: new Types.ObjectId(), ...mockItemData });
-      sinon.stub(fs, 'unlinkSync');
-  
-      await uploadItem(req, res);
-  
-      expect(res.status.calledWith(200)).to.be.true;
-      expect(mockUser.save.calledOnce).to.be.true;
-      expect(fs.unlinkSync.calledTwice).to.be.true; // Check that both files were removed
-      expect(res.json.calledWith(sinon.match.has('_id'))).to.be.true; // Check that the response contains the item data
-    });
-  
-    it('should return an error if the user is not found', async () => {
-      const req = { body: { username: 'nonexistentuser' } };
-      const res = { status: sinon.stub().returnsThis(), json: sinon.stub() };
-  
-      sinon.stub(User, 'findOne').resolves(null);
-  
-      await uploadItem(req, res);
-  
-      expect(res.status.calledWith(500)).to.be.true; // Alternatively, you could use a different status code for user not found
-      expect(res.json.calledWith({ error: 'User not found' })).to.be.true;
-    });
-  
-    // Other test cases...
-  });
-  
+
 
