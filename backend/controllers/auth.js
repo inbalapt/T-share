@@ -21,6 +21,13 @@ export const register = async (req, res) => {
             credit,
         } = req.body;
         
+        /*const existingUser = await User.find({ username });
+        const existingEmail = await User.find({ email });*/
+        /*const userExists = existingUser.length > 0 || existingEmail.length > 0;*/
+        if ( username == "" || email == "") {
+            res.status(403);
+        }
+        
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
 
