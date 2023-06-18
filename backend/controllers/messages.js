@@ -21,9 +21,8 @@ export const getMessages = async (req,res) => {
         }
 
         // Return the messages of the friend
-        res.json({ messages: friend.messages });
+        res.status(200).json({ messages: friend.messages });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Server error' });
     }
 };
@@ -57,7 +56,7 @@ export const postMessage = async(req,res) => {
         // Save the updated user data
         await user.save();
 
-        res.json({ message: 'Message created successfully', user });
+        res.status(200).json({ message: 'Message created successfully', user });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Server error' });
@@ -151,10 +150,9 @@ export const changeNotUnreadMessages = async (req, res) => {
   
       await friendUser.save();
   
-      res.json({ success: true, message: 'Friend added successfully' });
+      res.status(200).json({ success: true, message: 'Friend added successfully' });
   
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: 'Server error' });
     }
   };
@@ -181,8 +179,6 @@ export const uploadImage = async (req, res) => {
     try {
       // Process the uploaded image or perform necessary operations
       // Access the uploaded file via `req.file`
-      console.log("req file is: " + req.file);
-      console.log("req file filename is: " + req.file.filename);
       const { myUsername, friendUsername, time } = req.query;
       // Upload the file to Google Drive
       const fileId = await uploadFileToDrive(req.file);
@@ -265,7 +261,7 @@ export const uploadImage = async (req, res) => {
           await Promise.all([user.save(), friend.save()]);
         }
   
-        res.json(fileId);
+        res.status(200).json(fileId);
       } else {
         res.status(404).json({ message: "User or friend not found" });
       }

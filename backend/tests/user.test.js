@@ -1,18 +1,24 @@
-// userController.test.js
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('supertest');
 import { expect } from 'chai';
+import chai from 'chai';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import sinon from 'sinon';
-
+import fs from 'fs';
 import User from '../models/User.js';
+import Item from '../models/Item.js';
 import {register,login} from '../controllers/auth.js';
-import { getUserDetails } from '../controllers/user.js';
+import { getUserDetails, updateUserDetails, getCredit } from '../controllers/user.js';
+
 
 describe('User Account Management', () => {
     describe('register', () => {
+        afterEach(() => {
+            sinon.restore(); // Restore original behavior after each test
+          });
       it('should create a new user and return the saved user', async () => {
         const req = {
           body: {
@@ -81,6 +87,9 @@ describe('User Account Management', () => {
 
 
     describe('login', () => {
+        afterEach(() => {
+            sinon.restore(); // Restore original behavior after each test
+          });
         it('should authenticate the user and return a token and user data', async () => {
           const req = {
             body: {
@@ -149,6 +158,9 @@ describe('User Account Management', () => {
     });
 
     describe('getUserDetails', () => {
+        afterEach(() => {
+            sinon.restore(); // Restore original behavior after each test
+          });
         it('should return the user details', async () => {
           const req = {
             query: {
@@ -207,5 +219,119 @@ describe('User Account Management', () => {
         });
     
       });
+      describe('updateUserDetails', () => {
+      
+        afterEach(() => {
+          sinon.restore();
+        });
+      
+        it('should update user details without a file', async () => {
+            const req = {
+              body: {
+                username: 'testChange',
+                size: '32',
+              },
+            };
+            const res = {
+              status: sinon.stub().returnsThis(),
+              json: sinon.stub(),
+            };
+            const user = {
+              username: 'testChange',
+              size: '32',
+              save: sinon.stub().returnsThis(),
+            };
+          
+            //sinon.stub(user, 'save').resolves();
+            sinon.stub(User, 'findOne').resolves(user);
+          
+            await updateUserDetails(req, res);
+          
+            console.log(res.status.calledWith(200)); // Add this line
+            console.log(res.status.args); // Add this line
+          
+            expect(res.status.calledWith(200)).to.be.true;
+          });
+          
+        it('should return a 404 error if the user is not found', async () => {
+          // Mock the request and response objects
+          const req = {
+            body: {
+              username: 'nonExistingUsername',
+              city: 'New York',
+            },
+          };
+          const res = {
+            status: sinon.stub().returnsThis(),
+            json: sinon.stub(),
+          };
+    
+          // Mock the User.findOne method to return null
+          sinon.stub(User, 'findOne').resolves(null);
+    
+          // Call the updateUserDetails function
+          await updateUserDetails(req, res);
+    
+          // Check the response
+          expect(res.status.calledWith(404)).to.be.true;
+          expect(res.json.calledWith({ error: 'User not found' })).to.be.true;
+        });
+    });
+    describe('getCredit', () => {
+        afterEach(() => {
+            sinon.restore(); // Restore original behavior after each test
+          });
+        it('should return the user credit', async () => {
+          // Mock the request and response objects
+          const req = {
+            query: {
+              username: 'testuser',
+            },
+          };
+          const res = {
+            status: sinon.stub().returnsThis(),
+            json: sinon.stub(),
+          };
+    
+          // Mock the User.findOne method
+          const mockUser = {
+            username: 'testuser',
+            credit: 100,
+          };
+          sinon.stub(User, 'findOne').resolves(mockUser);
+    
+          // Call the function
+          await getCredit(req, res);
+    
+          // Check the response
+          expect(res.status.calledWith(200)).to.be.true;
+          expect(res.json.calledWith({ credit: 100})).to.be.true;
+        });
+    
+        it('should handle an internal server error', async () => {
+          // Mock the request and response objects
+          const req = {
+            query: {
+              username: 'testuser',
+            },
+          };
+        
+          const res = {
+            status: sinon.stub().returnsThis(),
+            json: sinon.stub(),
+          };
+    
+          sinon.stub(User, 'findOne').resolves(null);
+          
+         
+          // Call the function
+          await getCredit(req, res);
+    
+         
+          // Check the response
+          expect(res.status.calledWith(500)).to.be.true;
+          expect(res.json.calledWith({error: 'Internal server error'})).to.be.true;
+          
+        });
+      });
 });
-  
