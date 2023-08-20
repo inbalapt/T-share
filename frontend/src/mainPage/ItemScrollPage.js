@@ -30,6 +30,17 @@ function getCategoryHeadline(category) {
 }
 
 
+// Function for retrieving the last selected sort type from localStorage
+const getLastSortType = () => {
+  return localStorage.getItem('lastSortType') || 'popularity';
+};
+
+// Function for storing the last selected sort type in localStorage
+const setLastSortType = (sortType) => {
+  localStorage.setItem('lastSortType', sortType);
+};
+
+
 const getCategoryItems = async (category, username, page, limit, sort ,setItems, setLoading) => {
   try {
     if(sort=="relevent"){
@@ -54,7 +65,8 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     // the category of the page (like dresses, tops etc..)
     const { category } = useParams();
     // The type of how we sort our products.
-    const [sortType, setSortType] = useState("popularity");
+    //const [sortType, setSortType] = useState("popularity");
+    const [sortType, setSortType] = useState(getLastSortType());
     const [items, setItems] = useState([]);
     const location = useLocation();
     const username = location.state.username;
@@ -64,7 +76,13 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     const [loading, setLoading] = useState(false);
     
 
-    
+    const handleSortChange = (e) => {
+      const newSortType = e.target.value;
+      setSortType(newSortType);
+      setLastSortType(newSortType); // Store the new sort type in localStorage
+    };
+
+
     useEffect(() => {
       const fetchItems = async () => {
         const totalPages = await getCategoryItems(category, username, currentPage, itemsPerPage, sortType, setItems, setLoading);
@@ -98,9 +116,9 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
     let content = getCategoryHeadline(category);
     let img =  `/pictures/${category}.jpg`;
 
-    const handleSortChange = (e) => {
+   /* const handleSortChange = (e) => {
         setSortType(e.target.value);
-      };
+      };*/
 
 /*
     // if the sort type (relevent, price: low to high etc..) had change - change the order
@@ -137,7 +155,7 @@ const ItemScrollPage = ({ filterOptions, handleFilter }) => {
       <div className="filter-bar">
         <select value={sortType} onChange={handleSortChange}>
           <option value="relevent">Relevance</option>
-          <option value="popularity">Most Popular</option>
+          <option value="popularity">Default</option>
           <option value="priceLowToHigh">Price: Low to High</option>
           <option value="priceHighToLow">Price: High to Low</option>
         </select>

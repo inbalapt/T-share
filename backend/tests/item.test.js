@@ -9,9 +9,7 @@ import sinon from 'sinon';
 import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Item from '../models/Item.js';
-import { uploadItem , addFavoriteItem , getItemById, autocomplete ,buyItem, getUserItems} from '../controllers/item.js';  // Replace with actual import
-//import {register,login} from '../controllers/auth.js';
-import { getUserDetails } from '../controllers/user.js';
+import { uploadItem , addFavoriteItem , getItemById, autocomplete ,buyItem, getUserItems} from '../controllers/item.js'; 
 const { Types } = mongoose;
 
 
@@ -68,7 +66,7 @@ describe('addFavoriteItem', () => {
         const req = {
           body: {
             username: mockUser.username,
-            id: mockItem._id.toString(), // convert to string to match your schema
+            id: mockItem._id.toString(), 
           },
         };
   
@@ -83,7 +81,7 @@ describe('addFavoriteItem', () => {
         await addFavoriteItem(req, res);
   
         expect(res.json.firstCall.args[0]).to.deep.equals([req.body.id]);
-        //expect(res.json.calledWith([mockItem._id.toString()])).to.be.true; // compare with string format id
+        
       });
   
 
@@ -108,7 +106,7 @@ describe('addFavoriteItem', () => {
         expect(res.json.calledWith({ error: 'User not found' })).to.be.true;
     });
 
-    // Add more test cases for different scenarios
+    
 });
 
 
@@ -257,9 +255,9 @@ describe('buyItem', () => {
   
       await buyItem(req, res);
   
-      //expect(res.status.calledWith(200)).to.be.true;
+      expect(res.status.calledWith(200)).to.be.true;
       expect(res.json.firstCall.args[0]).to.deep.equals({ message: 'Item bought successfully' });
-      //expect(res.json.calledWith({ message: 'Item bought successfully' })).to.be.true;
+      expect(res.json.calledWith({ message: 'Item bought successfully' })).to.be.true;
     });
 
     it('should not allow user to buy the item over his price', async () => {
@@ -329,12 +327,11 @@ describe('buyItem', () => {
   
       await buyItem(req, res);
   
-      //expect(res.status.calledWith(200)).to.be.true;
+      expect(res.status.calledWith(400)).to.be.true; 
       expect(res.json.firstCall.args[0]).to.deep.equals({ error: 'Not enough credit' });
-      //expect(res.json.calledWith({ message: 'Item bought successfully' })).to.be.true;
     });
   
-    // Add more test cases to handle other scenarios, such as item already bought, user not found, not enough credit, seller not found
+    
   });
   
 // User Story 6: Viewing Seller's Other Items
@@ -346,7 +343,6 @@ describe('getUserItems', () => {
     it('should retrieve a paginated list of user uploaded items', async () => {
       const mockUser = {
         username: 'testuser',
-        // Other user fields...
         myUploads: [new Types.ObjectId(), new Types.ObjectId(), new Types.ObjectId()],
       };
       const mockItems = [
@@ -444,7 +440,7 @@ describe('getUserItems', () => {
       expect(res.json.calledWith({ error: 'User not found' })).to.be.true;
     });
   
-    // You can add more test cases for other scenarios, such as when an error is thrown when retrieving items
+    
   });
   
 

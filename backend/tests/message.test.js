@@ -2,9 +2,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { getMessages, hasUnreadMessages, postMessage, addNewFriend, uploadImage } from '../controllers/messages.js';
 import User from '../models/User.js';
-import Item from '../models/Item.js';
-import fs from 'fs';
-import * as utils from '../utils';
+
 
 describe('Read Messages', () => {
     afterEach(() => {
