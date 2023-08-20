@@ -18,7 +18,6 @@ import UserAccountMenu from './accountPage/UserAccountMenu';
 import UserProfilePage from './userPage/UserProfilePage';
 
 
-
 function App() {
   return (
     <BrowserRouter>

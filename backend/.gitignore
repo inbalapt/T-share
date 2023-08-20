@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 .env
+.vision-tshare.json
 
 # testing
 /coverage
